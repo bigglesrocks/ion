@@ -1,0 +1,21 @@
+{
+  "name": "ion",
+  "version": "0.0.0",
+  "authors": [
+    "Jessica Biggs <jlegosama@gmail.com>"
+  ],
+  "description": "A particle generator using canvas",
+  "main": "index.js",
+  "keywords": [
+    "particle",
+    "canvas"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

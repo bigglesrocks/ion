@@ -1,0 +1,15 @@
+{
+  "name": "ion",
+  "version": "1.0.0",
+  "description": "A particle generator using canvas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "particle",
+    "canvas"
+  ],
+  "author": "Jessica Biggs <jessica@jessicabiggs.com> (http://jessicabiggs.com/)",
+  "license": "ISC"
+}
