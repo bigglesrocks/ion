@@ -1,20 +1,3 @@
-
-var particleGeneratorDefaultParticleOptions = {
-      shape: 'circle',
-      color: 'rgba(0,0,0,1)',
-      minSize: 15,
-      maxSize: 30,
-      rotation: false,
-      rotationVelocity: 0.1,
-      spawn: true,
-      spawnRate: 8,
-      maxLife: 100,
-      fade: 'in-out',
-      fadeSpeed: 0.01,
-      grow: false,
-      gravity: 0
-    };
-
 //Particle function
 var Particle = function(particleOptions, generator) {
 
@@ -29,8 +12,8 @@ var Particle = function(particleOptions, generator) {
   // Establish starting positions and velocities
   particle.opacity = 1;
   particle.shape = o.shape;
-  particle.colorArray = o.color;
-  particle.color = 'rgba('+particle.colorArray[0]+','+particle.colorArray[1]+','+particle.colorArray[2]+','+particle.opacity+')';
+  particle.color = o.color;
+
   particle.minSize = o.minSize;
   particle.maxSize = o.maxSize;
   particle.rotationVelocity = o.rotationVelocity;
@@ -39,6 +22,8 @@ var Particle = function(particleOptions, generator) {
   particle.composite = o.composite;
   particle.fadeSpeed = o.fadeSpeed;
   particle.fade = o.fade;
+
+  particle.colorArray = particle.color.match(/(\d{1,4})/g);
 
   if(particle.fade == 'in-out') {
     particle.fade = 'in';
@@ -83,6 +68,8 @@ Particle.prototype.render = function(shape,x,y,width,height,degrees,color,direct
       var particle = this,
           context = particle.generator.context;
 
+      context.fillStyle = particle.color;
+
      // first save the untranslated/unrotated context
      context.save();
     
@@ -93,7 +80,7 @@ Particle.prototype.render = function(shape,x,y,width,height,degrees,color,direct
          context.fillStyle = color;
          context.moveTo(x,y);
          context.beginPath();
-         context.arc(size, size, size, 0, Math.PI*2, true);
+         context.arc(30, 30, width, 0, Math.PI*2, true);
          context.fill();
          context.closePath();
          break;
@@ -108,7 +95,7 @@ Particle.prototype.render = function(shape,x,y,width,height,degrees,color,direct
           context.rotate(-(degrees*Math.PI/180));
         }
 
-        context.fillStyle = color;
+        // context.fillStyle = color;
         context.strokeStyle = color;
         context.lineWidth = 5;
 
@@ -134,7 +121,7 @@ Particle.prototype.render = function(shape,x,y,width,height,degrees,color,direct
         
       case 'blip':
         context.translate(x, y);
-        context.fillStyle = color;
+        // context.fillStyle = color;
         context.moveTo(x,y);
         context.beginPath();
         context.arc(30, 30, width, 0, Math.PI*2, true);
@@ -235,26 +222,29 @@ var ParticleGenerator = function(el, particles, options) {
   }
 
   options = generator.setOpts({
-    frameRate: 30
+    frameRate: 30,
+    canvasBackground: 'rgba(255,255,255,1)'
   }, options);
 
   generator.frameRate = options.frameRate;
+  generator.canvasBackground = options.canvasBackground;
 
 
   for(var p=0; p<particles.length; p++) {
     particles[p] = generator.setOpts({
       shape: 'circle',
       color: 'rgba(0,0,0,1)',
+      border: false,
       minSize: 15,
       maxSize: 30,
       rotation: false,
       rotationVelocity: 0.1,
       spawnRate: 8,
       maxLife: 100,
-      fade: 'in-out',
+      fade: false,
       fadeSpeed: 0.01,
       grow: false,
-      gravity: 0,
+      gravity: -0.5,
       density: 20
     }, particles[p]);
   }
@@ -303,6 +293,9 @@ ParticleGenerator.prototype.createParticle = function(par) {
 ParticleGenerator.prototype.start = function() {
   var generator = this;
 
+  // generator.context.fillStyle = generator.canvasBackground;
+  // generator.context.fillRect(0, 0, generator.canvas.width, generator.canvas.height);
+
   // ========================================
   // For each particle type
   for(var t = 0; t < generator.particles.length; t++) {
@@ -318,8 +311,8 @@ ParticleGenerator.prototype.start = function() {
   // Interval to animate particles
   // ========================================
   generator.animate = setInterval(function() {
-    // context.fillStyle = grd;
-    // context.fillRect(0, 0, canvas.width, canvas.height);
+    generator.context.fillStyle = generator.canvasBackground;
+    generator.context.fillRect(0, 0, generator.canvas.width, generator.canvas.height);
     for(var s=0; s < generator.particles.length; s++) {
       var par = generator.particles[s];
       if(par.spawnRate) {

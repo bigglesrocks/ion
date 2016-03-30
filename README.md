@@ -70,4 +70,3 @@ You can draw muliple particle shapes on the canvas by passing an array of partic
 
 - Custom particle shapes
 - Add 'wind' option to particleSettings to allow horizontal particle movement
-- 
