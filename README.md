@@ -9,7 +9,8 @@ All you need to get Ion up and running is a `canvas` element with an id, and the
 	<canvas id="my-canvas"></canvas>
 
 	<script type="text/javascript">
-		new IonGenerator('my-canvas');
+		var g = new IonGenerator('my-canvas');
+        g.start();
 	</script>
 	```
 
@@ -65,8 +66,25 @@ You can draw muliple particle shapes on the canvas by passing an array of partic
 
 ###Particle Randomization
 
+###Parallax/Depth
 
-##Roadmap
+###Custom Particle shapes
 
-- Custom particle shapes
-- Add 'wind' option to particleSettings to allow horizontal particle movement
+You can add custom shapes to the particle generator by using the `IonGenerator.addShape()` function. `addShape()` takes 2 arguments: a name and a function containing instructions for drawing the shape onto the canvas. The instructions function takes one argument: a particle instance.
+
+    ```javascript
+        g = new IonGenerator('my-canvas');
+        g.addShape('crescent', function(p) {
+            // Get our context from the particle's generator
+            var ctx = p.generator.context;
+            // Move to the current coordinates for the particle
+             ctx.translate(p.x, p.y);
+
+             // Instructions ...
+        });
+        g.start();
+    ````
+
+You have access to all of the particle's properties and methods inside the addShape instructions function and can access them with `p.propertyName`. 
+
+
