@@ -2,21 +2,130 @@
 <html>
 <head>
 	<title>Ion Test</title>
-	<script type="text/javascript" src="../src/ion.js"></script>
-	<style type="text/css">
-	#testcanvas {
-		width: 100vw;
-		height: 100vh;
-	}
-	</style>
+	<link rel="stylesheet" href="test.css"/>
+
 </head>
 <body>
 
 <canvas id="testcanvas"></canvas>
 
-<script type="text/javascript">
-	new ParticleGenerator('testcanvas', { shape: 'circle', color: 'rgba(212, 83, 20, 1)' });
-</script>
+<header>
+	<h1>Ion</h1>
+	<h2>A javascript particle generator for canvas</h2>
+</header>
+
+<form class="toolbox">
+	<fieldset class="background">
+		<legend>Background</legend>
+		<input type="color" name="canvasBackground" id="canvasBackground"  value="#1d1d1d"/>
+	</fieldset>
+	<fieldset class="shape">
+		<legend>Shape</legend>
+		<select name="shape" id="shape">
+		</select>
+	</fieldset>
+	<fieldset class="color">
+		<input type="checkbox" value="true" name="colorBool" id="colorBool" checked/>
+		<legend>Color</legend>
+		<div class="color">
+			<input type="color" id="color" name="color" value="#72F3FF"/>
+			<label>Opacity</label>
+			<input type="range" value="100" min="0" max="100" name="colorOpacity" id="colorOpacity">
+		</div>
+	</fieldset>
+	<fieldset class="border">
+		<input type="checkbox" value="true" name="borderBool" id="borderBool"/>
+		<legend>Border</legend>
+		<div class="color">
+			<input type="color" id="borderColor" name="borderColor" value="#3C88B4" disabled />
+			<label for="borderOpacity">Opacity</label>
+			<input type="range" value="100" min="0" max="100" name="borderOpacity" id="borderOpacity">
+			<label for="borderSize">Size</label>
+			<input type="range" value="1" min="0" max="10" name="borderSize" id="borderSize">
+		</div>
+	</fieldset>
+	<fieldset class="size">
+		<label for="minSize">
+			<span class="inline-label">
+				<span class="form-label">MinSize</span>
+				<input type="number" name="minSize" id="minSize" value="15" min="1" max="500"/>
+			</span>
+		</label>
+		<label for="maxSize">
+			<span class="inline-label">
+				<span class="form-label">MaxSize</span>
+				<input type="number" name="maxSize" id="maxSize" value="30" min="1" max="500" />
+			</span>
+		</label>
+	</fieldset>
+	<fieldset class="density">
+		<legend>Density</legend>
+		<div class="range">
+			<input type="range" min="0" max="300" value="20" name="density" id="density" />
+		</div> 
+	</fieldset>
+	<fieldset class="life">
+		<legend>Life</legend>
+		<div class="range">
+			<input type="range" min="0" max="300" value="100" name="maxLife" id="maxLife"/>
+		</div>
+	</fieldset>
+	<fieldset class="spawn">
+		<input type="checkbox" value="true" name="spawnBool" id="spawnBool"/>
+		<legend>Spawn</legend>
+		<div class="range">
+			<input type="range" min="0" max="100" value="0" name="spawnRate" id="spawnRate"/>
+		</div>
+	</fieldset>
+	<fieldset class="gravity">
+		<input type="checkbox" value="true" name="gravityBool" id="gravityBool" checked/>
+		<legend>Gravity</legend>
+		<input type="range" min="-20" max="20" value="1" name="gravity" id="gravity" />
+	</fieldset>
+	<fieldset class="wind disabled">
+		<input type="checkbox" value="true" name="windBool" id="windBool"/>
+		<legend>Wind</legend>
+		<input type="range" min="-20" max="20" value="0" name="wind" id="wind" disabled/>
+	</fieldset>
+	<fieldset class="rotation disabled">
+		<input type="checkbox" value="true" name="rotationBool" id="rotationBool"/>
+		<legend>Rotate</legend>
+		<label for="rotationDirection">Direction</label>
+		<select name="rotationDirection" id="rotationDirection" disabled>
+			<option value="clockwise">Clockwise</option>
+			<option value="counter-clockwise">Counter Clockwise</option>
+			<option value="random">Random</option>
+		</select>
+		<div class="range">
+			<label for="orient">Orientation</label>
+			<input type="range" min="0.0" max="20.0" value="0.1" name="orient" id="orient" disabled/>
+		</div>
+		<div class="range">
+			<label for="rotationVelocity">Velocity</label>
+			<input type="range" min="0" max="100" value="3" name="rotationVelocity" id="rotationVelocity" disabled/>
+		</div>
+	</fieldset>
+	<fieldset class="fade disabled">
+		<input type="checkbox" value="true" name="fadeBool" id="fadeBool"/>
+		<legend>Fade</legend>
+		<label for="fade">Animate</label>
+		<select name="fade" id="fade" disabled>
+			<option value="in">In</option>
+			<option value="out">Out</option>
+			<option value="in-out">In-Out</option>
+		</select>
+		<div class="range">
+			<label for="">Speed</label>
+			<input type="range" min="0.00" max="20.00" value="0.1" name="fadeSpeed" id="fadeSpeed" disabled/>
+		</div>
+	</fieldset>
+<!-- 	<fieldset class="frameRate">
+		<label for="frameRate">Frame Rate</label>
+		<input type="range" min="10" max="3000" value="30" name="frameRate" id="frameRate" />
+	</fieldset> -->
+</form>
+
+<script type="text/javascript" src="demo.js"></script>
 
 </body>
 </html>

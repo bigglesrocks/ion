@@ -1,0 +1,126 @@
+@import "bower_components/foundation-apps/scss/vendor/normalize";
+@import "bower_components/foundation-apps/scss/helpers/functions";
+@import "bower_components/foundation-apps/scss/helpers/mixins";
+@import "bower_components/foundation-apps/scss/global";
+
+$primary-color: #31A6DD;
+
+$slider-radius: 50%;
+$slider-thumb-radius: 50%;
+$slider-height: 0.5rem;
+$slider-thumb-height: 1rem;
+
+
+@import "bower_components/foundation-apps/scss/components/forms";
+@import "bower_components/foundation-apps/scss/components/switch";
+
+
+body {
+	font-family: sans-serif;
+}
+
+header {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #333;
+	background-color: $gray-light;
+	padding: 1em;
+	text-align: center;
+}
+
+.toolbox {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 250px;
+	background-color: #ededed;
+	color: #666;
+	font-size: 0.8em;
+	border: 1px solid rgba(0,0,0,0.1);
+
+	label {
+		font-size: 0.9em;
+	}
+}
+
+fieldset {
+	border: none;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+	&.disabled {
+		color: #666;
+	}
+	&.size {
+		label { 
+			width: 50%;
+			float: left;
+			padding-left: 0.25em;
+			&:first-of-type {
+				padding-right: 0.25em;
+				padding-left: 0;
+			}
+		}
+	}
+	
+}
+
+input[type="checkbox"] {
+	// display: inline;
+	float: left;
+}
+
+.color {
+	clear: left;
+	input[type="checkbox"]:not(:checked) + label {
+		color: #666;
+	}
+
+
+}
+
+div.color {
+	input {
+		float: left;
+		&[type="color"] {
+			margin-right: 1em;
+			margin-top: 0.5em;
+		}
+		&[type="range"] {
+			float: left;
+			margin-top: 0;
+			width: calc(100% - 3.5rem);
+		}
+	}
+}
+
+label[for="frameRate"] {
+	display: block;
+}
+
+input[type="range"] {
+	font-size: 0.8em;
+	margin-top: 2.5em;
+}
+
+input[type="color"] {
+	width: 2rem;
+	padding: 0;
+	clear: left;
+	height: 2rem;
+}
+
+legend {
+	// display: inline-block;
+	float: left;
+	clear: right;
+	// padding: 0.65em 0;
+	text-transform: uppercase;
+	font-size: 0.9em;
+	// margin-right: 0.3em;
+}
+
+#testcanvas {
+	width: 100vw;
+	height: 100vh;
+}

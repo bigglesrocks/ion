@@ -18,8 +18,8 @@
     "test",
     "tests"
   ],
-  "dependencies": {
+  "devDependencies": {
     "jquery": "~2.2.2",
-    "foundation": "~5.5.3"
+    "foundation-apps": "~1.2.0"
   }
 }

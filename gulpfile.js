@@ -99,7 +99,7 @@ gulp.task('watch', function() {
   gulp.watch(['src/*.js', 'test/test.js'], ['scripts', 'tScripts']);
 
   // Watch for changes in 'compiled' files
-   gulp.watch(['app/**/*', 'assets/**/*', 'data/**/*.json'], function (file) {
+   gulp.watch(['src/test/*.{css,html}', 'text/demo.js'], function (file) {
        var relPath = '\\' + path.relative('/', file.path);
        gutil.log('File changed: ' + gutil.colors.magenta(relPath));
        livereload.changed(file.path);
