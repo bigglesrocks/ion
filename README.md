@@ -14,13 +14,22 @@ All you need to get Ion up and running is a `canvas` element with an id, and the
 	</script>
 	```
 
+##Initializing Ion
+
+The `Ion` class can take 3 arguments:
+
+    new IonGenerator(canvasID, particles, options);
+
+`canvasID` is a string id of the canvas element and is required.
+
+You may pass either a Particle settings object or array of Particle settings objects for the `particles` parameter. This parameter is optional, and useful to leave of if you want to create custom particles before starting animation.
+
+The `options` parameter is an Ion settings object. 
+
+
 ##Options
 
-The `IonGenerator` class take 3 arguments:
-
-    new IonGenerator(canvasID, particleOptions, generatorOptions);
-
-Options for `generatorOptions` object
+The options object takes 2 parameters
 
 | Option | Description | Accepted Values | Default Value |
 |:------:|:-----------:|:---------------:|:-------------:|
@@ -68,12 +77,14 @@ You can draw muliple particle shapes on the canvas by passing an array of partic
 
 ###Parallax/Depth
 
+You can acheive a sense of depth by passing multiple particle settings of the same (or different) particles with different wind or gravity settings. This will create multiple "planes" of particles moving at different speeds.    
+
 ###Custom Particle shapes
 
-You can add custom shapes to the particle generator by using the `IonGenerator.addShape()` function. `addShape()` takes 2 arguments: a name and a function containing instructions for drawing the shape onto the canvas. The instructions function takes one argument: a particle instance.
+You can add custom shapes to the particle generator by using the `Ion.addShape()` function. `addShape()` takes 2 arguments: a name and a function containing instructions for drawing the shape onto the canvas. The instructions function takes one argument: a particle instance.
 
     ```javascript
-        g = new IonGenerator('my-canvas');
+        g = new Ion('my-canvas');
         g.addShape('crescent', function(p) {
             // Get our context from the particle's generator
             var ctx = p.generator.context;
@@ -86,5 +97,30 @@ You can add custom shapes to the particle generator by using the `IonGenerator.a
     ````
 
 You have access to all of the particle's properties and methods inside the addShape instructions function and can access them with `p.propertyName`. 
+
+| Property | Description |
+|:--------:|:-----------:|
+| shape | string name for particle's shape |
+| x | current x coordinate |
+| y | current y coordinate |
+| size | initial size |
+| gravity | vertical movement modifier |
+| wind | horizontal movement modifier |
+| color | particle background color - string (rgba) |
+| colorArray | An array of the particle's rgba color values |
+| borderColor | particle stroke color - string (rgba)|
+| borderWidth | particle stroke size |
+| orient | initial rotation |
+| rotationDirection | Direction particle is set to rotate |
+| rotationVelocity | Speed particle is set to rotate |
+| rotation | current rotation |
+| fade | Animation for particle fade |
+| fadeSpeed | How fast the particle fades |
+| maxLife | Time after spawn at which the particle dies |
+| life | Particle's current age |
+
+
+
+
 
 

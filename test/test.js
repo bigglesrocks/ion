@@ -34,7 +34,9 @@ ion.setParticles({
 	gravity: parseInt($('#gravity').val())*0.1,
 	wind: parseInt($('#wind').val())*0.1,
 	borderColor: convertHex($('#borderColor').val(), parseInt($('#borderOpacity').val())),
-	borderWidth: parseInt($('#borderWidth').val())
+	borderWidth: parseInt($('#borderWidth').val()),
+	originX: 'random',
+	originY: 'top'
 });
 
 ion.start();
@@ -61,7 +63,17 @@ $('input, select').on('change', function() {
 		borderWidth = 0,
 		orient = 0,
 		rotationDirection = false,
-		fade = false;
+		fade = false,
+		originX = $('#originX').val(),
+		originY = $('#originY').val();
+
+	if(parseInt(originX) != NaN) {
+		originX = parseInt(originX);
+	}
+
+	if(parseInt(originY) != NaN) {
+		originY = parseInt(originY);
+	}
 
 	if($('#spawnBool').is(':checked')) {
 		spawnRate = parseInt($('#spawnRate').val());
@@ -102,7 +114,9 @@ $('input, select').on('change', function() {
 		gravity: gravity,
 		wind: wind,
 		borderColor: borderColor,
-		borderWidth: borderWidth
+		borderWidth: borderWidth,
+		originX: originX,
+		originY: originY
 	}, {
 		frameRate: parseInt($('#frameRate').val()),
 		canvasBackground: convertHex($('#canvasBackground').val(), 100)

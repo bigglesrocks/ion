@@ -15,34 +15,78 @@
 </header>
 
 <form class="toolbox">
+<section class="bar">
+	<legend><h4>Presets</h4></legend>
+	<select name="preset" id="preset">
+		<option value="bokeh">Bokeh</option>
+		<option value="ion">Ion</option>
+		<option value="space">Space</option>
+		<option value="geometry">Geometry</option>
+		<option value="rain">Rain</option>
+		<option value="music">Music</option>
+	</select>
+</section>
 <section class="panel">
 	<fieldset class="shape">
-		<legend>Shape</legend>
+		<legend><h4>Shape</h4></legend>
 		<select name="shape" id="shape">
 		</select>
 	</fieldset>
 	<fieldset class="background">
-		<legend>Background</legend>
-		<input type="color" name="canvasBackground" id="canvasBackground"  value="#1d1d1d"/>
+		<legend><h4>Background</h4></legend>
+		<div class="color">
+			<input type="color" name="canvasBackground" id="canvasBackground"  value="#1d1d1d" oninput="canvasBackgroundDisplay.value = canvasBackground.value.replace('#', '')" />
+			<label for="canvasBackground">
+				<span class="inline-label">
+						<span class="form-label">#</span>
+						<input type="text" name="canvasBackgroundDisplay" id="canvasBackgroundDisplay"  value="1d1d1d" oninput="canvasBackground.value = '#'+canvasBackgroundDisplay.value">
+				</span>
+			</label>
+		</div>
 	</fieldset>
 	<fieldset class="color">
-		<input type="checkbox" value="true" name="colorBool" id="colorBool" checked/>
-		<legend>Color</legend>
+		<legend>
+			<h4>Color</h4>
+			<div class="switch small"><input type="checkbox" id="colorBool" name="colorBool" checked><label for="colorBool"></label></div>
+		</legend>
 		<div class="color">
-			<input type="color" id="color" name="color" value="#72F3FF"/>
-			<label>Opacity</label>
-			<input type="range" value="30" min="0" max="100" name="colorOpacity" id="colorOpacity">
+			<input type="color" name="color" id="color"  value="#72F3FF" oninput="colorDisplay.value = color.value.replace('#', '')" />
+			<label for="color">
+			<span class="inline-label">
+					<span class="form-label">#</span>
+					<input type="text" name="colorDisplay" id="colorDisplay"  value="72F3FF" oninput="color.value = '#'+colorDisplay.value">
+			</span>
+			</label>
+		</div>
+		<div class="range">
+			<label for="colorOpacity">Opacity</label>
+			<input type="range" value="30" min="0" max="100" name="colorOpacity" id="colorOpacity" oninput="colorOpacityO.value = colorOpacity.value">
+			<output id="colorOpacityO">30</output>
 		</div>
 	</fieldset>
 	<fieldset class="border">
-		<input type="checkbox" value="true" name="borderBool" id="borderBool" checked/>
-		<legend>Border</legend>
+		<legend>
+			<h4>Stroke</h4>
+			<div class="switch small"><input type="checkbox" id="borderBool" name="borderBool" checked><label for="borderBool"></label></div>
+		</legend>
 		<div class="color">
-			<input type="color" id="borderColor" name="borderColor" value="#72F3FF"/>
+			<input type="color" name="borderColor" id="borderColor"  value="#72F3FF" oninput="borderColorDisplay.value = borderColor.value.replace('#', '')" />
+			<label for="borderColor">
+			<span class="inline-label">
+					<span class="form-label">#</span>
+					<input type="text" name="borderColorDisplay" id="borderColorDisplay"  value="72F3FF" oninput="borderColor.value = '#'+borderColorDisplay.value">
+			</span>
+			</label>
+		</div>
+		<div class="range">
 			<label for="borderOpacity">Opacity</label>
-			<input type="range" value="100" min="0" max="100" name="borderOpacity" id="borderOpacity">
+			<input type="range" value="100" min="0" max="100" name="borderOpacity" id="borderOpacity" oninput="borderOpacityO.value = borderOpacity.value">
+			<output id="borderOpacityO">100</output>
+		</div>
+		<div class="range">
 			<label for="borderWidth">Size</label>
-			<input type="range" value="2" min="0" max="10" name="borderWidth" id="borderWidth">
+			<input type="range" value="2" min="0" max="10" name="borderWidth" id="borderWidth" oninput="borderWidthO.value = borderWidth.value">
+			<output id="borderWidthO">2</output>
 		</div>
 	</fieldset>
 	<fieldset class="size">
@@ -59,61 +103,83 @@
 			</span>
 		</label>
 	</fieldset>
-	
-</section>
-<section class="panel">
 	<fieldset class="density">
-		<legend>Density</legend>
+		<legend><h4>Density</h4></legend>
 		<div class="range">
-			<input type="range" min="0" max="300" value="40" name="density" id="density" />
+			<input type="range" min="0" max="300" value="20" name="density" id="density" oninput="densityO.value = density.value"/>
+			<output id="densityO">20</output>
 		</div> 
 	</fieldset>
 	<fieldset class="life">
-		<legend>Life</legend>
+		<legend>
+			<h4>Life</h4>
+		</legend>
+		<div class="switch small">
+			<input type="checkbox" name="immortal" id="immortal" /><label for="immortal"></label>
+		</div>
+		<label for="immortal">Immortal</label>
 		<div class="range">
-			<input type="range" min="0" max="1000" value="300" name="maxLife" id="maxLife"/>
+			<input type="range" min="0" max="1000" value="1000" name="maxLife" id="maxLife" oninput="maxLifeO.value = maxLife.value" />
+			<output id="maxLifeO">1000</output>
 		</div>
 	</fieldset>
+	
+</section>
+<section class="panel">
+
 	<fieldset class="spawn">
-		<input type="checkbox" value="true" name="spawnBool" id="spawnBool" checked />
-		<legend>Spawn</legend>
-		<div>
-			<label>Origin</label>
-			<input type="text" list="originXpresets" name="originX" placeholder="select or type" />
-			<datalist id="originXpresets">
-				<option value="Left">
-				<option value="Right">
-				<option value="Center">
-				<option value="Random">
-			</datalist>
-		</div>
-		<div>
-			<input type="text" list="originYpresets" name="originY" placeholder="select or type" />
-			<datalist id="originYpresets">
-				<option value="Top" />
-				<option value="Bottom">
-				<option value="Center">
-				<option value="Random">
-			</datalist>
-		</div>
-		<div class="range">
+		<legend>
+			<h4>Spawn</h4>
+			<div class="switch small">
+				<input type="checkbox" value="true" name="spawnBool" id="spawnBool" checked /><label for="spawnBool"></label>
+			</div>
+		</legend>
+		<section>
+			<div>
+				<label>Origin</label>
+				<input type="text" list="originXpresets" name="originX" placeholder="select or type" value="random"/>
+				<datalist id="originXpresets">
+					<option value="left">
+					<option value="right">
+					<option value="center">
+					<option value="random">
+				</datalist>
+			</div>
+			<div>
+				<input type="text" list="originYpresets" name="originY" placeholder="select or type" value="top"/>
+				<datalist id="originYpresets">
+					<option value="top" />
+					<option value="bottom">
+					<option value="center">
+					<option value="random">
+				</datalist>
+			</div>
 			<label for="spawnRate">Rate</label>
-			<input type="range" min="0" max="100" value="20" name="spawnRate" id="spawnRate"/>
-		</div>
+			<div class="range">
+				<input type="range" min="0" max="100" value="4" name="spawnRate" id="spawnRate" oninput="spawnRateO.value = spawnRate.value"/>
+				<output id="spawnRateO">20</output>
+			</div>
+		</section>
 	</fieldset>
 	<fieldset class="gravity">
-		<input type="checkbox" value="true" name="gravityBool" id="gravityBool" checked/>
-		<legend>Gravity</legend>
+		<legend>
+			<h4>Gravity</h4>
+			<div class="switch small"><input type="checkbox" id="gravityBool" name="gravityBool" checked><label for="gravityBool"></label></div>
+		</legend>
 		<input type="range" min="-20" max="20" value="2" name="gravity" id="gravity" />
 	</fieldset>
 	<fieldset class="wind disabled">
-		<input type="checkbox" value="true" name="windBool" id="windBool"/>
-		<legend>Wind</legend>
+		<legend>
+			<h4>Wind</h4>
+			<div class="switch small"><input type="checkbox" id="windBool" name="windBool"><label for="windBool"></label></div>
+		</legend>
 		<input type="range" min="-20" max="20" value="0" name="wind" id="wind" disabled/>
 	</fieldset>
 	<fieldset class="rotation disabled">
-		<input type="checkbox" value="true" name="rotationBool" id="rotationBool"/>
-		<legend>Rotate</legend>
+		<legend>
+			<h4>Rotate</h4>
+			<div class="switch small"><input type="checkbox" id="rotateBool" name="rotateBool"><label for="rotateBool"></label></div>
+		</legend>
 		<label for="rotationDirection">Direction</label>
 		<select name="rotationDirection" id="rotationDirection" disabled>
 			<option value="clockwise">Clockwise</option>
@@ -130,8 +196,10 @@
 		</div>
 	</fieldset>
 	<fieldset class="fade disabled">
-		<input type="checkbox" value="true" name="fadeBool" id="fadeBool"/>
-		<legend>Fade</legend>
+		<legend>
+			<h4>Fade</h4>
+			<div class="switch small"><input type="checkbox" id="fadeBool" name="fadeBool"><label for="fadeBool"></label></div>
+		</legend>
 		<label for="fade">Animate</label>
 		<select name="fade" id="fade" disabled>
 			<option value="in">In</option>

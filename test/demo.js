@@ -9918,11 +9918,40 @@ var Particle = function(particleOptions, ion) {
     particle.order = 0;
   }
 
-
-  particle.x = Math.floor(particle.ion.randomNumber(-100, particle.ion.canvas.width+100));
-  particle.y = Math.floor(particle.ion.randomNumber(-100, particle.ion.canvas.height+100));
-
   particle.size = Math.floor(particle.ion.randomNumber(particle.minSize, particle.maxSize));
+
+  switch(o.originX) {
+    case 'left':
+      particle.x =  -particle.size*2;
+    break;
+    case 'right':
+      particle.x = ion.canvas.width + particle.size*2
+    case 'center':
+      particle.x = ion.canvas.width*0.5
+    break;
+    case 'random':
+      particle.x = Math.floor(particle.ion.randomNumber(-particle.size*2, particle.ion.canvas.width+particle.size*2));
+    break;
+    default:
+      particle.x = o.originX;
+    break;
+  }
+  switch(o.originY) {
+    case 'top':
+      particle.y =  -particle.size*2;
+    break;
+    case 'bottom':
+      particle.y = ion.canvas.height + particle.size*2
+    case 'center':
+      particle.y = ion.canvas.height*0.5
+    break;
+    case 'random':
+      particle.y = Math.floor(particle.ion.randomNumber(-particle.size*2, particle.ion.canvas.height+particle.size*2));
+    break;
+    default:
+      particle.y = o.originY;
+    break;
+  }
 
   switch(particle.rotationDirection) {
     case 'clockwise':
@@ -10014,8 +10043,12 @@ Particle.prototype.draw = function() {
   particle.render(particle.shape, particle.x, particle.y, particle.size, particle.size, particle.rotation, particle.color, particle.rotationDirection);
   // context.globalCompositeOpteration = 'destination-out';
 
-  if(particle.life > particle.maxLife) {
-    delete ion.particleTracker[particle.id];
+   if((particle.life > particle.maxLife && particle.maxLife != 'immortal') || 
+    (particle.gravity > 0 && particle.y > canvas.height+particle.size) || 
+    (particle.gravity < 0 && particle.y < canvas.height-particle.size) ||
+    (particle.wind < 0 && particle.x > canvas.width+particle.size) ||
+    (particle.wind > 0 && particle.x < canvas.width-particle.size)) {
+      delete ion.particleTracker[particle.id];
   }
 }
 
@@ -10109,25 +10142,21 @@ Ion.prototype.setParticles = function(particles) {
       rotationDirection: 'clockwise',
       rotationVelocity: 0.1,
       orient: 0,
-      spawnRate: 8,
+      spawnRate: 2,
       maxLife: 100,
       fade: false,
       fadeSpeed: 0.01,
       grow: false,
       gravity: 1,
       wind: 1,
-      density: 20
+      density: 20,
+      originX: 'random',
+      originY: 'top'
     }, particles[p]);
   }
    ion.particles = particles;
 
-
-
 }
-
-
-
-
 
 Ion.prototype.setOptions = function(opts) {
 
@@ -10136,6 +10165,7 @@ Ion.prototype.setOptions = function(opts) {
   options = ion.setOpts({
     frameRate: 30,
     canvasBackground: 'rgba(255,255,255,1)'
+    // startPopulated: true
   }, opts);
 
   ion.frameRate = options.frameRate;
@@ -10171,7 +10201,16 @@ Ion.prototype.start = function() {
     var par = ion.particles[t];
     // Make a new particle for the particle's density setting
     for(var d = 0; d < par.density; d++) {
+
+     if(par.density > 0) {
+      var originX = par.originX,
+          originY = par.originY;
+      par.originX = 'random';
+      par.originY = 'random';
+     }
      ion.createParticle(par);
+     par.originX = originX;
+     par.originY = originY;
     }
   }
 
@@ -10184,7 +10223,7 @@ Ion.prototype.start = function() {
     for(var s=0; s < ion.particles.length; s++) {
       var par = ion.particles[s];
       if(par.spawnRate > 0) {
-        if(ion.randomNumber(0,100) < par.spawnRate) {
+        if(ion.randomNumber(0, 25*par.density) < par.spawnRate) {
           ion.createParticle(par);
         }
       }
@@ -10232,7 +10271,9 @@ ion.setParticles({
 	gravity: parseInt($('#gravity').val())*0.1,
 	wind: parseInt($('#wind').val())*0.1,
 	borderColor: convertHex($('#borderColor').val(), parseInt($('#borderOpacity').val())),
-	borderWidth: parseInt($('#borderWidth').val())
+	borderWidth: parseInt($('#borderWidth').val()),
+	originX: 'random',
+	originY: 'top'
 });
 
 ion.start();
@@ -10259,7 +10300,17 @@ $('input, select').on('change', function() {
 		borderWidth = 0,
 		orient = 0,
 		rotationDirection = false,
-		fade = false;
+		fade = false,
+		originX = $('#originX').val(),
+		originY = $('#originY').val();
+
+	if(parseInt(originX) != NaN) {
+		originX = parseInt(originX);
+	}
+
+	if(parseInt(originY) != NaN) {
+		originY = parseInt(originY);
+	}
 
 	if($('#spawnBool').is(':checked')) {
 		spawnRate = parseInt($('#spawnRate').val());
@@ -10300,7 +10351,9 @@ $('input, select').on('change', function() {
 		gravity: gravity,
 		wind: wind,
 		borderColor: borderColor,
-		borderWidth: borderWidth
+		borderWidth: borderWidth,
+		originX: originX,
+		originY: originY
 	}, {
 		frameRate: parseInt($('#frameRate').val()),
 		canvasBackground: convertHex($('#canvasBackground').val(), 100)
