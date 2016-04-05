@@ -248,11 +248,12 @@ Ion.prototype.setParticles = function(particles) {
 
   var ion = this;
 
-  if(typeof(particles) === 'object') {
+ if(!particles.length) {
     var particle = particles;
     particles = new Array();
     particles.push(particle);
   }
+
 
 
   for(var p=0; p<particles.length; p++) {
@@ -279,11 +280,7 @@ Ion.prototype.setParticles = function(particles) {
    ion.particles = particles;
 
 
-
 }
-
-
-
 
 
 Ion.prototype.setOptions = function(opts) {
