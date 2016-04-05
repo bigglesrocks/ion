@@ -10091,7 +10091,7 @@ Ion.prototype.setParticles = function(particles) {
 
   var ion = this;
 
-  if(typeof(particles) === 'object') {
+  if(!particles.length) {
     var particle = particles;
     particles = new Array();
     particles.push(particle);
