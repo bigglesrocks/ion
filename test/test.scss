@@ -25,7 +25,8 @@ header {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	color: #333;
-	background-color: $gray-light;
+	// background-color: $gray-light;
+	color: #fff;
 	padding: 1em;
 	text-align: center;
 }
@@ -34,14 +35,25 @@ header {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 250px;
+	width: 450px;
 	background-color: #ededed;
 	color: #666;
 	font-size: 0.8em;
 	border: 1px solid rgba(0,0,0,0.1);
+	height: 100%;
+
+	.panel {
+		width: 50%;
+		float: left;
+		height: 100%;
+		&:first-child {
+			border-right: 1px solid rgba(0,0,0,0.1);
+		}
+	}
 
 	label {
 		font-size: 0.9em;
+		clear: left;
 	}
 }
 
@@ -50,19 +62,10 @@ fieldset {
 	border-bottom: 1px solid rgba(0,0,0,0.1);
 	&.disabled {
 		color: #666;
-	}
-	&.size {
-		label { 
-			width: 50%;
-			float: left;
-			padding-left: 0.25em;
-			&:first-of-type {
-				padding-right: 0.25em;
-				padding-left: 0;
-			}
+		input, select {
+			background-color: rgba(0,0,0,0.1);
 		}
 	}
-	
 }
 
 input[type="checkbox"] {
@@ -80,6 +83,9 @@ input[type="checkbox"] {
 }
 
 div.color {
+	label {
+		clear: none;
+	}
 	input {
 		float: left;
 		&[type="color"] {

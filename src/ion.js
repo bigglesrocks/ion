@@ -7,6 +7,9 @@ var drawCircle = function(p) {
        ctx.beginPath();
        ctx.arc(30, 30, p.size, 0, Math.PI*2, true);
        ctx.fill();
+       if(p.borderWidth) {
+        ctx.stroke();
+       }
        ctx.closePath();
 }
 
@@ -22,6 +25,9 @@ var drawSquare = function(p) {
        ctx.beginPath();
        ctx.rect(0, 0, p.size, p.size);
        ctx.fill();
+       if(p.borderWidth) {
+        ctx.stroke();
+       }
        ctx.closePath();
 }
 
@@ -91,19 +97,11 @@ var Particle = function(particleOptions, ion) {
       }
   }
 
-  // particle.rotation = Math.floor(particle.ion.randomNumber(0, 180));
-
-  // if(particle.ion.randomNumber(0,100) > 50) {
-  //   particle.rotationDirection = 'clockwise';
-  // } else {
-  //   particle.rotationDirection = 'counter-clockwise';
-  // }
-
   // Add new particle to the index
   // Object used as it's simpler to manage that an array
   particle.life = 0;
   particle.maxLife = o.maxLife;
-
+  
   particle.draw();
 
 }
@@ -128,8 +126,9 @@ Particle.prototype.render = function(shape) {
 
 Particle.prototype.draw = function() {
   var particle = this,
-      canvas = particle.ion.canvas,
-      context = particle.ion.context;
+      ion = particle.ion,
+      canvas = ion.canvas,
+      context = ion.context;
 
   particle.y +=  particle.gravity * Math.floor(particle.ion.randomNumber(1, 2));
   // particle.x += particle.wind * Math.floor(particle.ion.randomNumber(1,2));
@@ -170,10 +169,10 @@ Particle.prototype.draw = function() {
   context.fillStyle = particle.color;
   // context.globalCompositeOperation = this.composite;
   particle.render(particle.shape, particle.x, particle.y, particle.size, particle.size, particle.rotation, particle.color, particle.rotationDirection);
-  context.globalCompositeOpteration = 'destination-out';
-  
+  // context.globalCompositeOpteration = 'destination-out';
+
   if(particle.life > particle.maxLife) {
-    delete particle.ion.particles[particle.id];
+    delete ion.particleTracker[particle.id];
   }
 }
 
@@ -186,7 +185,7 @@ var Ion = function(el, particles, options) {
   ion.setOpts = function(standard, user) {
     if (typeof user === 'object') {
       for (var key in standard) {
-        if(user[key]) {
+        if(user[key] != null) {
             standard[key] = user[key];
         }
       }
@@ -196,11 +195,11 @@ var Ion = function(el, particles, options) {
 
   //Random Number generator funciton
   ion.randomNumber = function(min, max, frac) {
-     if(frac == true) {
-        return Math.random() * (max - min) + min;
-     } else {
-        return Math.floor(Math.random() * (max - min) + min);
-     }
+     var num = Math.random() * (max - min) + min;
+     if(!frac) {
+        var num = Math.floor(num);
+      }
+      return num;
   };
 
   ion.setOptions(options);
@@ -246,6 +245,7 @@ Ion.prototype.stop = function() {
 }
 
 Ion.prototype.setParticles = function(particles) {
+
   var ion = this;
 
   if(typeof(particles) === 'object') {
@@ -259,8 +259,8 @@ Ion.prototype.setParticles = function(particles) {
     particles[p] = ion.setOpts({
       shape: 'circle',
       color: 'rgba(0,0,0,1)',
-      borderColor: false,
-      borderWidth: 1,
+      borderColor: "rbga(0,0,0,0)",
+      borderWidth: 0,
       minSize: 15,
       maxSize: 30,
       rotationDirection: 'clockwise',
@@ -277,7 +277,14 @@ Ion.prototype.setParticles = function(particles) {
     }, particles[p]);
   }
    ion.particles = particles;
+
+
+
 }
+
+
+
+
 
 Ion.prototype.setOptions = function(opts) {
 
@@ -296,6 +303,7 @@ Ion.prototype.setOptions = function(opts) {
 Ion.prototype.createParticle = function(par) {
   var particle = new Particle(par, this);
   this.particleTracker[this.particleIndex] = particle;
+  particle.id = this.particleIndex;
   this.particleIndex++;
 }
 
@@ -332,7 +340,6 @@ Ion.prototype.start = function() {
     ion.context.fillRect(0, 0, ion.canvas.width, ion.canvas.height);
     for(var s=0; s < ion.particles.length; s++) {
       var par = ion.particles[s];
-      // console.log(par.spawnRate);
       if(par.spawnRate > 0) {
         if(ion.randomNumber(0,100) < par.spawnRate) {
           ion.createParticle(par);

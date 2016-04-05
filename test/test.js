@@ -19,7 +19,6 @@ ion.setOptions({
 	canvasBackground: convertHex($('#canvasBackground').val(), 100)
 });
 
-
 ion.setParticles({
 	shape: $('#shape').val(),
 	color: convertHex($('#color').val(), parseInt($('#colorOpacity').val())),
@@ -30,14 +29,13 @@ ion.setParticles({
 	maxSize: parseInt($('#maxSize').val()),
 	rotationDirection: $('#rotationDirection').val(),
 	rotationVelocity: parseInt($('#rotationVelocity').val()),
-	fade: $('#fade').val(),
+	fade: false,
 	fadeSpeed: parseInt($('#fadeSpeed').val()),
 	gravity: parseInt($('#gravity').val())*0.1,
 	wind: parseInt($('#wind').val())*0.1,
 	borderColor: convertHex($('#borderColor').val(), parseInt($('#borderOpacity').val())),
 	borderWidth: parseInt($('#borderWidth').val())
 });
-
 
 ion.start();
 
@@ -60,7 +58,10 @@ $('input, select').on('change', function() {
 		fade = false,
 		fadeSpeed = 0,
 		borderColor = 'rgba(0,0,0,0)',
-		borderWidth = 0;
+		borderWidth = 0,
+		orient = 0,
+		rotationDirection = false,
+		fade = false;
 
 	if($('#spawnBool').is(':checked')) {
 		spawnRate = parseInt($('#spawnRate').val());
@@ -70,7 +71,7 @@ $('input, select').on('change', function() {
 	}
 	if($('#borderBool').is(':checked')) {
 		borderColor = convertHex($('#borderColor').val(), parseInt($('#borderOpacity').val()));
-		borderWidth = parseInt($('#borderWidth'));
+		borderWidth = parseInt($('#borderWidth').val());
 	}
 	if($('#gravityBool').is(':checked')) {
 		gravity = parseInt($('#gravity').val())*0.1;
@@ -106,7 +107,5 @@ $('input, select').on('change', function() {
 		frameRate: parseInt($('#frameRate').val()),
 		canvasBackground: convertHex($('#canvasBackground').val(), 100)
 	});
-
-	console.log(ion);
 
 });

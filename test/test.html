@@ -15,14 +15,15 @@
 </header>
 
 <form class="toolbox">
-	<fieldset class="background">
-		<legend>Background</legend>
-		<input type="color" name="canvasBackground" id="canvasBackground"  value="#1d1d1d"/>
-	</fieldset>
+<section class="panel">
 	<fieldset class="shape">
 		<legend>Shape</legend>
 		<select name="shape" id="shape">
 		</select>
+	</fieldset>
+	<fieldset class="background">
+		<legend>Background</legend>
+		<input type="color" name="canvasBackground" id="canvasBackground"  value="#1d1d1d"/>
 	</fieldset>
 	<fieldset class="color">
 		<input type="checkbox" value="true" name="colorBool" id="colorBool" checked/>
@@ -30,57 +31,80 @@
 		<div class="color">
 			<input type="color" id="color" name="color" value="#72F3FF"/>
 			<label>Opacity</label>
-			<input type="range" value="100" min="0" max="100" name="colorOpacity" id="colorOpacity">
+			<input type="range" value="30" min="0" max="100" name="colorOpacity" id="colorOpacity">
 		</div>
 	</fieldset>
 	<fieldset class="border">
-		<input type="checkbox" value="true" name="borderBool" id="borderBool"/>
+		<input type="checkbox" value="true" name="borderBool" id="borderBool" checked/>
 		<legend>Border</legend>
 		<div class="color">
-			<input type="color" id="borderColor" name="borderColor" value="#3C88B4" disabled />
+			<input type="color" id="borderColor" name="borderColor" value="#72F3FF"/>
 			<label for="borderOpacity">Opacity</label>
 			<input type="range" value="100" min="0" max="100" name="borderOpacity" id="borderOpacity">
-			<label for="borderSize">Size</label>
-			<input type="range" value="1" min="0" max="10" name="borderSize" id="borderSize">
+			<label for="borderWidth">Size</label>
+			<input type="range" value="2" min="0" max="10" name="borderWidth" id="borderWidth">
 		</div>
 	</fieldset>
 	<fieldset class="size">
 		<label for="minSize">
 			<span class="inline-label">
 				<span class="form-label">MinSize</span>
-				<input type="number" name="minSize" id="minSize" value="15" min="1" max="500"/>
+				<input type="number" name="minSize" id="minSize" value="4" min="1" max="500"/>
 			</span>
 		</label>
 		<label for="maxSize">
 			<span class="inline-label">
 				<span class="form-label">MaxSize</span>
-				<input type="number" name="maxSize" id="maxSize" value="30" min="1" max="500" />
+				<input type="number" name="maxSize" id="maxSize" value="90" min="1" max="500" />
 			</span>
 		</label>
 	</fieldset>
+	
+</section>
+<section class="panel">
 	<fieldset class="density">
 		<legend>Density</legend>
 		<div class="range">
-			<input type="range" min="0" max="300" value="20" name="density" id="density" />
+			<input type="range" min="0" max="300" value="40" name="density" id="density" />
 		</div> 
 	</fieldset>
 	<fieldset class="life">
 		<legend>Life</legend>
 		<div class="range">
-			<input type="range" min="0" max="300" value="100" name="maxLife" id="maxLife"/>
+			<input type="range" min="0" max="1000" value="300" name="maxLife" id="maxLife"/>
 		</div>
 	</fieldset>
 	<fieldset class="spawn">
-		<input type="checkbox" value="true" name="spawnBool" id="spawnBool"/>
+		<input type="checkbox" value="true" name="spawnBool" id="spawnBool" checked />
 		<legend>Spawn</legend>
+		<div>
+			<label>Origin</label>
+			<input type="text" list="originXpresets" name="originX" placeholder="select or type" />
+			<datalist id="originXpresets">
+				<option value="Left">
+				<option value="Right">
+				<option value="Center">
+				<option value="Random">
+			</datalist>
+		</div>
+		<div>
+			<input type="text" list="originYpresets" name="originY" placeholder="select or type" />
+			<datalist id="originYpresets">
+				<option value="Top" />
+				<option value="Bottom">
+				<option value="Center">
+				<option value="Random">
+			</datalist>
+		</div>
 		<div class="range">
-			<input type="range" min="0" max="100" value="0" name="spawnRate" id="spawnRate"/>
+			<label for="spawnRate">Rate</label>
+			<input type="range" min="0" max="100" value="20" name="spawnRate" id="spawnRate"/>
 		</div>
 	</fieldset>
 	<fieldset class="gravity">
 		<input type="checkbox" value="true" name="gravityBool" id="gravityBool" checked/>
 		<legend>Gravity</legend>
-		<input type="range" min="-20" max="20" value="1" name="gravity" id="gravity" />
+		<input type="range" min="-20" max="20" value="2" name="gravity" id="gravity" />
 	</fieldset>
 	<fieldset class="wind disabled">
 		<input type="checkbox" value="true" name="windBool" id="windBool"/>
@@ -119,6 +143,10 @@
 			<input type="range" min="0.00" max="20.00" value="0.1" name="fadeSpeed" id="fadeSpeed" disabled/>
 		</div>
 	</fieldset>
+</section>
+	
+
+	
 <!-- 	<fieldset class="frameRate">
 		<label for="frameRate">Frame Rate</label>
 		<input type="range" min="10" max="3000" value="30" name="frameRate" id="frameRate" />
