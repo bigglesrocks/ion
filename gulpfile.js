@@ -76,7 +76,7 @@ gulp.task('scripts', function() {
 
 gulp.task('tScripts', function() {
   // Get the files to be included
-  return gulp.src(["bower_components/jquery/dist/jquery.js","src/ion.js", "test/test.js"])
+  return gulp.src(["bower_components/jquery/dist/jquery.js","bower_components/materialize/extra/noUiSlider/nouislider.js", "src/ion.js", "test/test.js",])
     .pipe(concat('demo.js'))
     .pipe(gulp.dest('test'))
     .pipe(uglify({
@@ -86,6 +86,10 @@ gulp.task('tScripts', function() {
     .pipe(gulp.dest('test'))
 });
 
+gulp.task('fonts', function() {
+  return gulp.src(["bower_components/materialize/fonts/**/*"])
+    .pipe(gulp.dest('test/fonts'));
+});
 
 gulp.task('watch', function() {
 
