@@ -31,15 +31,25 @@ ion.setParticles({
 	rotationVelocity: parseInt($('#rotationVelocity').val()),
 	fade: false,
 	fadeSpeed: parseInt($('#fadeSpeed').val()),
-	gravity: parseInt($('#gravity').val())*0.1,
-	wind: parseInt($('#wind').val())*0.1,
+	gravity: parseFloat($('#gravity').val()),
+	wind: parseFloat($('#wind').val()),
 	borderColor: convertHex($('#borderColor').val(), parseInt($('#borderOpacity').val())),
 	borderWidth: parseInt($('#borderWidth').val()),
 	originX: 'random',
-	originY: 'top'
+	originY: 'random'
 });
 
+console.log(ion);
+
 ion.start();
+
+$('#immortal').on('change', function() {
+	if($(this).is(':checked')) {
+		$('#maxLife').prop('disabled', true);
+	} else {
+		$('#maxLife').prop('disabled', false);
+	}
+});
 
 $('input, select').on('change', function() {
 
@@ -64,14 +74,15 @@ $('input, select').on('change', function() {
 		orient = 0,
 		rotationDirection = false,
 		fade = false,
-		originX = $('#originX').val(),
-		originY = $('#originY').val();
+		originX = $('[name="originXPreset"]:checked').val(),
+		originY = $('[name="originYPreset"]:checked').val();
 
-	if(parseInt(originX) != NaN) {
+
+	if(!isNaN(parseInt(originX))) {
 		originX = parseInt(originX);
 	}
 
-	if(parseInt(originY) != NaN) {
+	if(!isNaN(parseInt(originY))) {
 		originY = parseInt(originY);
 	}
 
@@ -86,10 +97,10 @@ $('input, select').on('change', function() {
 		borderWidth = parseInt($('#borderWidth').val());
 	}
 	if($('#gravityBool').is(':checked')) {
-		gravity = parseInt($('#gravity').val())*0.1;
+		gravity = parseFloat($('#gravity').val());
 	}
 	if($('#windBool').is(':checked')) {
-		windBool = parseInt($('#wind').val())*0.1;
+		wind = parseFloat($('#wind').val());
 	}
 	if($('#rotationBool').is(':checked')) {
 		rotationVelocity = parseInt($('#rotationVelocity').val())*0.01;
@@ -98,6 +109,22 @@ $('input, select').on('change', function() {
 		fade = $('#fade').val();
 		fadeSpeed = parseInt($('#fadeSpeed').val());
 	}
+
+	if(!$('#immortal').is(':checked')) {
+		maxLife == false;
+	}
+
+	if(originX == "custom") {
+		$('#originX').prop('disabled', false);
+		originX = parseFloat($('#originX').val());
+	}
+	if(originY == "custom") {
+		$('#originY').prop('disabled', false);
+		originY = parseFloat($('#originY').val());
+	}
+
+	console.log(originX);
+	console.log(originY);
 
 	var ion =  new Ion('testcanvas', {
 		shape: $('#shape').val(),

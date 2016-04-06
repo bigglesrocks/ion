@@ -24,6 +24,7 @@
 		<option value="geometry">Geometry</option>
 		<option value="rain">Rain</option>
 		<option value="music">Music</option>
+		<option value="sakura">Sakura Blossoms</option>
 	</select>
 </section>
 <section class="panel">
@@ -48,6 +49,9 @@
 		<legend>
 			<h4>Color</h4>
 			<div class="switch small"><input type="checkbox" id="colorBool" name="colorBool" checked><label for="colorBool"></label></div>
+			<div class="random">
+				<label for="colorRandomize">Randomize</label><input type="checkbox" name="colorRandomize" id="colorRadomize" />
+			</div>
 		</legend>
 		<div class="color">
 			<input type="color" name="color" id="color"  value="#72F3FF" oninput="colorDisplay.value = color.value.replace('#', '')" />
@@ -110,23 +114,18 @@
 			<output id="densityO">20</output>
 		</div> 
 	</fieldset>
+</section>
+<section class="panel">
 	<fieldset class="life">
 		<legend>
 			<h4>Life</h4>
 		</legend>
-		<div class="switch small">
-			<input type="checkbox" name="immortal" id="immortal" /><label for="immortal"></label>
-		</div>
-		<label for="immortal">Immortal</label>
+		<input type="checkbox" name="immortal" id="immortal" checked /><label for="immortal">Immortal</label>
 		<div class="range">
 			<input type="range" min="0" max="1000" value="1000" name="maxLife" id="maxLife" oninput="maxLifeO.value = maxLife.value" />
 			<output id="maxLifeO">1000</output>
 		</div>
 	</fieldset>
-	
-</section>
-<section class="panel">
-
 	<fieldset class="spawn">
 		<legend>
 			<h4>Spawn</h4>
@@ -134,46 +133,51 @@
 				<input type="checkbox" value="true" name="spawnBool" id="spawnBool" checked /><label for="spawnBool"></label>
 			</div>
 		</legend>
-		<section>
-			<div>
-				<label>Origin</label>
-				<input type="text" list="originXpresets" name="originX" placeholder="select or type" value="random"/>
-				<datalist id="originXpresets">
-					<option value="left">
-					<option value="right">
-					<option value="center">
-					<option value="random">
-				</datalist>
-			</div>
-			<div>
-				<input type="text" list="originYpresets" name="originY" placeholder="select or type" value="top"/>
-				<datalist id="originYpresets">
-					<option value="top" />
-					<option value="bottom">
-					<option value="center">
-					<option value="random">
-				</datalist>
-			</div>
-			<label for="spawnRate">Rate</label>
-			<div class="range">
-				<input type="range" min="0" max="100" value="4" name="spawnRate" id="spawnRate" oninput="spawnRateO.value = spawnRate.value"/>
-				<output id="spawnRateO">20</output>
-			</div>
-		</section>
+		<div class="column">
+			<label>Origin X</label>
+			<input type="radio" name="originXPreset" value="left" /><label for="originXPreset">Left</label>
+			<input type="radio" name="originXPreset" value="right" /><label for="originXPreset">Right</label>
+			<input type="radio" name="originXPreset" value="center" /><label for="originXPreset">Center</label>
+			<input type="radio" name="originXPreset" value="random" checked /><label for="originXPreset">Random</label>
+			<input type="radio" name="originXPreset" value="custom" /><label for="originXPreset">Custom</label>
+			<input type="number" name="originX" id="originX" placeholder="1" value="0" disabled/>
+		</div>
+		<div class="column">
+			<label>Origin Y</label>
+			<input type="radio" name="originYPreset" value="top" /><label for="originYPreset">Top</label>
+			<input type="radio" name="originYPreset" value="bottom" checked/><label for="originYPreset">Bottom</label>
+			<input type="radio" name="originYPreset" value="center" /><label for="originYPreset">Center</label>
+			<input type="radio" name="originYPreset" value="random" /><label for="originYPreset">Random</label>
+			<input type="radio" name="originYPreset" value="custom" /><label for="originYPreset">Custom</label>
+			<input type="number" name="originY" id="originY" placeholder="1" value="0" disabled/>
+		</div>
+		<label for="spawnRate">Rate</label>
+		<div class="range">
+			<input type="range" min="0" max="100" value="4" name="spawnRate" id="spawnRate" oninput="spawnRateO.value = spawnRate.value"/>
+			<output id="spawnRateO">20</output>
+		</div>
 	</fieldset>
 	<fieldset class="gravity">
 		<legend>
 			<h4>Gravity</h4>
 			<div class="switch small"><input type="checkbox" id="gravityBool" name="gravityBool" checked><label for="gravityBool"></label></div>
 		</legend>
-		<input type="range" min="-20" max="20" value="2" name="gravity" id="gravity" />
+		<div class="range">
+			<input type="range" min="-5" max="5" value="-0.5" step="0.1" name="gravity" id="gravity" oninput="gravityO.value = gravity.value"/>
+			<output id="gravityO">-0.5</output>
+		</div>
+		
 	</fieldset>
-	<fieldset class="wind disabled">
+	<fieldset class="wind">
 		<legend>
 			<h4>Wind</h4>
-			<div class="switch small"><input type="checkbox" id="windBool" name="windBool"><label for="windBool"></label></div>
+			<div class="switch small"><input type="checkbox" id="windBool" name="windBool" checked><label for="windBool"></label></div>
 		</legend>
-		<input type="range" min="-20" max="20" value="0" name="wind" id="wind" disabled/>
+		<div class="range">
+			<input type="range" min="-5" max="5" value="-0.5" step="0.1" name="wind" id="wind" oninput="windO.value = wind.value"/>
+			<output id="windO">-0.5</output>
+		</div>
+		
 	</fieldset>
 	<fieldset class="rotation disabled">
 		<legend>
@@ -188,11 +192,13 @@
 		</select>
 		<div class="range">
 			<label for="orient">Orientation</label>
-			<input type="range" min="0.0" max="20.0" value="0.1" name="orient" id="orient" disabled/>
+			<input type="range" min="0" max="3600" value="0" name="orient" id="orient" disabled oninput="orientO.value = orient.value" />
+			<output id="orientO">0</output>
 		</div>
 		<div class="range">
 			<label for="rotationVelocity">Velocity</label>
-			<input type="range" min="0" max="100" value="3" name="rotationVelocity" id="rotationVelocity" disabled/>
+			<input type="range" min="0" max="100" value="3" name="rotationVelocity" id="rotationVelocity" disabled oninput="rotationVelocityO.value = rotationVelocity.value" />
+			<output id="rotationVelocityO">3</output>
 		</div>
 	</fieldset>
 	<fieldset class="fade disabled">
@@ -208,7 +214,8 @@
 		</select>
 		<div class="range">
 			<label for="">Speed</label>
-			<input type="range" min="0.00" max="20.00" value="0.1" name="fadeSpeed" id="fadeSpeed" disabled/>
+			<input type="range" min="0.00" max="20.00" value="0.1" name="fadeSpeed" id="fadeSpeed" disabled oninput="fadeSpeedO.value = fadeSpeed.value"/>
+			<output id="fadeSpeedO">0.1</output>
 		</div>
 	</fieldset>
 </section>

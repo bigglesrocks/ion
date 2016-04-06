@@ -40,29 +40,32 @@ var Particle = function(particleOptions, ion) {
 
   particle.ion = ion;
 
-  // Establish starting positions and velocities
-  particle.opacity = 1;
   particle.shape = o.shape;
+
   particle.color = o.color;
+  particle.colorArray = particle.color.match(/(\d{1,4})/g);
 
   particle.borderColor = o.borderColor;
   particle.borderWidth = o.borderWidth;
 
   particle.minSize = o.minSize;
   particle.maxSize = o.maxSize;
-  particle.rotationDirection = o.rotationDirection;
-  particle.rotationVelocity = o.rotationVelocity;
-  particle.gravity = o.gravity;
-  particle.grow = o.grow;
-  particle.composite = o.composite;
-  particle.fadeSpeed = o.fadeSpeed;
-  particle.fade = o.fade;
-
-  particle.spawnRate = o.spawnRate;
 
   particle.orient = o.orient;
+  particle.rotationDirection = o.rotationDirection;
+  particle.rotationVelocity = o.rotationVelocity;
 
-  particle.colorArray = particle.color.match(/(\d{1,4})/g);
+  particle.gravity = o.gravity;
+  particle.wind = o.wind;
+
+  particle.grow = o.grow;
+  particle.composite = o.composite;
+
+  particle.fade = o.fade;
+  particle.fadeSpeed = o.fadeSpeed;
+  particle.opacity = 1;
+
+  particle.spawnRate = o.spawnRate;
 
   if(particle.fade == 'in-out') {
     particle.fade = 'in';
@@ -93,6 +96,9 @@ var Particle = function(particleOptions, ion) {
       particle.x = o.originX;
     break;
   }
+
+  // console.log(o.originX);
+
   switch(o.originY) {
     case 'top':
       particle.y =  -particle.size*2;
@@ -103,7 +109,10 @@ var Particle = function(particleOptions, ion) {
       particle.y = ion.canvas.height*0.5
     break;
     case 'random':
-      particle.y = Math.floor(particle.ion.randomNumber(-particle.size*2, particle.ion.canvas.height+particle.size*2));
+      var min = -particle.size*2,
+          max = particle.ion.canvas.height+particle.size*2;
+      particle.y = Math.floor(particle.ion.randomNumber(min, max));
+      // console.log("random("+min+","+max+") = "+particle.y);
     break;
     default:
       particle.y = o.originY;
@@ -130,7 +139,9 @@ var Particle = function(particleOptions, ion) {
   // Object used as it's simpler to manage that an array
   particle.life = 0;
   particle.maxLife = o.maxLife;
-  
+
+  // console.log("initial particle coordinates: ["+particle.x+","+particle.y+"]");
+
   particle.draw();
 
 }
@@ -159,9 +170,8 @@ Particle.prototype.draw = function() {
       canvas = ion.canvas,
       context = ion.context;
 
-  particle.y +=  particle.gravity * Math.floor(particle.ion.randomNumber(1, 2));
-  // particle.x += particle.wind * Math.floor(particle.ion.randomNumber(1,2));
-
+  particle.y +=  particle.gravity;
+  particle.x += particle.wind;
 
   // Age the particle
   particle.life++;
@@ -200,11 +210,12 @@ Particle.prototype.draw = function() {
   particle.render(particle.shape, particle.x, particle.y, particle.size, particle.size, particle.rotation, particle.color, particle.rotationDirection);
   // context.globalCompositeOpteration = 'destination-out';
 
+
    if((particle.life > particle.maxLife && particle.maxLife != 'immortal') || 
-    (particle.gravity > 0 && particle.y > canvas.height+particle.size) || 
-    (particle.gravity < 0 && particle.y < canvas.height-particle.size) ||
-    (particle.wind < 0 && particle.x > canvas.width+particle.size) ||
-    (particle.wind > 0 && particle.x < canvas.width-particle.size)) {
+    (particle.gravity > 0 && particle.y > canvas.height+particle.size*2) || 
+    (particle.gravity < 0 && particle.y < -particle.size*2) ||
+    (particle.wind < 0 && particle.x < -particle.size*2) ||
+    (particle.wind > 0 && particle.x > canvas.width+particle.size*2)) {
       delete ion.particleTracker[particle.id];
   }
 }
@@ -358,16 +369,8 @@ Ion.prototype.start = function() {
     var par = ion.particles[t];
     // Make a new particle for the particle's density setting
     for(var d = 0; d < par.density; d++) {
-
-     if(par.density > 0) {
-      var originX = par.originX,
-          originY = par.originY;
-      par.originX = 'random';
-      par.originY = 'random';
-     }
      ion.createParticle(par);
-     par.originX = originX;
-     par.originY = originY;
+
     }
   }
 
