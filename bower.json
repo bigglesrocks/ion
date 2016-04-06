@@ -20,6 +20,7 @@
   ],
   "devDependencies": {
     "jquery": "~2.2.2",
-    "foundation-apps": "~1.2.0"
+    "materialize": "~0.97.6",
+    "nouislider": "~8.3.0"
   }
 }
