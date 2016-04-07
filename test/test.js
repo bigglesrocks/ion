@@ -39,8 +39,6 @@ ion.setParticles({
 	originY: 'random'
 });
 
-console.log(ion);
-
 ion.start();
 
 $('#immortal').on('change', function() {
@@ -122,9 +120,6 @@ $('input, select').on('change', function() {
 		$('#originY').prop('disabled', false);
 		originY = parseFloat($('#originY').val());
 	}
-
-	console.log(originX);
-	console.log(originY);
 
 	var ion =  new Ion('testcanvas', {
 		shape: $('#shape').val(),

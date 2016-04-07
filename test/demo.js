@@ -10054,7 +10054,7 @@ Particle.prototype.draw = function() {
   // context.globalCompositeOpteration = 'destination-out';
 
 
-   if((particle.life > particle.maxLife && particle.maxLife != 'immortal') || 
+   if((particle.life > particle.maxLife && particle.maxLife != false) || 
     (particle.gravity > 0 && particle.y > canvas.height+particle.size*2) || 
     (particle.gravity < 0 && particle.y < -particle.size*2) ||
     (particle.wind < 0 && particle.x < -particle.size*2) ||
@@ -10279,8 +10279,6 @@ ion.setParticles({
 	originY: 'random'
 });
 
-console.log(ion);
-
 ion.start();
 
 $('#immortal').on('change', function() {
@@ -10362,9 +10360,6 @@ $('input, select').on('change', function() {
 		$('#originY').prop('disabled', false);
 		originY = parseFloat($('#originY').val());
 	}
-
-	console.log(originX);
-	console.log(originY);
 
 	var ion =  new Ion('testcanvas', {
 		shape: $('#shape').val(),

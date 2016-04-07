@@ -211,7 +211,7 @@ Particle.prototype.draw = function() {
   // context.globalCompositeOpteration = 'destination-out';
 
 
-   if((particle.life > particle.maxLife && particle.maxLife != 'immortal') || 
+   if((particle.life > particle.maxLife && particle.maxLife != false) || 
     (particle.gravity > 0 && particle.y > canvas.height+particle.size*2) || 
     (particle.gravity < 0 && particle.y < -particle.size*2) ||
     (particle.wind < 0 && particle.x < -particle.size*2) ||
