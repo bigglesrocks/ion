@@ -97,8 +97,6 @@ var Particle = function(particleOptions, ion) {
     break;
   }
 
-  // console.log(o.originX);
-
   switch(o.originY) {
     case 'top':
       particle.y =  -particle.size*2;
@@ -118,6 +116,7 @@ var Particle = function(particleOptions, ion) {
       particle.y = o.originY;
     break;
   }
+
 
   switch(particle.rotationDirection) {
     case 'clockwise':
@@ -323,6 +322,7 @@ Ion.prototype.setParticles = function(particles) {
     }, particles[p]);
   }
    ion.particles = particles;
+   console.log(particles);
 
 }
 
@@ -333,7 +333,6 @@ Ion.prototype.setOptions = function(opts) {
   options = ion.setOpts({
     frameRate: 30,
     canvasBackground: 'rgba(255,255,255,1)'
-    // startPopulated: true
   }, opts);
 
   ion.frameRate = options.frameRate;

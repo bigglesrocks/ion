@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Ion Test</title>
-	<link rel="stylesheet" href="test.css"/>
+	<link rel="stylesheet" href="/demo/demo.css"/>
 
 </head>
 <body>
@@ -54,6 +54,16 @@
 </section>
 
 <form class="toolbox">
+	<fieldset class="background">
+		<legend><h6>Background</h6></legend>
+		<section class="fields">
+			<div class="color-field">
+				<input type="color" name="canvasBackground" id="canvasBackground"  value="#212121" oninput="canvasBackgroundDisplay.value = canvasBackground.value.replace('#', '')" />
+				<label for="color">#</label>
+				<input type="text" name="canvasBackgroundDisplay" id="canvasBackgroundDisplay"  value="212121" oninput="canvasBackground.value = '#'+canvasBackgroundDisplay.value">
+			</div>
+		</section>
+	</fieldset>
 	<fieldset class="shape">
 		<legend><h6>Shape</h6></legend>
 		<section class="fields">
@@ -92,15 +102,14 @@
 			</ul>
 		</section>
 	</fieldset>
-	<fieldset class="background">
-		<legend><h6>Background</h6></legend>
-		<section class="fields">
-			<div class="color-field">
-				<input type="color" name="canvasBackground" id="canvasBackground"  value="#212121" oninput="canvasBackgroundDisplay.value = canvasBackground.value.replace('#', '')" />
-				<label for="color">#</label>
-				<input type="text" name="canvasBackgroundDisplay" id="canvasBackgroundDisplay"  value="212121" oninput="canvasBackground.value = '#'+canvasBackgroundDisplay.value">
-			</div>
-		</section>
+	<fieldset class="size">
+		<legend>
+			<h6>Size</h6>
+		</legend>
+		<div class="range-slider">
+			<input type="range" name="minSize" id="minSize" min="1" max="300" step="1" value="4"/>
+			<input type="range" name="maxSize" id="minSize" min="1" max="300" step="1" value="90"/>
+		</div>
 	</fieldset>
 	<fieldset class="color">
 		<legend>
@@ -153,77 +162,6 @@
 			<label for="borderWidth">Width</label>
 			<div class="range">
 				<input type="range" value="2" min="0" max="10" step="1" name="borderWidth" id="borderWidth">
-			</div>
-		</section>
-	</fieldset>
-	<fieldset class="size">
-		<legend>
-			<h6>Size</h6>
-			<p class="random">
-				<input type="checkbox" name="sizeRandomize" id="sizeRandomize" />
-				<label for="sizeRandomize">Randomize</label>
-			</p>
-		</legend>
-		<div class="range-slider">
-			<input type="range" name="minSize" id="minSize" min="1" max="300" step="1" value="4"/>
-			<input type="range" name="maxSize" id="minSize" min="1" max="300" step="1" value="90"/>
-		</div>
-		
-	</fieldset>
-	<fieldset class="density">
-		<legend><h6>Density</h6></legend>
-		<section class="fields">
-			<div class="range">
-				<input type="range" min="0" max="300" value="20" step="1" name="density" id="density"/>
-			</div> 
-		</section>
-	</fieldset>
-	<fieldset class="life">
-		<legend>
-			<h6>Life</h6>
-			<p class="random">
-				<input type="checkbox" name="lifeRandomize" id="lifeRandomize" />
-				<label for="lifeRandomize">Randomize</label>
-			</p>
-		</legend>
-		<section class="fields">
-			<input type="checkbox" name="immortal" id="immortal" checked /><label for="immortal">Immortal</label>
-			<div class="range">
-				<input type="range" min="0" max="1000" value="1000" name="maxLife" id="maxLife" step="1"/>
-			</div>
-		</section>
-	</fieldset>
-	<fieldset class="spawn">
-		<legend>
-			<h6>Spawn</h6>
-			<div class="switch">
-				<label for="spawnBool">
-					<input type="checkbox" id="spawnBool" name="spawnBool" checked><span class="lever"></span>
-				</label>
-			</div>
-		</legend>
-		<section class="fields">
-			<div class="column">
-				<label>Origin X</label>
-				<input type="radio" class="with-gap" id="originXLeft" name="originXPreset" value="left" /><label for="originXLeft">Left</label><br />
-				<input type="radio" class="with-gap" id="originXRight" name="originXPreset" value="right" /><label for="originXRight">Right</label><br />
-				<input type="radio" class="with-gap" id="originXCenter" name="originXPreset" value="center" /><label for="originXCenter">Center</label><br />
-				<input type="radio" class="with-gap" id="originXRandom" name="originXPreset" value="random" checked /><label for="originXRandom">Random</label><br />
-				<input type="radio" class="with-gap" id="originXCustom" name="originXPreset" value="custom" /><label for="originXCustom">Custom</label><br />
-				<input type="number" name="originX" id="originX" placeholder="1" value="0" disabled/>
-			</div>
-			<div class="column">
-				<label>Origin Y</label>
-				<input type="radio" class="with-gap" name="originYPreset" id="originYTop" value="top" /><label for="originYTop">Top</label><br />
-				<input type="radio" class="with-gap" name="originYPreset" id="originYBottom" value="bottom" checked/><label for="originYBottom">Bottom</label><br />
-				<input type="radio" class="with-gap" name="originYPreset" id="originYCenter" value="center" /><label for="originYCenter">Center</label><br />
-				<input type="radio" class="with-gap" name="originYPreset" id="originYRandom" value="random" /><label for="originYRandom">Random</label><br />
-				<input type="radio" class="with-gap" name="originYPreset" id="originYCustom" value="custom" /><label for="originYCustom">Custom</label><br />
-				<input type="number" name="originY" id="originY" placeholder="1" value="0" disabled/>
-			</div>
-			<label for="spawnRate">Rate</label>
-			<div class="range">
-				<input type="range" min="0" max="100" value="4" step="1" name="spawnRate" id="spawnRate"/>
 			</div>
 		</section>
 	</fieldset>
@@ -293,7 +231,7 @@
 			</div>
 			<label for="rotationVelocity">Velocity</label>
 			<div class="range">
-				<input type="range" min="0" max="100" value="3" step="1" name="rotationVelocity" id="rotationVelocity" disabled/>
+				<input type="range" min="0" max="10" value="0.1" step="0.1" name="rotationVelocity" id="rotationVelocity" disabled/>
 			</div>
 		</section>
 	</fieldset>
@@ -325,16 +263,67 @@
 			</div>
 		</section>
 	</fieldset>
+	<fieldset class="density">
+		<legend><h6>Density</h6></legend>
+		<section class="fields">
+			<div class="range">
+				<input type="range" min="0" max="300" value="20" step="1" name="density" id="density"/>
+			</div> 
+		</section>
+	</fieldset>
+	<fieldset class="life">
+		<legend>
+			<h6>Life</h6>
+			<p class="random">
+				<input type="checkbox" name="lifeRandomize" id="lifeRandomize" />
+				<label for="lifeRandomize">Randomize</label>
+			</p>
+		</legend>
+		<section class="fields">
+			<input type="checkbox" name="immortal" id="immortal" checked /><label for="immortal">Immortal</label>
+			<div class="range">
+				<input type="range" min="0" max="1000" value="1000" name="maxLife" id="maxLife" step="1"/>
+			</div>
+		</section>
+	</fieldset>
+	<fieldset class="spawn">
+		<legend>
+			<h6>Spawn</h6>
+			<div class="switch">
+				<label for="spawnBool">
+					<input type="checkbox" id="spawnBool" name="spawnBool" checked><span class="lever"></span>
+				</label>
+			</div>
+		</legend>
+		<section class="fields">
+			<div class="column">
+				<label>Origin X</label>
+				<input type="radio" class="with-gap" id="originXLeft" name="originXPreset" value="left" /><label for="originXLeft">Left</label><br />
+				<input type="radio" class="with-gap" id="originXRight" name="originXPreset" value="right" /><label for="originXRight">Right</label><br />
+				<input type="radio" class="with-gap" id="originXCenter" name="originXPreset" value="center" /><label for="originXCenter">Center</label><br />
+				<input type="radio" class="with-gap" id="originXRandom" name="originXPreset" value="random" checked /><label for="originXRandom">Random</label><br />
+				<input type="radio" class="with-gap" id="originXCustom" name="originXPreset" value="custom" /><label for="originXCustom">Custom</label><br />
+				<input type="number" name="originX" id="originX" placeholder="1" value="0" disabled/>
+			</div>
+			<div class="column">
+				<label>Origin Y</label>
+				<input type="radio" class="with-gap" name="originYPreset" id="originYTop" value="top" /><label for="originYTop">Top</label><br />
+				<input type="radio" class="with-gap" name="originYPreset" id="originYBottom" value="bottom" checked/><label for="originYBottom">Bottom</label><br />
+				<input type="radio" class="with-gap" name="originYPreset" id="originYCenter" value="center" /><label for="originYCenter">Center</label><br />
+				<input type="radio" class="with-gap" name="originYPreset" id="originYRandom" value="random" /><label for="originYRandom">Random</label><br />
+				<input type="radio" class="with-gap" name="originYPreset" id="originYCustom" value="custom" /><label for="originYCustom">Custom</label><br />
+				<input type="number" name="originY" id="originY" placeholder="1" value="0" disabled/>
+			</div>
+			<label for="spawnRate">Rate</label>
+			<div class="range">
+				<input type="range" min="0" max="100" value="8" step="1" name="spawnRate" id="spawnRate"/>
+			</div>
+		</section>
+	</fieldset>
 	
-
-	
-<!-- 	<fieldset class="frameRate">
-		<label for="frameRate">Frame Rate</label>
-		<input type="range" min="10" max="3000" value="30" name="frameRate" id="frameRate" />
-	</fieldset> -->
 </form>
 
-<script type="text/javascript" src="demo.js"></script>
+<script type="text/javascript" src="/demo/ion-demo.js"></script>
 
 </body>
 </html>

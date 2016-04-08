@@ -12692,8 +12692,6 @@ var Particle = function(particleOptions, ion) {
     break;
   }
 
-  // console.log(o.originX);
-
   switch(o.originY) {
     case 'top':
       particle.y =  -particle.size*2;
@@ -12713,6 +12711,7 @@ var Particle = function(particleOptions, ion) {
       particle.y = o.originY;
     break;
   }
+
 
   switch(particle.rotationDirection) {
     case 'clockwise':
@@ -12918,6 +12917,7 @@ Ion.prototype.setParticles = function(particles) {
     }, particles[p]);
   }
    ion.particles = particles;
+   console.log(particles);
 
 }
 
@@ -12928,7 +12928,6 @@ Ion.prototype.setOptions = function(opts) {
   options = ion.setOpts({
     frameRate: 30,
     canvasBackground: 'rgba(255,255,255,1)'
-    // startPopulated: true
   }, opts);
 
   ion.frameRate = options.frameRate;
@@ -13003,7 +13002,15 @@ function convertHex(hex,opacity){
 
 
 function getAbsValue(val) {
-	return Math.abs(parseFloat(val));
+	var abs = Math.abs(parseFloat(val));;
+	if(val.match("-")) {
+		abs = -abs;
+	}
+	return abs;
+}
+
+$.fn.rangeVal = function() {
+	return $(this).parents('[class*="range"]')[0].noUiSlider.get();
 }
 
 function decimalPlaces(num) {
@@ -13036,12 +13043,8 @@ $('.range-slider').each(function() {
 });
 
 $('.range').each(function() {
-
-
 	var range = $(this).find('input[type="range"]'),
 		val = getAbsValue(range.val());
-
-	console.log(wNumb({ decimals: decimalPlaces(val) }));
 
 	var opts = {
 		start: val,
@@ -13075,8 +13078,8 @@ var size = $('.size .range-slider')[0].noUiSlider.get();
 
 ion.setParticles({
 	shape: $('#shape').val(),
-	color: convertHex($('#color').val(), getAbsValue($('#colorOpacity').val())),
-	density: getAbsValue($('#density').val()),
+	color: convertHex($('#color').val(), getAbsValue($('#colorOpacity').rangeVal())),
+	density: getAbsValue($('#density').rangeVal()),
 	maxLife: getAbsValue($('#maxLife').val()),
 	spawnRate: getAbsValue($('#spawnRate').val()),
 	minSize: getAbsValue(size[0]),
@@ -13126,10 +13129,8 @@ $('.random input[type="checkbox"]').on('change', function() {
 	}
 });
 
-$('input, select').on('change', function() {
-
-
-	$('#testcanvas').remove();
+var updateCanvas = function() {
+		$('#testcanvas').remove();
 	$('header').before('<canvas id="testcanvas"></canvas>');
 	
 
@@ -13160,27 +13161,27 @@ $('input, select').on('change', function() {
 	}
 
 	if($('#spawnBool').is(':checked')) {
-		spawnRate = getAbsValue($('#spawnRate').val());
+		spawnRate = getAbsValue($('#spawnRate').rangeVal());
 	}
 	if($('#colorBool').is(':checked')) {
-		color = convertHex($('#color').val(), getAbsValue($('#colorOpacity').val()));
+		color = convertHex($('#color').val(), getAbsValue($('#colorOpacity').rangeVal()));
 	}
 	if($('#borderBool').is(':checked')) {
-		borderColor = convertHex($('#borderColor').val(), getAbsValue($('#borderOpacity').val()));
-		borderWidth = getAbsValue($('#borderWidth').val());
+		borderColor = convertHex($('#borderColor').val(), getAbsValue($('#borderOpacity').rangeVal()));
+		borderWidth = getAbsValue($('#borderWidth').rangeVal());
 	}
 	if($('#gravityBool').is(':checked')) {
-		gravity = getAbsValue($('#gravity').val());
+		gravity = getAbsValue($('#gravity').rangeVal());
 	}
 	if($('#windBool').is(':checked')) {
 		wind = getAbsValue($('#wind').val());
 	}
 	if($('#rotationBool').is(':checked')) {
-		rotationVelocity = getAbsValue($('#rotationVelocity').val())*0.01;
+		rotationVelocity = getAbsValue($('#rotationVelocity').rangeVal())*0.01;
 	}
 	if($('#fadeBool').is(':checked')) {
 		fade = $('#fade').val();
-		fadeSpeed = getAbsValue($('#fadeSpeed').val());
+		fadeSpeed = getAbsValue($('#fadeSpeed').rangeVal());
 	}
 
 	if(!$('#immortal').is(':checked')) {
@@ -13199,8 +13200,8 @@ $('input, select').on('change', function() {
 	var ion =  new Ion('testcanvas', {
 		shape: $('#shape').val(),
 		color: color,
-		density: getAbsValue($('#density').val()),
-		maxLife: getAbsValue($('#maxLife').val()),
+		density: getAbsValue($('#density').rangeVal()),
+		maxLife: getAbsValue($('#maxLife').rangeVal()),
 		spawnRate: spawnRate,
 		minSize: getAbsValue(size[0]),
 		maxSize: getAbsValue(size[1]),
@@ -13215,8 +13216,14 @@ $('input, select').on('change', function() {
 		originX: originX,
 		originY: originY
 	}, {
-		frameRate: getAbsValue($('#frameRate').val()),
 		canvasBackground: convertHex($('#canvasBackground').val(), 100)
 	});
+}
 
+$('input, select').on('change', function() {
+	updateCanvas();
+});
+
+$('.range-slider, .range').each(function() {
+	this.noUiSlider.on('set', updateCanvas);
 });

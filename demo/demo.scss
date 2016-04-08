@@ -3,7 +3,7 @@
 @import "bower_components/materialize/sass/components/color";
 @import "bower_components/materialize/sass/components/variables";
 
-$roboto-font-path: "/test/fonts/roboto/";
+$roboto-font-path: "/demo/fonts/roboto/";
 
 $switch-bg-color: color("cyan", "base");
 $switch-checked-lever-bg: color("blue-grey", "darken-1");
@@ -166,6 +166,10 @@ section.fields {
 
 input[type="checkbox"] + label {
 	padding-left: 1.75em;
+}
+
+.switch {
+	font-size: 0.8em;
 }
 
 
