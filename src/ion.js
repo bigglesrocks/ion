@@ -361,6 +361,7 @@ Ion.prototype.init = function() {
 }
 
 Ion.prototype.start = function() {
+
   var ion = this;
 
   // ========================================

@@ -76,7 +76,15 @@ gulp.task('scripts', function() {
 
 gulp.task('tScripts', function() {
   // Get the files to be included
-  return gulp.src(["bower_components/jquery/dist/jquery.js","bower_components/materialize/extra/noUiSlider/nouislider.js", "src/ion.js", "test/test.js",])
+  return gulp.src(
+    ["bower_components/jquery/dist/jquery.js",
+    "bower_components/materialize/js/jquery.easing.1.3.js",
+    "bower_components/materialize/extras/noUiSlider/nouislider.js", 
+    "bower_components/materialize/js/global.js",
+    "bower_components/materialize/js/dropdown.js",
+    "bower_components/materialize/js/forms.js", 
+    "src/ion.js", 
+    "test/test.js",])
     .pipe(concat('demo.js'))
     .pipe(gulp.dest('test'))
     .pipe(uglify({
