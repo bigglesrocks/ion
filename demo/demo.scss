@@ -17,6 +17,7 @@ $input-disabled-color: color("blue-grey", "darken-4");
 $input-disabled-border: 1px solid color("blue-grey", "darken-4");
 
 $select-background: color("blue-grey", "darken-1");
+$select-disabled-color: color("blue-grey", "darken-5");
 
 $radio-fill-color: $switch-bg-color;
 $radio-border: 2px solid $radio-fill-color;
@@ -141,7 +142,7 @@ section.fields {
 }
 
 .select-wrapper {
-	background-color: color("blue-grey", "darken-1");
+	background-color: rbga(255,255,255,0.2);
 	color: color("blue-grey", "lighten-4");
 	input.select-dropdown {
 		padding: 0 1em;
@@ -153,7 +154,6 @@ section.fields {
 	}
 
 	.dropdown-content {
-
 		li {
 			
 			&.selected, &.active {

@@ -1,6 +1,6 @@
 var drawCircle = function(p) {
     var ctx = p.ion.context;
-    var size = p.randomNumber(p.minSize, p.maxSize);
+    var size = randomNumber(p.minSize, p.maxSize);
        ctx.translate(p.x, p.y);
        // ctx.fillStyle = p.color;
        ctx.moveTo(p.x,p.y);

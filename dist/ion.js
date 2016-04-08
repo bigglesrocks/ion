@@ -1,70 +1,3 @@
-var drawCircle = function(p) {
-    var ctx = p.ion.context;
-    var size = p.randomNumber(p.minSize, p.maxSize);
-       ctx.translate(p.x, p.y);
-       // ctx.fillStyle = p.color;
-       ctx.moveTo(p.x,p.y);
-       ctx.beginPath();
-       ctx.arc(30, 30, p.size, 0, Math.PI*2, true);
-       ctx.fill();
-       if(p.borderWidth) {
-        ctx.stroke();
-       }
-       ctx.closePath();
-}
-// get a random number provided min & max values
-function randomNumber(min, max, frac) {
-   var num = Math.random() * (max - min) + min;
-   if(!frac) {
-      var num = Math.floor(num);
-    }
-    return num;
-};
-
-// Get a random rgba value
-function randomRGBA() {
-  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0.255)+","+randomNumber(0,1,true)+")";
-}
-
-// Convert hex values to rgba values
-function convertHex(hex,opacity){
-    hex = hex.replace('#','');
-    r = parseInt(hex.substring(0,2), 16);
-    g = parseInt(hex.substring(2,4), 16);
-    b = parseInt(hex.substring(4,6), 16);
-
-    if(!opacity) { opacity = 1; }
-
-    result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
-    return result;
-}
-
-// Create an array of separate values from an rgba color string
-function colorArray(rgbaString) {
-  return p.color.match(/(\d{1,4})/g);
-}
-
-// Strip any trailing zeros from decimal places on numbers
-function getAbsValue(val) {
-  var abs = Math.abs(parseFloat(val));;
-  if(val.match("-")) {
-    abs = -abs;
-  }
-  return abs;
-}
-
-// Get the number of decimal places provided a number
-function decimalPlaces(num) {
-  var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-  if (!match) { return 0; }
-  return Math.max(
-       0,
-       // Number of digits right of decimal point.
-       (match[1] ? match[1].length : 0)
-       // Adjust for scientific notation.
-       - (match[2] ? +match[2] : 0));
-}
-
 //Particle function
 var Particle = function(particleOptions, ion) {
 
@@ -105,8 +38,15 @@ Particle.prototype.setProperty = function(opts) {
     }
   // If the property value passed was an array, then the user has set custom min & max limits
   // Choose a random number from that range between
-  } else if(typeof(val) =='array') {
-    p[prop] = val[randomNumber(0,val.length)];
+  } else if(isArray(val)) {
+    // If our array contains only 2 values, use them as min/max values
+    if(val.length > 2) {
+      p[prop] = val[randomNumber(0, val.length)];
+    // if there's more that 2 values, use those as a list of values to select from
+    } else {
+       p[prop] = randomNumber(val[0],val[1]);
+    }
+   
   // Otherwise, just st the property value to what was passed
   } else {
     p[prop] = val;
@@ -123,6 +63,10 @@ Particle.prototype.init = function(o) {
     randomize: 'color'
   });
 
+  // Convert color & opacity to rgba
+  if(p.color.indexOf("#") >= 0) {
+    p.color = convertHex(p.color, 1);
+  }
   // Split the RGBA string in an array of values so we can fade if needed
   p.colorArray = p.color.match(/(\d{1,4})/g);
 
@@ -151,7 +95,7 @@ Particle.prototype.init = function(o) {
   p.setProperty({
     property: 'shape', 
     value: o.shape,
-    acceptedValues: p.ion.shapes.keys()
+    acceptedValues: Object.keys(p.ion.shapes)
   });
 
   // Gravity
@@ -209,7 +153,7 @@ Particle.prototype.init = function(o) {
 
   // Depending on what the spawn point properties are for this Particle,
   // We need to set the particle's initial x & y points
-  switch(o.originX) {
+  switch(o.origin[0]) {
     case 'left':
       p.x =  -p.size*2;
     break;
@@ -220,14 +164,14 @@ Particle.prototype.init = function(o) {
       p.x = ion.canvas.width*0.5
     break;
     case 'random':
-      p.x = Math.floor(p.randomNumber(-p.size*2, p.ion.canvas.width+p.size*2));
+      p.x = Math.floor(randomNumber(-p.size*2, p.ion.canvas.width+p.size*2));
     break;
     default:
-      p.x = o.originX;
+      p.x = o.origin[0];
     break;
   }
 
-  switch(o.originY) {
+  switch(o.origin[1]) {
     case 'top':
       p.y =  -p.size*2;
     break;
@@ -240,10 +184,10 @@ Particle.prototype.init = function(o) {
     case 'random':
       var min = -p.size*2,
           max = p.ion.canvas.height+p.size*2;
-      p.y = Math.floor(p.randomNumber(min, max));
+      p.y = Math.floor(randomNumber(min, max));
     break;
     default:
-      p.y = o.originY;
+      p.y = o.origin[1];
     break;
   }
 
@@ -262,19 +206,19 @@ Particle.prototype.init = function(o) {
   });
 
   // Set particle's rotation
-  switch(particle.rotationDirection) {
+  switch(p.rotationDirection) {
     case 'clockwise':
-      particle.rotation = particle.rotationVelocity*0.01
+      p.rotation = p.rotationVelocity*0.01
     break;
     case 'counter-clockwise':
-      particle.rotation = - particle.rotationVelocity*0.01
+      p.rotation = - p.rotationVelocity*0.01
     break;
     case 'random':
       var chance = randomNumber(0,100);
       if(chance > 50) {
-        particle.rotation = particle.rotationVelocity*0.01;
+        p.rotation = p.rotationVelocity*0.01;
       } else {
-        particle.rotation = particle.roationVelocity*0.01
+        p.rotation = p.roationVelocity*0.01
       }
   }
 
@@ -370,25 +314,6 @@ var Ion = function(el, particles, options) {
   var ion = this;
 
   //Function for setting default & user settings
-  ion.setOpts = function(standard, user) {
-    if (typeof user === 'object') {
-      for (var key in standard) {
-        if(user[key] != null) {
-            standard[key] = user[key];
-        }
-      }
-    }
-    return standard;
-  };
-
-  // //Random Number generator funciton
-  // randomNumber = function(min, max, frac) {
-  //    var num = Math.random() * (max - min) + min;
-  //    if(!frac) {
-  //       var num = Math.floor(num);
-  //     }
-  //     return num;
-  // };
 
   ion.setOptions(options);
 
@@ -455,7 +380,32 @@ Ion.prototype.setParticles = function(particles) {
 
   // Iterate through each particle settings object and set any unset values to the defaults
   for(var p=0; p<particles.length; p++) {
-    particles[p] = ion.setOpts({
+    // console.log("Ion:setParticles:Line376")
+    // console.log({
+    //   shape: 'circle',
+    //   color: 'rgba(0,0,0,1)',
+    //   opacity: 1,
+    //   borderColor: "rbga(0,0,0,0)",
+    //   borderWidth: 0,
+    //   borderOpacity: 1,
+    //   size: [10,90],
+    //   rotationDirection: 'clockwise',
+    //   rotationVelocity: 0.1,
+    //   orient: 0,
+    //   death: 100,
+    //   fade: false,
+    //   fadeSpeed: 0.01,
+    //   grow: false,
+    //   gravity: 1,
+    //   wind: 1,
+    //   density: 20,
+    //   origin: ['random', 'random'],
+    //   spawnRate: 2,
+    //   spawnOrigin: ['random', 'top']
+    // });
+    // console.log("Ion:setParticles:Line399");
+    // console.log(particles[p]);
+    particles[p] = defaultOptions({
       shape: 'circle',
       color: 'rgba(0,0,0,1)',
       opacity: 1,
@@ -466,7 +416,6 @@ Ion.prototype.setParticles = function(particles) {
       rotationDirection: 'clockwise',
       rotationVelocity: 0.1,
       orient: 0,
-      spawnRate: 2,
       death: 100,
       fade: false,
       fadeSpeed: 0.01,
@@ -474,12 +423,12 @@ Ion.prototype.setParticles = function(particles) {
       gravity: 1,
       wind: 1,
       density: 20,
-      originX: 'random',
-      originY: 'top'
+      spawnOrigin: ['random', 'top'],
+      origin: ['random', 'random'],
+      spawnRate: 2
     }, particles[p]);
   }
    ion.particles = particles;
-   console.log(particles);
 
 }
 
@@ -488,7 +437,7 @@ Ion.prototype.setOptions = function(opts) {
 
   var ion = this;
 
-  options = ion.setOpts({
+  options = defaultOptions({
     frameRate: 30,
     canvasBackground: 'rgba(255,255,255,1)'
   }, opts);
@@ -546,8 +495,7 @@ Ion.prototype.start = function() {
     ion.context.fillRect(0, 0, ion.canvas.width, ion.canvas.height);
     for(var s=0; s < ion.particles.length; s++) {
       var par = ion.particles[s];
-      par.originX = par.spawnOriginX;
-      par.originY = par.spawnOriginY;
+      par.origin = par.spawnOrigin;
       if(par.spawnRate > 0) {
         if(randomNumber(0, 25*par.density) < par.spawnRate) {
           ion.createParticle(par);
@@ -560,6 +508,20 @@ Ion.prototype.start = function() {
     }
    
   }, ion.frameRate);
+}
+var drawCircle = function(p) {
+    var ctx = p.ion.context;
+    var size = randomNumber(p.minSize, p.maxSize);
+       ctx.translate(p.x, p.y);
+       // ctx.fillStyle = p.color;
+       ctx.moveTo(p.x,p.y);
+       ctx.beginPath();
+       ctx.arc(30, 30, p.size, 0, Math.PI*2, true);
+       ctx.fill();
+       if(p.borderWidth) {
+        ctx.stroke();
+       }
+       ctx.closePath();
 }
 var drawSquare = function(p) {
     var ctx = p.ion.context;
@@ -577,4 +539,77 @@ var drawSquare = function(p) {
         ctx.stroke();
        }
        ctx.closePath();
+}
+// get a random number provided min & max values
+function randomNumber(min, max, frac) {
+   var num = Math.random() * (max - min) + min;
+   if(!frac) {
+      var num = Math.floor(num);
+    }
+    return num;
+};
+
+// Get a random rgba value
+function randomRGBA() {
+  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0.255)+","+randomNumber(0,1,true)+")";
+}
+
+// Convert hex values to rgba values
+function convertHex(hex,opacity){
+    hex = hex.replace('#','');
+    r = parseInt(hex.substring(0,2), 16);
+    g = parseInt(hex.substring(2,4), 16);
+    b = parseInt(hex.substring(4,6), 16);
+
+    if(!opacity) { opacity = 1; }
+
+    result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
+    return result;
+}
+
+// Create an array of separate values from an rgba color string
+function colorArray(rgbaString) {
+  return p.color.match(/(\d{1,4})/g);
+}
+
+// Strip any trailing zeros from decimal places on numbers
+function getAbsValue(val) {
+  var abs = Math.abs(parseFloat(val));;
+  if(val.match("-")) {
+    abs = -abs;
+  }
+  return abs;
+}
+
+// Get the number of decimal places provided a number
+function decimalPlaces(num) {
+  var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+  if (!match) { return 0; }
+  return Math.max(
+       0,
+       // Number of digits right of decimal point.
+       (match[1] ? match[1].length : 0)
+       // Adjust for scientific notation.
+       - (match[2] ? +match[2] : 0));
+}
+
+function defaultOptions(standard, user) {
+  // console.log("Utilites:defaultOptions:55")
+  // console.log(standard);
+  if (typeof user === 'object') {
+    for (var key in standard) {
+      if(user[key] != undefined) {
+         // console.log(standard[key]);
+         // console.log(user[key]);
+          standard[key] = user[key];
+      }
+    }
+  }
+  // console.log("Utilities:defaultOptions:Line64")
+  // console.log(standard);
+  return standard;
+};
+
+isArray = function(val) {
+  return Object.prototype.toString.call(val) == '[object Array]'
 }

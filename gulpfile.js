@@ -65,6 +65,11 @@ gulp.task('tStyles', function() {
 gulp.task('scripts', function() {
   // Get the files to be included
   return gulp.src("src/**/*.js")
+    .pipe(order([
+        "src/utilities.js",
+        "src/shapes/*.js",
+        "src/ion.js"
+      ]))
     .pipe(concat('ion.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({
@@ -83,7 +88,7 @@ gulp.task('tScripts', function() {
     "bower_components/materialize/js/global.js",
     "bower_components/materialize/js/dropdown.js",
     "bower_components/materialize/js/forms.js", 
-    "src/ion.js", 
+    "dist/ion.js", 
     "demo/demo.js",])
     .pipe(concat('ion-demo.js'))
     .pipe(gulp.dest('demo'))
@@ -114,7 +119,9 @@ gulp.task('watch', function() {
   // Watch for changes in source files
   gulp.watch(['demo/*.scss'], ['tStyles']);
 
-  gulp.watch(['src/*.js', 'demo/demo.js'], ['scripts', 'tScripts']);
+  gulp.watch(['src/**/*.js'], ['scripts', 'tScripts']);
+
+  gulp.watch(['demo/demo.js'], ['tScripts']);
 
   gulp.watch(["demo/demo.html"], ['demo']);
 

@@ -12593,193 +12593,279 @@ if ($) {
 
 }( jQuery ));
 
-var drawCircle = function(p) {
-    var ctx = p.ion.context;
-    var size = p.ion.randomNumber(p.minSize, p.maxSize);
-       ctx.translate(p.x, p.y);
-       // ctx.fillStyle = p.color;
-       ctx.moveTo(p.x,p.y);
-       ctx.beginPath();
-       ctx.arc(30, 30, p.size, 0, Math.PI*2, true);
-       ctx.fill();
-       if(p.borderWidth) {
-        ctx.stroke();
-       }
-       ctx.closePath();
-}
-
-var drawSquare = function(p) {
-    var ctx = p.ion.context;
-       ctx.translate(p.x, p.y);
-       // context.fillStyle = color;
-       if(p.rotation) {
-          ctx.rotate(p.orient + p.rotationVelocity);
-          p.orient++;
-       }
-       ctx.moveTo(p.x,p.y);
-       ctx.beginPath();
-       ctx.rect(0, 0, p.size, p.size);
-       ctx.fill();
-       if(p.borderWidth) {
-        ctx.stroke();
-       }
-       ctx.closePath();
-}
-
 //Particle function
 var Particle = function(particleOptions, ion) {
 
-  var o = particleOptions;
-
-  var particle = this;
+  var o = particleOptions,
+      particle = this;
 
   particle.ion = ion;
 
-  particle.shape = o.shape;
+  // Setup all the particle properties
+  particle.init(particleOptions);
 
-  particle.color = o.color;
-  particle.colorArray = particle.color.match(/(\d{1,4})/g);
-
-  particle.borderColor = o.borderColor;
-  particle.borderWidth = o.borderWidth;
-
-  particle.minSize = o.minSize;
-  particle.maxSize = o.maxSize;
-
-  particle.orient = o.orient;
-  particle.rotationDirection = o.rotationDirection;
-  particle.rotationVelocity = o.rotationVelocity;
-
-  particle.gravity = o.gravity;
-  particle.wind = o.wind;
-
-  particle.grow = o.grow;
-  particle.composite = o.composite;
-
-  particle.fade = o.fade;
-  particle.fadeSpeed = o.fadeSpeed;
-  particle.opacity = 1;
-
-  particle.spawnRate = o.spawnRate;
-
-  if(particle.fade == 'in-out') {
-    particle.fade = 'in';
-    particle.fadeStop = false;
-  }
-
-  if(particle.shape == 'flux') {
-    particle.order = 1;
-  } else {
-    particle.order = 0;
-  }
-
-  particle.size = Math.floor(particle.ion.randomNumber(particle.minSize, particle.maxSize));
-
-  switch(o.originX) {
-    case 'left':
-      particle.x =  -particle.size*2;
-    break;
-    case 'right':
-      particle.x = ion.canvas.width + particle.size*2
-    case 'center':
-      particle.x = ion.canvas.width*0.5
-    break;
-    case 'random':
-      particle.x = Math.floor(particle.ion.randomNumber(-particle.size*2, particle.ion.canvas.width+particle.size*2));
-    break;
-    default:
-      particle.x = o.originX;
-    break;
-  }
-
-  switch(o.originY) {
-    case 'top':
-      particle.y =  -particle.size*2;
-    break;
-    case 'bottom':
-      particle.y = ion.canvas.height + particle.size*2
-    case 'center':
-      particle.y = ion.canvas.height*0.5
-    break;
-    case 'random':
-      var min = -particle.size*2,
-          max = particle.ion.canvas.height+particle.size*2;
-      particle.y = Math.floor(particle.ion.randomNumber(min, max));
-      // console.log("random("+min+","+max+") = "+particle.y);
-    break;
-    default:
-      particle.y = o.originY;
-    break;
-  }
-
-
-  switch(particle.rotationDirection) {
-    case 'clockwise':
-      particle.rotation = particle.rotationVelocity*0.01
-    break;
-    case 'counter-clockwise':
-      particle.rotation = - particle.rotationVelocity*0.01
-    break;
-    case 'random':
-      var chance = ion.randomNumber(0,100);
-      if(chance > 50) {
-        particle.rotation = particle.rotationVelocity*0.01;
-      } else {
-        particle.rotation = particle.roationVelocity*0.01
-      }
-  }
-
-  // Add new particle to the index
-  // Object used as it's simpler to manage that an array
-  particle.life = 0;
-  particle.maxLife = o.maxLife;
-
-  // console.log("initial particle coordinates: ["+particle.x+","+particle.y+"]");
-
+  // Draw the particle on the first frame
   particle.draw();
 
 }
 
+// The set property function takes care of the different types of values
+// that can be passed for the same property and the default values
+Particle.prototype.setProperty = function(opts) {
+
+  var p = this,
+      val = opts.value,
+      prop = opts.property;
+
+  // Check to see if the 'random' keyword was passed as the property value
+  if(val == 'random') {
+    // If we have an array of accepted values, choose a random value from that array
+    if(opts.acceptedValues) {
+      p[prop] = opts.acceptedValues[randomNumber(0, opts.acceptedValues.length)];
+    // otherwise check for the "randomize" property.
+    // if randomize is set to the keyword color, use the random color function to get a random rgba value
+    } else if(opts.randomize == 'color') {
+      p[prop] = randomRGBA();
+    // Otherwise the randomize variable should be an array with the default min & max limits for that property
+    // Pick a random number from that range as the property value
+    } else {
+      p[prop] = randomNumber(randomize[0], randomize[1], true);
+    }
+  // If the property value passed was an array, then the user has set custom min & max limits
+  // Choose a random number from that range between
+  } else if(isArray(val)) {
+    // If our array contains only 2 values, use them as min/max values
+    if(val.length > 2) {
+      p[prop] = val[randomNumber(0, val.length)];
+    // if there's more that 2 values, use those as a list of values to select from
+    } else {
+       p[prop] = randomNumber(val[0],val[1]);
+    }
+   
+  // Otherwise, just st the property value to what was passed
+  } else {
+    p[prop] = val;
+  }
+}
+
+Particle.prototype.init = function(o) {
+  var p = this;
+
+  // Background Color
+  p.setProperty({
+    property: 'color', 
+    value: o.color, 
+    randomize: 'color'
+  });
+
+  // Convert color & opacity to rgba
+  if(p.color.indexOf("#") >= 0) {
+    p.color = convertHex(p.color, 1);
+  }
+  // Split the RGBA string in an array of values so we can fade if needed
+  p.colorArray = p.color.match(/(\d{1,4})/g);
+
+  // Border Color
+  p.setProperty({
+    property: 'borderColor', 
+    value: o.borderColor, 
+    randomize: 'color'
+  });
+
+  // Border Width
+  p.setProperty({
+    property: 'borderWidth', 
+    value: o.borderWidth, 
+    randomize: [0,10]
+  });
+
+  // Size
+  p.setProperty({
+    property: 'size', 
+    value: o.size, 
+    randomize: [1,p.ion.canvas.width*0.5]
+  });
+
+  // Shape
+  p.setProperty({
+    property: 'shape', 
+    value: o.shape,
+    acceptedValues: Object.keys(p.ion.shapes)
+  });
+
+  // Gravity
+  p.setProperty({
+    property: 'gravity',
+    value: o.gravity,
+    randomize: [-5,5]
+  });
+
+  // Wind
+  p.setProperty({
+    property: 'wind',
+    value: o.wind,
+    randomize: [-5,5]
+  });
+
+  // Orientation
+  p.setProperty({
+    property: 'orient',
+    value: o.orient,
+    randomize: [0,360]
+  });
+
+  // Age/Death
+  p.setProperty({
+    property: 'death',
+    value: o.death,
+    randomize: [0, 3000]
+  });
+
+  // Set intial particle life to 0
+  p.life = 0;
+
+  p.setProperty({
+    property: 'fade',
+    value: o.fade,
+    acceptedValues: ['in', 'out', 'in-out']
+  });
+  p.setProperty({
+    property: 'fadeSpeed',
+    value: o.fadeSpeed,
+    randomize: [0,20]
+  });
+
+
+  // If the fade property is set, then we need to adjust the initial opacity
+  // based on the fade animation
+  if(p.fade == 'in' || p.fade == "in-out") {
+    p.opacity = 0;
+  } else if(p.fade == 'out') {
+    p.opacity = 1
+  } else {
+    p.opacity = p.colorArray[3];
+  }
+
+  // Depending on what the spawn point properties are for this Particle,
+  // We need to set the particle's initial x & y points
+  switch(o.origin[0]) {
+    case 'left':
+      p.x =  -p.size*2;
+    break;
+    case 'right':
+      p.x = ion.canvas.width + p.size*2
+    break;
+    case 'center':
+      p.x = ion.canvas.width*0.5
+    break;
+    case 'random':
+      p.x = Math.floor(randomNumber(-p.size*2, p.ion.canvas.width+p.size*2));
+    break;
+    default:
+      p.x = o.origin[0];
+    break;
+  }
+
+  switch(o.origin[1]) {
+    case 'top':
+      p.y =  -p.size*2;
+    break;
+    case 'bottom':
+      p.y = ion.canvas.height + p.size*2
+    break;
+    case 'center':
+      p.y = ion.canvas.height*0.5
+    break;
+    case 'random':
+      var min = -p.size*2,
+          max = p.ion.canvas.height+p.size*2;
+      p.y = Math.floor(randomNumber(min, max));
+    break;
+    default:
+      p.y = o.origin[1];
+    break;
+  }
+
+  // Rotation Direction
+  p.setProperty({
+    property: 'rotationDirection',
+    value: o.rotationDirection,
+    acceptedValues: ['clockwise', 'counter-clockwise', 'random']
+  });
+
+  // Rotation Velocity
+  p.setProperty({
+    property: 'rotationVelocity',
+    value: o.rotationVelocity,
+    randomize: [0,10]
+  });
+
+  // Set particle's rotation
+  switch(p.rotationDirection) {
+    case 'clockwise':
+      p.rotation = p.rotationVelocity*0.01
+    break;
+    case 'counter-clockwise':
+      p.rotation = - p.rotationVelocity*0.01
+    break;
+    case 'random':
+      var chance = randomNumber(0,100);
+      if(chance > 50) {
+        p.rotation = p.rotationVelocity*0.01;
+      } else {
+        p.rotation = p.roationVelocity*0.01
+      }
+  }
+
+}
+
+// Place the drawn particle on the canvas
 Particle.prototype.render = function(shape) {
 
       var particle = this,
           context = particle.ion.context;
 
+      // Set the visual properties for the shape & line of the particles
       context.fillStyle = particle.color;
       context.strokeStyle = particle.borderColor;
       context.lineWidth = particle.borderWidth;
 
-     // first save the untranslated/unrotated context
+     //  save the untranslated/unrotated context
      context.save();
 
+     // Use the drawing instructions for the particle's shape to render the particle
      particle.ion.shapes[shape](particle);
     
     // restore the context to its untranslated/unrotated state
     context.restore();
 }
 
+// Draw the particle shape
 Particle.prototype.draw = function() {
   var particle = this,
       ion = particle.ion,
       canvas = ion.canvas,
       context = ion.context;
 
+  // Adjust particle position based on wind and gravity
   particle.y +=  particle.gravity;
   particle.x += particle.wind;
 
   // Age the particle
   particle.life++;
   
+  // Adjust the particles orientation based on rotation settings
   if(particle.rotationDirection == 'clockwise') {
     particle.rotation += particle.rotationVelocity;
   } else {
      particle.rotation -= particle.rotationVelocity;
   }
   
-  if(particle.grow) {
-    particle.size = particle.size*particle.grow;
-  }
+  // if(particle.grow) {
+  //   particle.size = particle.size*particle.grow;
+  // }
   
+  // Adjust the particle's opacity based on the fade settings
   if(particle.fade) {
     if(particle.fadeStop === false) {
       if(particle.opacity >= 1) {
@@ -12797,15 +12883,18 @@ Particle.prototype.draw = function() {
     particle.color = 'rgba('+particle.colorArray[0]+','+particle.colorArray[1]+','+particle.colorArray[2]+','+particle.opacity+')'; 
   }
  
- // Create the shapes
+ // Clear the canvas
   context.clearRect(canvas.width, canvas.height, canvas.width, canvas.height);
-  context.fillStyle = particle.color;
+  // context.fillStyle = particle.color;
   // context.globalCompositeOperation = this.composite;
+
+  // Render the particle on the canvas
   particle.render(particle.shape, particle.x, particle.y, particle.size, particle.size, particle.rotation, particle.color, particle.rotationDirection);
   // context.globalCompositeOpteration = 'destination-out';
 
 
-   if((particle.life > particle.maxLife && particle.maxLife != false) || 
+   // Kill the particle if it's reached it's death or has left the visible canvas area
+   if((particle.life > particle.death && particle.death != false) || 
     (particle.gravity > 0 && particle.y > canvas.height+particle.size*2) || 
     (particle.gravity < 0 && particle.y < -particle.size*2) ||
     (particle.wind < 0 && particle.x < -particle.size*2) ||
@@ -12820,33 +12909,15 @@ var Ion = function(el, particles, options) {
   var ion = this;
 
   //Function for setting default & user settings
-  ion.setOpts = function(standard, user) {
-    if (typeof user === 'object') {
-      for (var key in standard) {
-        if(user[key] != null) {
-            standard[key] = user[key];
-        }
-      }
-    }
-    return standard;
-  };
-
-  //Random Number generator funciton
-  ion.randomNumber = function(min, max, frac) {
-     var num = Math.random() * (max - min) + min;
-     if(!frac) {
-        var num = Math.floor(num);
-      }
-      return num;
-  };
 
   ion.setOptions(options);
 
+  // Setup a particle tracker for rendering
   ion.particleTracker = {};
   ion.particleIndex = 0;
 
+  // Initialize the canvas
   ion.canvas = document.getElementById(el);
-
   ion.context = ion.canvas.getContext("2d");
 
   // Responsive/relative canvas sizing
@@ -12855,9 +12926,10 @@ var Ion = function(el, particles, options) {
     ion.sizeCanvas();
   };
 
-  // Add base shapes
+  // Initialize particle generator
   ion.init();
 
+  // If particles were passed as initial properties, add the particles and start the animations
   if(particles) {
     ion.setParticles(particles);
     ion.start();
@@ -12865,12 +12937,16 @@ var Ion = function(el, particles, options) {
 
 };
 
+// Responsive canvas sizing
 Ion.prototype.sizeCanvas = function() {
 
   var ion = this,
       width = ion.canvas.getAttribute('width'),
       height = ion.canvas.getAttribute('height');
 
+  // If the canvas element does not have width & height properties set, 
+  // set the canvas to the size of it's immediate parent
+  // Otherwise, set it to the width & height properties
   if(!width) { width = window.getComputedStyle(ion.canvas.parentElement, null).width; }
   if(!height) { height = window.getComputedStyle(ion.canvas.parentElement, null).height; }
 
@@ -12878,14 +12954,18 @@ Ion.prototype.sizeCanvas = function() {
   ion.canvas.setAttribute('height', height);
 }
 
+// Stop the particle generator
 Ion.prototype.stop = function() {
    clearInterval(this.animate);
 }
 
+// Set particle properties
 Ion.prototype.setParticles = function(particles) {
 
   var ion = this;
 
+  // Check to see if we've passed a single particle settings object, 
+  // or an array of particle settings. Convert to a single-item array if the former
   if(!particles.length) {
     var particle = particles;
     particles = new Array();
@@ -12893,39 +12973,66 @@ Ion.prototype.setParticles = function(particles) {
   }
 
 
+  // Iterate through each particle settings object and set any unset values to the defaults
   for(var p=0; p<particles.length; p++) {
-    particles[p] = ion.setOpts({
+    // console.log("Ion:setParticles:Line376")
+    // console.log({
+    //   shape: 'circle',
+    //   color: 'rgba(0,0,0,1)',
+    //   opacity: 1,
+    //   borderColor: "rbga(0,0,0,0)",
+    //   borderWidth: 0,
+    //   borderOpacity: 1,
+    //   size: [10,90],
+    //   rotationDirection: 'clockwise',
+    //   rotationVelocity: 0.1,
+    //   orient: 0,
+    //   death: 100,
+    //   fade: false,
+    //   fadeSpeed: 0.01,
+    //   grow: false,
+    //   gravity: 1,
+    //   wind: 1,
+    //   density: 20,
+    //   origin: ['random', 'random'],
+    //   spawnRate: 2,
+    //   spawnOrigin: ['random', 'top']
+    // });
+    // console.log("Ion:setParticles:Line399");
+    // console.log(particles[p]);
+    particles[p] = defaultOptions({
       shape: 'circle',
       color: 'rgba(0,0,0,1)',
+      opacity: 1,
       borderColor: "rbga(0,0,0,0)",
       borderWidth: 0,
-      minSize: 15,
-      maxSize: 30,
+      borderOpacity: 1,
+      size: [10,90],
       rotationDirection: 'clockwise',
       rotationVelocity: 0.1,
       orient: 0,
-      spawnRate: 2,
-      maxLife: 100,
+      death: 100,
       fade: false,
       fadeSpeed: 0.01,
       grow: false,
       gravity: 1,
       wind: 1,
       density: 20,
-      originX: 'random',
-      originY: 'top'
+      spawnOrigin: ['random', 'top'],
+      origin: ['random', 'random'],
+      spawnRate: 2
     }, particles[p]);
   }
    ion.particles = particles;
-   console.log(particles);
 
 }
 
+// Set global properties
 Ion.prototype.setOptions = function(opts) {
 
   var ion = this;
 
-  options = ion.setOpts({
+  options = defaultOptions({
     frameRate: 30,
     canvasBackground: 'rgba(255,255,255,1)'
   }, opts);
@@ -12935,18 +13042,25 @@ Ion.prototype.setOptions = function(opts) {
 
 }
 
+// Add a new particle to the generator
 Ion.prototype.createParticle = function(par) {
+  // Create a new instance of Particle
   var particle = new Particle(par, this);
+  // Set the particle index (id)
   this.particleTracker[this.particleIndex] = particle;
   particle.id = this.particleIndex;
+  // increment the particle index tracker for the next particle
   this.particleIndex++;
 }
 
+// Add a new option for particle shape
 Ion.prototype.addShape = function(id, instructions) {
   this.shapes[id] = instructions;
 }
 
+// Intialize the particle generator
 Ion.prototype.init = function() {
+  // Add the default shapes
   this.shapes = {
     circle: drawCircle, 
     square: drawSquare
@@ -12954,18 +13068,17 @@ Ion.prototype.init = function() {
 
 }
 
+// Start particle animation
 Ion.prototype.start = function() {
 
   var ion = this;
 
-  // ========================================
   // For each particle type
   for(var t = 0; t < ion.particles.length; t++) {
     var par = ion.particles[t];
     // Make a new particle for the particle's density setting
     for(var d = 0; d < par.density; d++) {
      ion.createParticle(par);
-
     }
   }
 
@@ -12977,8 +13090,9 @@ Ion.prototype.start = function() {
     ion.context.fillRect(0, 0, ion.canvas.width, ion.canvas.height);
     for(var s=0; s < ion.particles.length; s++) {
       var par = ion.particles[s];
+      par.origin = par.spawnOrigin;
       if(par.spawnRate > 0) {
-        if(ion.randomNumber(0, 25*par.density) < par.spawnRate) {
+        if(randomNumber(0, 25*par.density) < par.spawnRate) {
           ion.createParticle(par);
         }
       }
@@ -12990,15 +13104,119 @@ Ion.prototype.start = function() {
    
   }, ion.frameRate);
 }
+var drawCircle = function(p) {
+    var ctx = p.ion.context;
+    var size = randomNumber(p.minSize, p.maxSize);
+       ctx.translate(p.x, p.y);
+       // ctx.fillStyle = p.color;
+       ctx.moveTo(p.x,p.y);
+       ctx.beginPath();
+       ctx.arc(30, 30, p.size, 0, Math.PI*2, true);
+       ctx.fill();
+       if(p.borderWidth) {
+        ctx.stroke();
+       }
+       ctx.closePath();
+}
+var drawSquare = function(p) {
+    var ctx = p.ion.context;
+       ctx.translate(p.x, p.y);
+       // context.fillStyle = color;
+       if(p.rotation) {
+          ctx.rotate(p.orient + p.rotationVelocity);
+          p.orient++;
+       }
+       ctx.moveTo(p.x,p.y);
+       ctx.beginPath();
+       ctx.rect(0, 0, p.size, p.size);
+       ctx.fill();
+       if(p.borderWidth) {
+        ctx.stroke();
+       }
+       ctx.closePath();
+}
+// get a random number provided min & max values
+function randomNumber(min, max, frac) {
+   var num = Math.random() * (max - min) + min;
+   if(!frac) {
+      var num = Math.floor(num);
+    }
+    return num;
+};
+
+// Get a random rgba value
+function randomRGBA() {
+  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0.255)+","+randomNumber(0,1,true)+")";
+}
+
+// Convert hex values to rgba values
 function convertHex(hex,opacity){
     hex = hex.replace('#','');
     r = parseInt(hex.substring(0,2), 16);
     g = parseInt(hex.substring(2,4), 16);
     b = parseInt(hex.substring(4,6), 16);
 
+    if(!opacity) { opacity = 1; }
+
     result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
     return result;
 }
+
+// Create an array of separate values from an rgba color string
+function colorArray(rgbaString) {
+  return p.color.match(/(\d{1,4})/g);
+}
+
+// Strip any trailing zeros from decimal places on numbers
+function getAbsValue(val) {
+  var abs = Math.abs(parseFloat(val));;
+  if(val.match("-")) {
+    abs = -abs;
+  }
+  return abs;
+}
+
+// Get the number of decimal places provided a number
+function decimalPlaces(num) {
+  var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+  if (!match) { return 0; }
+  return Math.max(
+       0,
+       // Number of digits right of decimal point.
+       (match[1] ? match[1].length : 0)
+       // Adjust for scientific notation.
+       - (match[2] ? +match[2] : 0));
+}
+
+function defaultOptions(standard, user) {
+  // console.log("Utilites:defaultOptions:55")
+  // console.log(standard);
+  if (typeof user === 'object') {
+    for (var key in standard) {
+      if(user[key] != undefined) {
+         // console.log(standard[key]);
+         // console.log(user[key]);
+          standard[key] = user[key];
+      }
+    }
+  }
+  // console.log("Utilities:defaultOptions:Line64")
+  // console.log(standard);
+  return standard;
+};
+
+isArray = function(val) {
+  return Object.prototype.toString.call(val) == '[object Array]'
+}
+// function convertHex(hex,opacity){
+//     hex = hex.replace('#','');
+//     r = parseInt(hex.substring(0,2), 16);
+//     g = parseInt(hex.substring(2,4), 16);
+//     b = parseInt(hex.substring(4,6), 16);
+
+//     result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
+//     return result;
+// }
 
 
 function getAbsValue(val) {
@@ -13010,7 +13228,25 @@ function getAbsValue(val) {
 }
 
 $.fn.rangeVal = function() {
-	return $(this).parents('[class*="range"]')[0].noUiSlider.get();
+	var $range
+		$el = $(this);
+
+	if($el.hasClass('range-slider') || $el.hasClass('range')) {
+		$range = $el;
+	} else {
+		$range = $el.parents('[class*="range"]');
+	}
+
+	var val = $range[0].noUiSlider.get();
+
+	if($.isArray(val)) {
+		val.filter(function(el,i,arr) {
+			arr[i] = getAbsValue(el);
+		});
+	} else {
+		val = getAbsValue(val);
+	}
+	return val;
 }
 
 function decimalPlaces(num) {
@@ -13024,17 +13260,23 @@ function decimalPlaces(num) {
        - (match[2] ? +match[2] : 0));
 }
 
+// Toolbox interface
+// ========================================
+
+// Initialize noUiSlider double-range inputs
 $('.range-slider').each(function() {
 	var ranges = $(this).find('input[type="range"]'),
 		min = ranges.first(),
-		max = ranges.last();
+		max = ranges.last(),
+		step = min.attr('step');
+
 
 
 	noUiSlider.create(this, {
 		start: [getAbsValue(min.val()), getAbsValue(max.val())],
 		connect: true,
-		step: getAbsValue(min.attr('step')),
-		format: wNumb({ decimals: 0 }),
+		step: getAbsValue(step),
+		format: wNumb({ decimals: decimalPlaces(step) }),
 		range: {
 			'min': getAbsValue(min.attr('min')),
 			'max': getAbsValue(max.attr('max'))
@@ -13042,6 +13284,7 @@ $('.range-slider').each(function() {
 	});
 });
 
+// Initialize noUiSlider single-range inputs
 $('.range').each(function() {
 	var range = $(this).find('input[type="range"]'),
 		val = getAbsValue(range.val());
@@ -13059,59 +13302,17 @@ $('.range').each(function() {
 	noUiSlider.create(this, opts);
 });
 
-
-
-var ion = new Ion('testcanvas');
-
-var $select = $('#shape');
-for(var key in ion.shapes) {
-	$select.append('<option value="'+key+'">'+key+'</option>');
-}
-
+// Intialize custom materialize selects
 $('select').not('.disabled').material_select();
 
-ion.setOptions({
-	canvasBackground: convertHex($('#canvasBackground').val(), 100)
-});
-
-var size = $('.size .range-slider')[0].noUiSlider.get();
-
-ion.setParticles({
-	shape: $('#shape').val(),
-	color: convertHex($('#color').val(), getAbsValue($('#colorOpacity').rangeVal())),
-	density: getAbsValue($('#density').rangeVal()),
-	maxLife: getAbsValue($('#maxLife').val()),
-	spawnRate: getAbsValue($('#spawnRate').val()),
-	minSize: getAbsValue(size[0]),
-	maxSize: getAbsValue(size[1]),
-	rotationDirection: $('#rotationDirection').val(),
-	rotationVelocity: getAbsValue($('#rotationVelocity').val()),
-	fade: false,
-	fadeSpeed: getAbsValue($('#fadeSpeed').val()),
-	gravity: getAbsValue($('#gravity').val()),
-	wind: getAbsValue($('#wind').val()),
-	borderColor: convertHex($('#borderColor').val(), getAbsValue($('#borderOpacity').val())),
-	borderWidth: getAbsValue($('#borderWidth').val()),
-	originX: 'random',
-	originY: 'random'
-});
-
-ion.start();
-
-$('#immortal').on('change', function() {
-	if($(this).is(':checked')) {
-		$('#maxLife').prop('disabled', true);
-	} else {
-		$('#maxLife').prop('disabled', false);
-	}
-});
-
+// Emulate field focus for custom color fields
 $('.color-field input').focus(function() {
 	$(this).parents('.color-field').addClass('focus');
 }).blur(function() {
 	$(this).parents('.color-field').removeClass('focus');
 });
 
+// Disable fieldsets when fieldset on/off switch is toggles
 $('.switch input[type="checkbox"]').on('change', function() {
 	if($(this).is(":checked")) {
 		$(this).parents('fieldset').removeClass('disabled').find('input, select').not('[id*="Bool"]').prop('disabled', false);
@@ -13120,6 +13321,7 @@ $('.switch input[type="checkbox"]').on('change', function() {
 	}
 });
 
+// Disabled fieldsets when fieldset randomize checkbox is toggles
 $('.random input[type="checkbox"]').on('change', function() {
 	if($(this).is(":checked")) {
 		$(this).parents('fieldset').addClass('disabled').find('input, select').not('[id*="Bool"], [id*="Randomize"]').prop('disabled', true);
@@ -13129,63 +13331,83 @@ $('.random input[type="checkbox"]').on('change', function() {
 	}
 });
 
+
+// Ion Particle Generator
+// ========================================
+
+// Start Ion on page load
+var ion = new Ion('testcanvas');
+
+ion.setOptions({
+	canvasBackground: $('#canvasBackground').val()
+});
+
+
+ion.setParticles({
+	borderColor: $('#borderColor').val(),
+	borderWidth: $('.borderWidth-range').rangeVal(),
+	borderOpacity: $('.borderOpacity-range').rangeVal(),
+	color: $('#color').val(),
+	density: $('#density').rangeVal(),
+	death: false,
+	fade: false,
+	gravity: $('.gravity-range').rangeVal(),
+	opacity: $('.opacity-range').rangeVal(),
+	origin: ['random', 'random'],
+	rotation: false,
+	shape: $('#shape').val(),
+	size: [4,10,35,90],
+	spawnRate: $('#spawnRate').rangeVal(),
+	spawnOrigin: ['random', 'bottom'],
+	wind: $('.wind-range').rangeVal()
+});
+
+// console.log(ion.particles);
+
+ion.start();
+
+
+// Update Ion Generator on value changes
+// ========================================
+
+// Read values and re-initialize Ion Particle Generator with new settings
 var updateCanvas = function() {
-		$('#testcanvas').remove();
+
+	// Clear the canvas & destroy the previous Ion Generator
+	$('#testcanvas').remove();
 	$('header').before('<canvas id="testcanvas"></canvas>');
 	
 
-	var spawnRate = 0,
-		color = 'rgba(0,0,0,0)',
-		rotationVelocity = 0,
-		gravity = 0,
-		wind = 0,
-		border = false,
-		fade = false,
-		fadeSpeed = 0,
+	// Default values for settings when a fieldset is disabled or "off"
+	var border = false,
 		borderColor = 'rgba(0,0,0,0)',
 		borderWidth = 0,
-		orient = 0,
-		rotationDirection = false,
+		color = 'rgba(0,0,0,0)',
+		death = false,
 		fade = false,
+		fadeSpeed = 0,
+		gravity = 0,
+		opacity = [10,30],
+		orient = 0,
+		origin,
 		originX = $('[name="originXPreset"]:checked').val(),
-		originY = $('[name="originYPreset"]:checked').val();
-		size = $('.size .range-slider')[0].noUiSlider.get();
+		originY = $('[name="originYPreset"]:checked').val(),
+		rotationDirection = false,
+		rotationVelocity = 0,
+		spawnOrigin,
+		spawnOriginX = $('[name="spawnOriginXPreset"]:checked').val(),
+		spawnOriginY = $('[name="spawnOriginYPreset"]:checked').val(),
+		spawnRate = 0,
+		wind = 0;
 
+	// Read form fields values 
 
+	// Starting Population
 	if(!isNaN(parseInt(originX))) {
 		originX = getAbsValue(originX);
 	}
-
 	if(!isNaN(parseInt(originY))) {
 		originY = getAbsValue(originY);
-	}
-
-	if($('#spawnBool').is(':checked')) {
-		spawnRate = getAbsValue($('#spawnRate').rangeVal());
-	}
-	if($('#colorBool').is(':checked')) {
-		color = convertHex($('#color').val(), getAbsValue($('#colorOpacity').rangeVal()));
-	}
-	if($('#borderBool').is(':checked')) {
-		borderColor = convertHex($('#borderColor').val(), getAbsValue($('#borderOpacity').rangeVal()));
-		borderWidth = getAbsValue($('#borderWidth').rangeVal());
-	}
-	if($('#gravityBool').is(':checked')) {
-		gravity = getAbsValue($('#gravity').rangeVal());
-	}
-	if($('#windBool').is(':checked')) {
-		wind = getAbsValue($('#wind').val());
-	}
-	if($('#rotationBool').is(':checked')) {
-		rotationVelocity = getAbsValue($('#rotationVelocity').rangeVal())*0.01;
-	}
-	if($('#fadeBool').is(':checked')) {
-		fade = $('#fade').val();
-		fadeSpeed = getAbsValue($('#fadeSpeed').rangeVal());
-	}
-
-	if(!$('#immortal').is(':checked')) {
-		maxLife == false;
 	}
 
 	if(originX == "custom") {
@@ -13197,33 +13419,134 @@ var updateCanvas = function() {
 		originY = getAbsValue($('#originY').val());
 	}
 
+	// Spawn
+	if(!isNaN(parseInt(spawnOriginX))) {
+		spawnOriginX = getAbsValue(spawnOriginX);
+	}
+
+	if(!isNaN(parseInt(spawnOriginY))) {
+		spawnOriginY = getAbsValue(spawnOriginY);
+	}
+
+	if(spawnOriginX == "custom") {
+		$('#spawnOriginX').prop('disabled', false);
+		spawnOriginX = getAbsValue($('#spawnOriginX').val());
+	}
+	if(spawnOriginY == "custom") {
+		$('#spawnOriginY').prop('disabled', false);
+		spawnOriginY = getAbsValue($('#spawnOriginY').val());
+	}
+
+	spawnOrigin = [spawnOriginX, spawnOriginY];
+
+	if($('#spawnBool').is(':checked')) {
+		spawnRate = $('.spawnRate-range').rangeVal();
+	}
+
+	//Color
+	if($('#colorBool').is(':checked')) {
+		if($('#colorRandomize').is(':checked')) {
+			color = 'random';
+			opacity = 'random'
+		} else {
+			color = $('#color').val();
+			color = $('.opacity-range').rangeVal();
+		}
+	}
+
+	//Border
+	if($('#borderBool').is(':checked')) {
+		if($('#borderRandomize').is(':checked')) {
+			borderColor = 'random';
+			borderWidth = 'random';
+		} else {
+			borderColor = $('#borderColor').val();
+			borderWidth = $('.borderWidth-range').rangeVal();
+		}
+	}
+
+	//Gravity
+	if($('#gravityBool').is(':checked')) {
+		if($('#gravityRandomize').is(':checked')) {
+			gravity = 'random';
+		} else {
+			gravity = $('.gravity-range').rangeVal();
+		}
+		
+	}
+
+	//Wind
+	if($('#windBool').is(':checked')) {
+		if($('#windRandomize').is(':checked')) {
+			wind = 'random';
+		} else {
+			wind = $('.wind-range').rangeVal();
+		}
+	}
+
+	//Rotation
+	if($('#rotationBool').is(':checked')) {
+		if($('#rotationRandomize').is(':checked')) {
+			rotationVelocity = 'random';
+			orient = 'random';
+		} else {
+			orient = $('.orient-range').rangeVal();
+			rotationVelocity = $('.rotationVelocity-range').rangeVal();
+		}
+		
+	}
+
+	//Fade
+	if($('#fadeBool').is(':checked')) {
+		if($('#fadeRandomize'),is(':checked')) {
+			fade = 'random';
+			fadeSpeed = 'random';
+		} else {
+			fade = $('#fade').val();
+			fadeSpeed = $('.fade-range').rangeVal();
+		}
+		
+	}
+
+	//Life
+	if($('#deathBool').is(':checked')) {
+		if($('#deathRandomize').is(':checked')) {
+			death = 'random';
+		} else {
+			death = $('.death-range').rangeVal();
+		}
+	}
+
+	// Create a new instance of Ion with the new settings
 	var ion =  new Ion('testcanvas', {
-		shape: $('#shape').val(),
+		borderColor: borderColor,
+		borderWidth: borderWidth,
+		borderOpacity: borderOpacity,
 		color: color,
 		density: getAbsValue($('#density').rangeVal()),
-		maxLife: getAbsValue($('#maxLife').rangeVal()),
-		spawnRate: spawnRate,
-		minSize: getAbsValue(size[0]),
-		maxSize: getAbsValue(size[1]),
-		rotationVelocity: rotationVelocity,
-		rotationDirection: $('#rotationDirection').val(),
+		death: death,
 		fade: fade,
 		fadeSpeed: fadeSpeed,
 		gravity: gravity,
+		opacity: opacity,
+		origin: origin,
+		orient: orient,
+		rotationVelocity: rotationVelocity,
+		rotationDirection: $('#rotationDirection').val(),
+		shape: $('#shape').val(),
+		size: $('.size-range').rangeVal(),
+		spawnRate: spawnRate,
+		spawnOrigin: spawnOrigin,
 		wind: wind,
-		borderColor: borderColor,
-		borderWidth: borderWidth,
-		originX: originX,
-		originY: originY
 	}, {
-		canvasBackground: convertHex($('#canvasBackground').val(), 100)
+		canvasBackground: $('#canvasBackground').val()
 	});
 }
 
+// Update the canvas on setting change from UI
 $('input, select').on('change', function() {
 	updateCanvas();
 });
-
 $('.range-slider, .range').each(function() {
 	this.noUiSlider.on('set', updateCanvas);
 });
