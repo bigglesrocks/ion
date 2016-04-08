@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ion Test</title>
+	<link rel="stylesheet" href="/demo/demo.css"/>
+
+</head>
+<body>
+
+<svg version="1.1" id="shape-icon-map" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 35.9 36.4" style="enable-background:new 0 0 35.9 36.4;" xml:space="preserve">
+<circle id="circle" cx="18.1" cy="18.1" r="18.1"/>
+<rect id="square" x="2.1" y="3.3" width="30.9" height="30.9"/>
+<polygon id="right-triangle" points="33.1,3.3 2.1,34.2 33.1,34.2 "/>
+<polygon id="iso-triangle" points="1.1,31 17.3,3.1 33.4,31 "/>
+<polygon id="octogon" points="9.3,32.9 0.8,18.1 9.3,3.4 26.3,3.4 34.8,18.1 26.3,32.9 "/>
+<polygon id="star" points="18.5,0.8 24.5,10.6 35.7,13.3 28.3,22.1 29.1,33.5 18.5,29.2 7.9,33.5 8.7,22.1 1.3,13.3 12.4,10.6 "/>
+<path id="raindrop" d="M29.9,18.2c-2.7-8.4-10.9-16.9-12-18V0c0,0,0,0-0.1,0.1c0,0-0.1-0.1-0.1-0.1v0.1C16.5,1.4,6.1,12.1,5,21.6
+	c0,0.1,0,0.2,0,0.3c0,0.4-0.1,0.8-0.1,1.2c0,7.2,5.8,13,13,13c7.2,0,13-5.8,13-13C30.9,21.4,30.5,19.7,29.9,18.2z"/>
+</svg>
+
+
+<section class="demo">
+	<canvas id="testcanvas"></canvas>
+	<header>
+		<h1 title="Ion">
+			<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+				 viewBox="0 0 156.6 39.1" style="enable-background:new 0 0 156.6 39.1;" xml:space="preserve">
+			<g>
+				<polygon points="3.2,10.4 23.4,10.4 23.4,29.7 3.2,29.7 3.2,36 49.9,36 49.9,29.7 29.7,29.7 29.7,10.4 49.9,10.4 49.9,4.1 3.2,4.1 
+						"/>
+				<polygon points="146.4,4.1 146.4,28.1 114.5,4.1 108.2,4.1 108.2,36 114.5,36 114.5,11.5 146.4,36 152.6,36 152.6,4.1 	"/>
+				<path d="M85.7,4.1H71.3c-8.8,0-15.9,7.1-15.9,15.9v0c0,8.8,7.1,15.9,15.9,15.9h14.3c8.8,0,15.9-7.1,15.9-15.9v0
+					C101.6,11.2,94.5,4.1,85.7,4.1z M85.7,30H71.3c-5.5,0-9.9-4.5-9.9-9.9c0-5.5,4.5-9.9,9.9-9.9h14.3c5.5,0,9.9,4.5,9.9,9.9
+					C95.6,25.5,91.2,30,85.7,30z"/>
+			</g>
+			</svg>
+		</h1>
+		<h4>A javascript particle generator for canvas</h4>
+		<div class="input-field">
+			<select name="preset" id="preset">
+				<option value="ion" selected>Ion</option>
+				<option value="bokeh">Bokeh</option>
+				<option value="space">Space</option>
+				<option value="geometry">Geometry</option>
+				<option value="rain">Rain</option>
+				<option value="music">Music</option>
+				<option value="sakura">Sakura Blossoms</option>
+			</select>
+			<label for="preset">Select a Preset</label>
+		</div>
+		
+	</header>
+</section>
+
+<form class="toolbox">
+	<fieldset class="background">
+		<legend><h6>Background</h6></legend>
+		<section class="fields">
+			<div class="color-field">
+				<input type="color" name="canvasBackground" id="canvasBackground"  value="#212121" oninput="canvasBackgroundDisplay.value = canvasBackground.value.replace('#', '')" />
+				<label for="color">#</label>
+				<input type="text" name="canvasBackgroundDisplay" id="canvasBackgroundDisplay"  value="212121" oninput="canvasBackground.value = '#'+canvasBackgroundDisplay.value">
+			</div>
+		</section>
+	</fieldset>
+	<fieldset class="shape">
+		<legend><h6>Shape</h6></legend>
+		<section class="fields">
+			<input type="hidden" name="shape" id="shape" value="circle" />
+			<ul>
+				<li class="selected">
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#circle" />
+					</svg>
+				</li>
+				<li>
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#square" />
+					</svg>
+				</li>
+				<li>
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#iso-triangle" />
+					</svg>
+				</li>
+				<li>
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#right-triangle" />
+					</svg>
+				</li>
+				<li>
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#star" />
+					</svg>
+				</li>
+				<li>
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#raindrop" />
+					</svg>
+				</li>
+			</ul>
+		</section>
+	</fieldset>
+	<fieldset class="size">
+		<legend>
+			<h6>Size</h6>
+		</legend>
+		<div class="range-slider">
+			<input type="range" name="minSize" id="minSize" min="1" max="300" step="1" value="4"/>
+			<input type="range" name="maxSize" id="minSize" min="1" max="300" step="1" value="90"/>
+		</div>
+	</fieldset>
+	<fieldset class="color">
+		<legend>
+			<h6>Color</h6>
+			<div class="switch">
+				<label for="colorBool">
+					<input type="checkbox" id="colorBool" name="colorBool" checked><span class="lever"></span>
+				</label>
+			</div>
+			<p class="random">
+				<input type="checkbox" name="colorRandomize" id="colorRadomize" />
+				<label for="colorRandomize">Randomize</label>
+			</p>
+		</legend>
+		<section class="fields">
+			<div class="color-field">
+				<input type="color" name="color" id="color"  value="#00e5ff" oninput="colorDisplay.value = color.value.replace('#', '')" />
+				<label for="color">#</label>
+				<input type="text" name="colorDisplay" id="colorDisplay"  value="00e5ff" oninput="color.value = '#'+colorDisplay.value">
+			</div>
+			<label for="colorOpacity">Opacity</label>
+			<div class="range">
+				<input type="range" value="30" min="0" max="100" step="1" name="colorOpacity" id="colorOpacity">
+			</div>
+		</section>
+	</fieldset>
+	<fieldset class="border">
+		<legend>
+			<h6>Stroke</h6>
+			<div class="switch">
+				<label for="borderBool">
+					<input type="checkbox" id="borderBool" name="borderBool" checked><span class="lever"></span>
+				</label>
+			</div>
+			<p class="random">
+				<input type="checkbox" name="borderRandomize" id="borderRandomize" />
+				<label for="borderRandomize">Randomize</label>
+			</p>
+		</legend>
+		<section class="fields">
+			<div class="color-field">
+				<input type="color" name="borderColor" id="borderColor"  value="#00e5ff" oninput="borderColorDisplay.value = borderColor.value.replace('#', '')" />
+					<label for="borderColor">#</label>
+					<input type="text" name="borderColorDisplay" id="borderColorDisplay"  value="00e5ff" oninput="borderColor.value = '#'+borderColorDisplay.value">
+			</div>
+			<label for="borderOpacity">Opacity</label>
+			<div class="range">
+				<input type="range" value="100" min="0" max="100" step="1" name="borderOpacity" id="borderOpacity">
+			</div>
+			<label for="borderWidth">Width</label>
+			<div class="range">
+				<input type="range" value="2" min="0" max="10" step="1" name="borderWidth" id="borderWidth">
+			</div>
+		</section>
+	</fieldset>
+	<fieldset class="gravity">
+		<legend>
+			<h6>Gravity</h6>
+			<div class="switch">
+				<label for="gravityBool">
+					<input type="checkbox" id="gravityBool" name="gravityBool" checked><span class="lever"></span>
+				</label>
+			</div>
+			<p class="random">
+				<input type="checkbox" name="gravityRandomize" id="gravityRandomize" />
+				<label for="gravityRandomize">Randomize</label>
+			</p>
+		</legend>
+		<section class="fields">
+			<div class="range">
+				<input type="range" min="-5" max="5" value="-0.5" step="0.1" name="gravity" id="gravity" />
+			</div>
+		</section>
+	</fieldset>
+	<fieldset class="wind">
+		<legend>
+			<h6>Wind</h6>
+			<div class="switch">
+				<label for="windBool">
+					<input type="checkbox" id="windBool" name="windBool" checked><span class="lever"></span>
+				</label>
+			</div>
+			<p class="random">
+				<input type="checkbox" name="windRandomize" id="windRandomize" />
+				<label for="windRandomize">Randomize</label>
+			</p>
+		</legend>
+		<section class="fields">
+			<div class="range">
+				<input type="range" min="-5" max="5" value="-0.5" step="0.1" name="wind" id="wind"/>
+			</div>
+		</section>
+	</fieldset>
+	<fieldset class="rotation disabled">
+		<legend>
+			<h6>Rotate</h6>
+			<div class="switch">
+				<label for="rotationBool">
+					<input type="checkbox" id="rotationBool" name="rotationBool"><span class="lever"></span>
+				</label>
+			</div>
+			<p class="random">
+				<input type="checkbox" name="rotateRandomize" id="rotateRandomize" />
+				<label for="rotateRandomize">Randomize</label>
+			</p>
+		</legend>
+		<section class="fields">
+			<label for="rotationDirection">Direction</label>
+			<div class="input-field">
+				<select name="rotationDirection" id="rotationDirection" disabled>
+					<option value="clockwise" selected>Clockwise</option>
+					<option value="counter-clockwise">Counter Clockwise</option>
+					<option value="random">Random</option>
+				</select>
+			</div>
+			<label for="orient">Orientation</label>
+			<div class="range">
+				<input type="range" min="0" max="360" value="0" step="1" name="orient" id="orient" disabled />
+			</div>
+			<label for="rotationVelocity">Velocity</label>
+			<div class="range">
+				<input type="range" min="0" max="10" value="0.1" step="0.1" name="rotationVelocity" id="rotationVelocity" disabled/>
+			</div>
+		</section>
+	</fieldset>
+	<fieldset class="fade disabled">
+		<legend>
+			<h6>Fade</h6>
+			<div class="switch">
+				<label for="fadeBool">
+					<input type="checkbox" id="fadeBool" name="fadeBool"><span class="lever"></span>
+				</label>
+			</div>
+			<p class="random">
+				<input type="checkbox" name="fadeRandomize" id="fadeRandomize" />
+				<label for="fadeRandomize">Randomize</label>
+			</p>
+		</legend>
+		<section class="fields">
+			<label for="fade">Animate</label>
+			<div class="input-field">
+				<select name="fade" id="fade" disabled>
+					<option value="in" selected>In</option>
+					<option value="out">Out</option>
+					<option value="in-out">In-Out</option>
+				</select>
+			</div>
+			<label for="">Speed</label>
+			<div class="range">
+				<input type="range" min="0.00" max="20.00" value="0.1" step="0.1" name="fadeSpeed" id="fadeSpeed" disabled />
+			</div>
+		</section>
+	</fieldset>
+	<fieldset class="density">
+		<legend><h6>Density</h6></legend>
+		<section class="fields">
+			<div class="range">
+				<input type="range" min="0" max="300" value="20" step="1" name="density" id="density"/>
+			</div> 
+		</section>
+	</fieldset>
+	<fieldset class="life">
+		<legend>
+			<h6>Life</h6>
+			<p class="random">
+				<input type="checkbox" name="lifeRandomize" id="lifeRandomize" />
+				<label for="lifeRandomize">Randomize</label>
+			</p>
+		</legend>
+		<section class="fields">
+			<input type="checkbox" name="immortal" id="immortal" checked /><label for="immortal">Immortal</label>
+			<div class="range">
+				<input type="range" min="0" max="1000" value="1000" name="maxLife" id="maxLife" step="1"/>
+			</div>
+		</section>
+	</fieldset>
+	<fieldset class="spawn">
+		<legend>
+			<h6>Spawn</h6>
+			<div class="switch">
+				<label for="spawnBool">
+					<input type="checkbox" id="spawnBool" name="spawnBool" checked><span class="lever"></span>
+				</label>
+			</div>
+		</legend>
+		<section class="fields">
+			<div class="column">
+				<label>Origin X</label>
+				<input type="radio" class="with-gap" id="originXLeft" name="originXPreset" value="left" /><label for="originXLeft">Left</label><br />
+				<input type="radio" class="with-gap" id="originXRight" name="originXPreset" value="right" /><label for="originXRight">Right</label><br />
+				<input type="radio" class="with-gap" id="originXCenter" name="originXPreset" value="center" /><label for="originXCenter">Center</label><br />
+				<input type="radio" class="with-gap" id="originXRandom" name="originXPreset" value="random" checked /><label for="originXRandom">Random</label><br />
+				<input type="radio" class="with-gap" id="originXCustom" name="originXPreset" value="custom" /><label for="originXCustom">Custom</label><br />
+				<input type="number" name="originX" id="originX" placeholder="1" value="0" disabled/>
+			</div>
+			<div class="column">
+				<label>Origin Y</label>
+				<input type="radio" class="with-gap" name="originYPreset" id="originYTop" value="top" /><label for="originYTop">Top</label><br />
+				<input type="radio" class="with-gap" name="originYPreset" id="originYBottom" value="bottom" checked/><label for="originYBottom">Bottom</label><br />
+				<input type="radio" class="with-gap" name="originYPreset" id="originYCenter" value="center" /><label for="originYCenter">Center</label><br />
+				<input type="radio" class="with-gap" name="originYPreset" id="originYRandom" value="random" /><label for="originYRandom">Random</label><br />
+				<input type="radio" class="with-gap" name="originYPreset" id="originYCustom" value="custom" /><label for="originYCustom">Custom</label><br />
+				<input type="number" name="originY" id="originY" placeholder="1" value="0" disabled/>
+			</div>
+			<label for="spawnRate">Rate</label>
+			<div class="range">
+				<input type="range" min="0" max="100" value="8" step="1" name="spawnRate" id="spawnRate"/>
+			</div>
+		</section>
+	</fieldset>
+	
+</form>
+
+<script type="text/javascript" src="/demo/ion-demo.js"></script>
+
+</body>
+</html>

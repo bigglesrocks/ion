@@ -1,0 +1,350 @@
+
+@import "bower_components/materialize/sass/components/mixins";
+@import "bower_components/materialize/sass/components/color";
+@import "bower_components/materialize/sass/components/variables";
+
+$roboto-font-path: "/demo/fonts/roboto/";
+
+$switch-bg-color: color("cyan", "base");
+$switch-checked-lever-bg: color("blue-grey", "darken-1");
+$switch-unchecked-lever-bg: color("blue-grey", "base");
+$switch-unchecked-bg: color("blue-grey", "darken-1");
+
+$input-border-color: color("blue-grey", "base");
+$input-border: 1px solid $input-border-color;
+$input-focus-color: $switch-bg-color;
+$input-disabled-color: color("blue-grey", "darken-4");
+$input-disabled-border: 1px solid color("blue-grey", "darken-4");
+
+$select-background: color("blue-grey", "darken-1");
+
+$radio-fill-color: $switch-bg-color;
+$radio-border: 2px solid $radio-fill-color;
+
+$dropdown-bg-color: color("blue-grey", "darken-1");
+$dropdown-color: color("blue-grey", "lighten-4");
+$drop-down-hover-bg-color: color("blue-grey", "base");
+
+$toolbox-width: 300px;
+
+
+@import "bower_components/materialize/sass/components/normalize";
+
+@import "bower_components/materialize/sass/components/global";
+
+@import "bower_components/materialize/sass/components/roboto";
+@import "bower_components/materialize/sass/components/typography";
+
+@import "bower_components/materialize/sass/components/preloader";
+@import "bower_components/materialize/sass/components/dropdown";
+
+@import "bower_components/materialize/sass/components/forms/input-fields";
+@import "bower_components/materialize/sass/components/forms/forms";
+@import "bower_components/materialize/sass/components/forms/checkboxes";
+@import "bower_components/materialize/sass/components/forms/radio-buttons";
+@import "bower_components/materialize/sass/components/forms/select";
+@import "bower_components/materialize/sass/components/forms/switches";
+@import "bower_components/materialize/sass/components/forms/range";
+
+@import "../bower_components/materialize/extras/noUiSlider/nouislider.css";
+
+*  {
+	box-sizing: border-box;
+}
+
+
+
+#shape-icon-map {
+	display: none;
+}
+
+// Toolbox Controls
+// ========================================
+
+.toolbox {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: $toolbox-width;
+	background-color: color("blue-grey", "darken-4");
+	color: color("blue-grey", "lighten-3");
+	font-size: 0.8em;
+	border: 1px solid rgba(0,0,0,0.1);
+	height: 100%;
+	z-index: 0;
+	overflow-y: scroll;
+}
+
+fieldset {
+	border: none;
+	padding: 2em 0 0 0;
+	background-color: color("blue-grey", "darken-3");
+	margin: 0;
+	position: relative;
+	z-index: 1;
+
+	&.disabled {
+		color: color("blue-grey", "base");
+		background-color: color("blue-grey", "darken-4");
+
+		label { 
+			color: color("blue-grey", "base"); 
+		}
+	}
+	.column {
+		width: 50%;
+		float: left;
+	}
+}
+
+label {
+	color: color("blue-grey", "lighten-3");
+	display: inline-block;
+}
+
+legend {
+	clear: right;
+	background-color: darken(color("blue-grey", "darken-3"), 5%);
+	height: 2.65em;
+	display: inline-block;
+	padding: 0.5em 1em;
+	width: 100%;
+	top: 0;
+	margin-top: 0;
+	margin-bottom: -1em;
+	h6 {
+		float: left;
+		display: inline-block;
+		line-height: 1.5em;
+		margin: 0.15em 0 0 0;
+		font-size: 1em;
+		text-transform: uppercase;
+		& + .switch {
+			float: left;
+			
+		}
+	}
+	.random {
+		display: inline-block;
+		float: right;
+		margin-top: 0;
+	}
+}
+
+
+section.fields {
+	padding: 0 1em 1em 1em;
+
+	.input-field {
+		margin-top: 0;
+	}
+}
+
+.select-wrapper {
+	background-color: color("blue-grey", "darken-1");
+	color: color("blue-grey", "lighten-4");
+	input.select-dropdown {
+		padding: 0 1em;
+		box-sizing: border-box;
+	}
+	span.caret {
+		right: 1em;
+		color: color("blue-grey", "lighten-4");
+	}
+
+	.dropdown-content {
+
+		li {
+			
+			&.selected, &.active {
+				background-color: transparent;
+				span { color: $switch-bg-color; }
+			}
+		}
+	}
+}
+
+input[type="checkbox"] + label {
+	padding-left: 1.75em;
+}
+
+.switch {
+	font-size: 0.8em;
+}
+
+
+div.range, div.range-slider {
+	margin: 0 0 2em 0;
+}
+
+.noUi-connect, .noUi-handle, .noUi-target .range-label {
+	background-color: $switch-bg-color;
+}
+
+input[type="range"] {
+	display: none;
+	border: none;
+		&::-webkit-slider-thumb {
+			background-color: $switch-bg-color;
+		}
+		&::-moz-slider-thumb {
+			background-color: $switch-bg-color;
+		}
+		&::-ms-slider-thumb {
+			background-color: $switch-bg-color;
+		}
+		&::-webkit-slider-runnable-track {
+			background-color:  $switch-unchecked-lever-bg;
+		}
+		&::-moz-slider-runnable-track {
+			background-color:  $switch-unchecked-lever-bg;
+
+		}
+		&::-ms-slider-runnable-track {
+			background-color: $switch-unchecked-lever-bg;
+
+		}
+	&[disabled] {
+		&::-webkit-slider-thumb {
+			background-color: $switch-unchecked-bg;
+		}
+		&::-moz-slider-thumb {
+			background-color: $switch-unchecked-bg;
+		}
+		&::-ms-slider-thumb {
+			background-color: $switch-unchecked-bg;
+		}
+	}
+
+}
+
+fieldset.shape {
+	ul li {
+		display: inline-block;
+		width: 2em;
+		margin: 0.2em;
+		svg {
+			width: 100%;
+			* {
+				fill: $switch-unchecked-bg;
+				transition: fill 0.35s ease-in-out;
+				&:hover {
+					cursor: pointer;
+					fill: $switch-unchecked-lever-bg;
+				}
+			}
+		}
+		&.selected svg * {
+			fill: $switch-bg-color;
+		}
+	}
+}
+
+input[type="color"] {
+	padding: 0;
+	border: none;
+	outline: none;
+	box-shadow: none;
+	height: 3.8em;
+	&::-webkit-color-swatch-wrapper {
+		padding: 0;
+	}
+	&::-webkit-color-swatch {
+		border: none;
+	}
+}
+
+input[type="text"] {
+	background-color: color("blue-grey", "darken-2");
+}
+
+.color-field {
+	position: relative;
+	clear: both;
+	display: inline-block;
+	border-bottom: 1px solid color("blue-grey", "lighten-1");
+	transition: border 0.35s ease-in-out;
+	overflow: hidden;
+	margin-right: 2em;
+	&.focus {
+		border-bottom: 2px solid $input-focus-color;
+	}
+	input[type="text"] {
+		float: left;
+		display: inline-block;
+		width: auto;
+		border-bottom: none;
+		margin-bottom: 0;
+		&:focus {
+			border-bottom: none;
+		}
+	}
+	input[type="color"] {
+		float: left;
+	}
+	label {
+		float: left;
+		font-size: 1.5em;
+		padding: 0.5em;
+		background-color: color("blue-grey", "darken-2");
+	}
+	& + label {
+		margin-top: 1em;
+	}
+}
+
+.column label:first-child {
+	display: block;
+}
+
+// Demo Area
+// ========================================
+
+.demo {
+	width: calc(100vw - #{$toolbox-width});
+	height: 100vh;
+	position: relative;
+	margin-left: $toolbox-width;
+}
+
+
+#testcanvas {
+	width: 100%;
+	height: 100%;
+}
+
+
+header {
+	position: absolute;
+	top: 50%;
+	left: 3em;
+	transform: translate(0, -50%);
+	color: #333;
+	color: #fff;
+	padding: 1em;
+	text-align: center;
+
+	h1 {
+		font-size: 1;
+		line-height: 0;
+		width: 100%;
+		max-width: 300px;
+	}
+
+	svg {
+		path, polygon {
+			fill: #fff;
+		}
+	}
+
+	.input-field {
+		margin-top: 2.5em;
+
+		label {
+			left: 0;
+			top: -2em;
+		}
+	}
+}
+
+

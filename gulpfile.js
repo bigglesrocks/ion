@@ -45,12 +45,12 @@ gulp.task('styles', function() {
 });
 
 gulp.task('tStyles', function() {
-  return gulp.src('test/*.scss')
+  return gulp.src('demo/*.scss')
     .pipe(sourcemaps.init())
     .pipe(sass({ style: 'expanded'}, {sourcemap: true}))
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
     .pipe(combineMq())
-    .pipe(gulp.dest('test'))
+    .pipe(gulp.dest('demo'))
     .pipe(minifycss())
     .pipe(rename(function(path) {
       path.basename += "-min";
@@ -59,7 +59,7 @@ gulp.task('tStyles', function() {
       includeContent: false,
       sourceRoot: '/'
     }))
-    .pipe(gulp.dest('test'))
+    .pipe(gulp.dest('demo'))
 });
 
 gulp.task('scripts', function() {
@@ -76,19 +76,33 @@ gulp.task('scripts', function() {
 
 gulp.task('tScripts', function() {
   // Get the files to be included
-  return gulp.src(["bower_components/jquery/dist/jquery.js","bower_components/materialize/extra/noUiSlider/nouislider.js", "src/ion.js", "test/test.js",])
-    .pipe(concat('demo.js'))
-    .pipe(gulp.dest('test'))
+  return gulp.src(
+    ["bower_components/jquery/dist/jquery.js",
+    "bower_components/materialize/js/jquery.easing.1.3.js",
+    "bower_components/materialize/extras/noUiSlider/nouislider.js", 
+    "bower_components/materialize/js/global.js",
+    "bower_components/materialize/js/dropdown.js",
+    "bower_components/materialize/js/forms.js", 
+    "src/ion.js", 
+    "demo/demo.js",])
+    .pipe(concat('ion-demo.js'))
+    .pipe(gulp.dest('demo'))
     .pipe(uglify({
       mangle: false
     }))
-    .pipe(rename('test-min.js'))
-    .pipe(gulp.dest('test'))
+    .pipe(rename('ion-demo-min.js'))
+    .pipe(gulp.dest('demo'))
 });
 
 gulp.task('fonts', function() {
   return gulp.src(["bower_components/materialize/fonts/**/*"])
-    .pipe(gulp.dest('test/fonts'));
+    .pipe(gulp.dest('demo/fonts'));
+});
+
+gulp.task('demo', function() {
+  return gulp.src(["demo/demo.html"])
+    .pipe(rename("index.html"))
+    .pipe(gulp.dest(""));
 });
 
 gulp.task('watch', function() {
@@ -98,12 +112,14 @@ gulp.task('watch', function() {
   livereload.listen();
 
   // Watch for changes in source files
-  gulp.watch(['test/*.scss'], ['tStyles']);
+  gulp.watch(['demo/*.scss'], ['tStyles']);
 
-  gulp.watch(['src/*.js', 'test/test.js'], ['scripts', 'tScripts']);
+  gulp.watch(['src/*.js', 'demo/demo.js'], ['scripts', 'tScripts']);
+
+  gulp.watch(["demo/demo.html"], ['demo']);
 
   // Watch for changes in 'compiled' files
-   gulp.watch(['test/*.{css,html}', 'test/demo.js'], function (file) {
+   gulp.watch(['demo/*.{css,html}', 'demo/ion-demo.js'], function (file) {
        var relPath = '\\' + path.relative('/', file.path);
        gutil.log('File changed: ' + gutil.colors.magenta(relPath));
        livereload.changed(file.path);

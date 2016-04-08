@@ -97,8 +97,6 @@ var Particle = function(particleOptions, ion) {
     break;
   }
 
-  // console.log(o.originX);
-
   switch(o.originY) {
     case 'top':
       particle.y =  -particle.size*2;
@@ -118,6 +116,7 @@ var Particle = function(particleOptions, ion) {
       particle.y = o.originY;
     break;
   }
+
 
   switch(particle.rotationDirection) {
     case 'clockwise':
@@ -211,7 +210,7 @@ Particle.prototype.draw = function() {
   // context.globalCompositeOpteration = 'destination-out';
 
 
-   if((particle.life > particle.maxLife && particle.maxLife != 'immortal') || 
+   if((particle.life > particle.maxLife && particle.maxLife != false) || 
     (particle.gravity > 0 && particle.y > canvas.height+particle.size*2) || 
     (particle.gravity < 0 && particle.y < -particle.size*2) ||
     (particle.wind < 0 && particle.x < -particle.size*2) ||
@@ -323,6 +322,7 @@ Ion.prototype.setParticles = function(particles) {
     }, particles[p]);
   }
    ion.particles = particles;
+   console.log(particles);
 
 }
 
@@ -333,7 +333,6 @@ Ion.prototype.setOptions = function(opts) {
   options = ion.setOpts({
     frameRate: 30,
     canvasBackground: 'rgba(255,255,255,1)'
-    // startPopulated: true
   }, opts);
 
   ion.frameRate = options.frameRate;
@@ -361,6 +360,7 @@ Ion.prototype.init = function() {
 }
 
 Ion.prototype.start = function() {
+
   var ion = this;
 
   // ========================================
