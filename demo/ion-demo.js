@@ -12630,6 +12630,7 @@ Particle.prototype.setProperty = function(opts) {
     // Pick a random number from that range as the property value
     } else {
       p[prop] = randomNumber(randomize[0], randomize[1], true);
+
     }
   // If the property value passed was an array, then the user has set custom min & max limits
   // Choose a random number from that range between
@@ -12639,7 +12640,7 @@ Particle.prototype.setProperty = function(opts) {
       p[prop] = val[randomNumber(0, val.length)];
     // if there's more that 2 values, use those as a list of values to select from
     } else {
-       p[prop] = randomNumber(val[0],val[1]);
+       p[prop] = randomNumber(val[0],val[1],true);
     }
    
   // Otherwise, just st the property value to what was passed
@@ -12657,6 +12658,7 @@ Particle.prototype.init = function(o) {
     value: o.color, 
     randomize: 'color'
   });
+
 
   // Convert color & opacity to rgba
   if(p.color.indexOf("#") >= 0) {
@@ -12706,6 +12708,7 @@ Particle.prototype.init = function(o) {
     value: o.wind,
     randomize: [-5,5]
   });
+
 
   // Orientation
   p.setProperty({
@@ -13220,11 +13223,20 @@ isArray = function(val) {
 
 
 function getAbsValue(val) {
-	var abs = Math.abs(parseFloat(val));;
-	if(val.match("-")) {
-		abs = -abs;
+	var number;
+	if(typeof(val) == 'string') {
+		number = Math.abs(parseFloat(val));
+		if(val.match("-")) {
+			number = -number;
+		};
+	} else {
+		if(val < 0) {
+			number = -Math.abs(number);
+		} else {
+			number = Math.abs(number);
+		}
 	}
-	return abs;
+	return number;
 }
 
 $.fn.rangeVal = function() {
@@ -13246,6 +13258,7 @@ $.fn.rangeVal = function() {
 	} else {
 		val = getAbsValue(val);
 	}
+
 	return val;
 }
 
@@ -13270,8 +13283,6 @@ $('.range-slider').each(function() {
 		max = ranges.last(),
 		step = min.attr('step');
 
-
-
 	noUiSlider.create(this, {
 		start: [getAbsValue(min.val()), getAbsValue(max.val())],
 		connect: true,
@@ -13282,6 +13293,7 @@ $('.range-slider').each(function() {
 			'max': getAbsValue(max.attr('max'))
 		}
 	});
+
 });
 
 // Initialize noUiSlider single-range inputs
@@ -13342,7 +13354,6 @@ ion.setOptions({
 	canvasBackground: $('#canvasBackground').val()
 });
 
-
 ion.setParticles({
 	borderColor: $('#borderColor').val(),
 	borderWidth: $('.borderWidth-range').rangeVal(),
@@ -13361,8 +13372,6 @@ ion.setParticles({
 	spawnOrigin: ['random', 'bottom'],
 	wind: $('.wind-range').rangeVal()
 });
-
-// console.log(ion.particles);
 
 ion.start();
 
@@ -13450,7 +13459,7 @@ var updateCanvas = function() {
 			opacity = 'random'
 		} else {
 			color = $('#color').val();
-			color = $('.opacity-range').rangeVal();
+			opacity = $('.opacity-range').rangeVal();
 		}
 	}
 
@@ -13459,9 +13468,11 @@ var updateCanvas = function() {
 		if($('#borderRandomize').is(':checked')) {
 			borderColor = 'random';
 			borderWidth = 'random';
+			borderOpacity = 'random';
 		} else {
 			borderColor = $('#borderColor').val();
 			borderWidth = $('.borderWidth-range').rangeVal();
+			borderOpacity = $('.borderOpacity-range').rangeVal();
 		}
 	}
 
@@ -13471,6 +13482,7 @@ var updateCanvas = function() {
 			gravity = 'random';
 		} else {
 			gravity = $('.gravity-range').rangeVal();
+		
 		}
 		
 	}
@@ -13517,13 +13529,14 @@ var updateCanvas = function() {
 		}
 	}
 
+
 	// Create a new instance of Ion with the new settings
 	var ion =  new Ion('testcanvas', {
 		borderColor: borderColor,
 		borderWidth: borderWidth,
 		borderOpacity: borderOpacity,
 		color: color,
-		density: getAbsValue($('#density').rangeVal()),
+		density: $('#density').rangeVal(),
 		death: death,
 		fade: fade,
 		fadeSpeed: fadeSpeed,

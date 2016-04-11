@@ -35,6 +35,7 @@ Particle.prototype.setProperty = function(opts) {
     // Pick a random number from that range as the property value
     } else {
       p[prop] = randomNumber(randomize[0], randomize[1], true);
+
     }
   // If the property value passed was an array, then the user has set custom min & max limits
   // Choose a random number from that range between
@@ -44,7 +45,7 @@ Particle.prototype.setProperty = function(opts) {
       p[prop] = val[randomNumber(0, val.length)];
     // if there's more that 2 values, use those as a list of values to select from
     } else {
-       p[prop] = randomNumber(val[0],val[1]);
+       p[prop] = randomNumber(val[0],val[1],true);
     }
    
   // Otherwise, just st the property value to what was passed
@@ -62,6 +63,7 @@ Particle.prototype.init = function(o) {
     value: o.color, 
     randomize: 'color'
   });
+
 
   // Convert color & opacity to rgba
   if(p.color.indexOf("#") >= 0) {
@@ -111,6 +113,7 @@ Particle.prototype.init = function(o) {
     value: o.wind,
     randomize: [-5,5]
   });
+
 
   // Orientation
   p.setProperty({

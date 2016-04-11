@@ -10,11 +10,20 @@
 
 
 function getAbsValue(val) {
-	var abs = Math.abs(parseFloat(val));;
-	if(val.match("-")) {
-		abs = -abs;
+	var number;
+	if(typeof(val) == 'string') {
+		number = Math.abs(parseFloat(val));
+		if(val.match("-")) {
+			number = -number;
+		};
+	} else {
+		if(val < 0) {
+			number = -Math.abs(number);
+		} else {
+			number = Math.abs(number);
+		}
 	}
-	return abs;
+	return number;
 }
 
 $.fn.rangeVal = function() {
@@ -36,6 +45,7 @@ $.fn.rangeVal = function() {
 	} else {
 		val = getAbsValue(val);
 	}
+
 	return val;
 }
 
@@ -60,8 +70,6 @@ $('.range-slider').each(function() {
 		max = ranges.last(),
 		step = min.attr('step');
 
-
-
 	noUiSlider.create(this, {
 		start: [getAbsValue(min.val()), getAbsValue(max.val())],
 		connect: true,
@@ -72,6 +80,7 @@ $('.range-slider').each(function() {
 			'max': getAbsValue(max.attr('max'))
 		}
 	});
+
 });
 
 // Initialize noUiSlider single-range inputs
@@ -132,7 +141,6 @@ ion.setOptions({
 	canvasBackground: $('#canvasBackground').val()
 });
 
-
 ion.setParticles({
 	borderColor: $('#borderColor').val(),
 	borderWidth: $('.borderWidth-range').rangeVal(),
@@ -151,8 +159,6 @@ ion.setParticles({
 	spawnOrigin: ['random', 'bottom'],
 	wind: $('.wind-range').rangeVal()
 });
-
-// console.log(ion.particles);
 
 ion.start();
 
@@ -240,7 +246,7 @@ var updateCanvas = function() {
 			opacity = 'random'
 		} else {
 			color = $('#color').val();
-			color = $('.opacity-range').rangeVal();
+			opacity = $('.opacity-range').rangeVal();
 		}
 	}
 
@@ -249,9 +255,11 @@ var updateCanvas = function() {
 		if($('#borderRandomize').is(':checked')) {
 			borderColor = 'random';
 			borderWidth = 'random';
+			borderOpacity = 'random';
 		} else {
 			borderColor = $('#borderColor').val();
 			borderWidth = $('.borderWidth-range').rangeVal();
+			borderOpacity = $('.borderOpacity-range').rangeVal();
 		}
 	}
 
@@ -261,6 +269,7 @@ var updateCanvas = function() {
 			gravity = 'random';
 		} else {
 			gravity = $('.gravity-range').rangeVal();
+		
 		}
 		
 	}
@@ -307,13 +316,14 @@ var updateCanvas = function() {
 		}
 	}
 
+
 	// Create a new instance of Ion with the new settings
 	var ion =  new Ion('testcanvas', {
 		borderColor: borderColor,
 		borderWidth: borderWidth,
 		borderOpacity: borderOpacity,
 		color: color,
-		density: getAbsValue($('#density').rangeVal()),
+		density: $('#density').rangeVal(),
 		death: death,
 		fade: fade,
 		fadeSpeed: fadeSpeed,
