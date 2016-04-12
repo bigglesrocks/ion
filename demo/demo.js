@@ -130,6 +130,12 @@ $('.random input[type="checkbox"]').on('change', function() {
 	}
 });
 
+//Set the value of the hidden select when clicking on shape icons
+$('fieldset.shape .fields ul li').click(function(e) {
+	$('fieldset.shape .fields ul li').removeClass('selected');
+	$(this).addClass('selected');
+	$('#shape').val($(this).data('shape')).trigger('change');
+});
 
 // Ion Particle Generator
 // ========================================
@@ -152,7 +158,7 @@ ion.setParticles({
 	gravity: $('.gravity-range').rangeVal(),
 	opacity: $('.opacity-range').rangeVal(),
 	origin: ['random', 'random'],
-	rotation: false,
+	rotationVelocity: 0,
 	shape: $('#shape').val(),
 	size: [4,10,35,90],
 	spawnRate: $('#spawnRate').rangeVal(),
@@ -292,7 +298,6 @@ var updateCanvas = function() {
 			orient = $('.orient-range').rangeVal();
 			rotationVelocity = $('.rotationVelocity-range').rangeVal();
 		}
-		
 	}
 
 	//Fade

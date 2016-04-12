@@ -35,7 +35,6 @@ Particle.prototype.setProperty = function(opts) {
     // Pick a random number from that range as the property value
     } else {
       p[prop] = randomNumber(randomize[0], randomize[1], true);
-
     }
   // If the property value passed was an array, then the user has set custom min & max limits
   // Choose a random number from that range between
@@ -47,15 +46,16 @@ Particle.prototype.setProperty = function(opts) {
     } else {
        p[prop] = randomNumber(val[0],val[1],true);
     }
-   
   // Otherwise, just st the property value to what was passed
   } else {
     p[prop] = val;
   }
+
 }
 
 Particle.prototype.init = function(o) {
-  var p = this;
+  var p = this,
+      opacity = o.opacity || 1;
 
   // Background Color
   p.setProperty({
@@ -64,13 +64,24 @@ Particle.prototype.init = function(o) {
     randomize: 'color'
   });
 
+   // Opacity
+  p.setProperty({
+    property: 'opacity', 
+    value: o.opacity, 
+    randomize: [0,1]
+  });
 
   // Convert color & opacity to rgba
   if(p.color.indexOf("#") >= 0) {
-    p.color = convertHex(p.color, 1);
+    p.color = convertHex(p.color, p.opacity*100);
   }
+
   // Split the RGBA string in an array of values so we can fade if needed
   p.colorArray = p.color.match(/(\d{1,4})/g);
+
+  if(p.opacity) {
+    p.colorArray[3] = p.opacity;
+  }
 
   // Border Color
   p.setProperty({
@@ -137,6 +148,8 @@ Particle.prototype.init = function(o) {
     value: o.fade,
     acceptedValues: ['in', 'out', 'in-out']
   });
+
+  // Fade Speed
   p.setProperty({
     property: 'fadeSpeed',
     value: o.fadeSpeed,
@@ -207,28 +220,11 @@ Particle.prototype.init = function(o) {
     value: o.rotationVelocity,
     randomize: [0,10]
   });
-
-  // Set particle's rotation
-  switch(p.rotationDirection) {
-    case 'clockwise':
-      p.rotation = p.rotationVelocity*0.01
-    break;
-    case 'counter-clockwise':
-      p.rotation = - p.rotationVelocity*0.01
-    break;
-    case 'random':
-      var chance = randomNumber(0,100);
-      if(chance > 50) {
-        p.rotation = p.rotationVelocity*0.01;
-      } else {
-        p.rotation = p.roationVelocity*0.01
-      }
-  }
-
+  
 }
 
 // Place the drawn particle on the canvas
-Particle.prototype.render = function(shape) {
+Particle.prototype.render = function() {
 
       var particle = this,
           context = particle.ion.context;
@@ -242,10 +238,11 @@ Particle.prototype.render = function(shape) {
      context.save();
 
      // Use the drawing instructions for the particle's shape to render the particle
-     particle.ion.shapes[shape](particle);
+     particle.ion.shapes[particle.shape](particle);
     
     // restore the context to its untranslated/unrotated state
     context.restore();
+
 }
 
 // Draw the particle shape
@@ -263,12 +260,19 @@ Particle.prototype.draw = function() {
   particle.life++;
   
   // Adjust the particles orientation based on rotation settings
-  if(particle.rotationDirection == 'clockwise') {
-    particle.rotation += particle.rotationVelocity;
-  } else {
-     particle.rotation -= particle.rotationVelocity;
+  if(particle.rotationVelocity > 0) {
+
+    if(particle.rotationDirection == 'clockwise') {
+      particle.orient += particle.rotationVelocity;
+    } else {
+       particle.orient -= particle.rotationVelocity;
+    }
   }
-  
+
+  // if(particle.id == 5) {
+  //    console.log(particle.orient);
+  // } 
+
   // if(particle.grow) {
   //   particle.size = particle.size*particle.grow;
   // }
@@ -293,11 +297,12 @@ Particle.prototype.draw = function() {
  
  // Clear the canvas
   context.clearRect(canvas.width, canvas.height, canvas.width, canvas.height);
-  // context.fillStyle = particle.color;
+
   // context.globalCompositeOperation = this.composite;
 
   // Render the particle on the canvas
-  particle.render(particle.shape, particle.x, particle.y, particle.size, particle.size, particle.rotation, particle.color, particle.rotationDirection);
+  particle.render();
+
   // context.globalCompositeOpteration = 'destination-out';
 
 
@@ -383,31 +388,6 @@ Ion.prototype.setParticles = function(particles) {
 
   // Iterate through each particle settings object and set any unset values to the defaults
   for(var p=0; p<particles.length; p++) {
-    // console.log("Ion:setParticles:Line376")
-    // console.log({
-    //   shape: 'circle',
-    //   color: 'rgba(0,0,0,1)',
-    //   opacity: 1,
-    //   borderColor: "rbga(0,0,0,0)",
-    //   borderWidth: 0,
-    //   borderOpacity: 1,
-    //   size: [10,90],
-    //   rotationDirection: 'clockwise',
-    //   rotationVelocity: 0.1,
-    //   orient: 0,
-    //   death: 100,
-    //   fade: false,
-    //   fadeSpeed: 0.01,
-    //   grow: false,
-    //   gravity: 1,
-    //   wind: 1,
-    //   density: 20,
-    //   origin: ['random', 'random'],
-    //   spawnRate: 2,
-    //   spawnOrigin: ['random', 'top']
-    // });
-    // console.log("Ion:setParticles:Line399");
-    // console.log(particles[p]);
     particles[p] = defaultOptions({
       shape: 'circle',
       color: 'rgba(0,0,0,1)',
@@ -514,9 +494,7 @@ Ion.prototype.start = function() {
 }
 var drawCircle = function(p) {
     var ctx = p.ion.context;
-    var size = randomNumber(p.minSize, p.maxSize);
        ctx.translate(p.x, p.y);
-       // ctx.fillStyle = p.color;
        ctx.moveTo(p.x,p.y);
        ctx.beginPath();
        ctx.arc(30, 30, p.size, 0, Math.PI*2, true);
@@ -529,14 +507,13 @@ var drawCircle = function(p) {
 var drawSquare = function(p) {
     var ctx = p.ion.context;
        ctx.translate(p.x, p.y);
-       // context.fillStyle = color;
-       if(p.rotation) {
-          ctx.rotate(p.orient + p.rotationVelocity);
-          p.orient++;
+       ctx.moveTo(p.x, p.y);
+       if(p.orient) {
+          ctx.rotate(p.orient*Math.PI/180);
        }
-       ctx.moveTo(p.x,p.y);
+       ctx.moveTo(p.x-p.size*0.5, p.y-p.size*0.5);
        ctx.beginPath();
-       ctx.rect(0, 0, p.size, p.size);
+       ctx.rect(-p.size*0.5, -p.size*0.5, p.size, p.size);
        ctx.fill();
        if(p.borderWidth) {
         ctx.stroke();

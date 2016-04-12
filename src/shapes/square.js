@@ -1,14 +1,13 @@
 var drawSquare = function(p) {
     var ctx = p.ion.context;
        ctx.translate(p.x, p.y);
-       // context.fillStyle = color;
-       if(p.rotation) {
-          ctx.rotate(p.orient + p.rotationVelocity);
-          p.orient++;
+       ctx.moveTo(p.x, p.y);
+       if(p.orient) {
+          ctx.rotate(p.orient*Math.PI/180);
        }
-       ctx.moveTo(p.x,p.y);
+       ctx.moveTo(p.x-p.size*0.5, p.y-p.size*0.5);
        ctx.beginPath();
-       ctx.rect(0, 0, p.size, p.size);
+       ctx.rect(-p.size*0.5, -p.size*0.5, p.size, p.size);
        ctx.fill();
        if(p.borderWidth) {
         ctx.stroke();

@@ -69,32 +69,32 @@
 		<section class="fields">
 			<input type="hidden" name="shape" id="shape" value="circle" />
 			<ul>
-				<li class="selected">
+				<li class="selected" data-shape="circle">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#circle" />
 					</svg>
 				</li>
-				<li>
+				<li data-shape="square">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#square" />
 					</svg>
 				</li>
-				<li>
+				<li data-shape="iso-triangle">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#iso-triangle" />
 					</svg>
 				</li>
-				<li>
+				<li data-shape="right-triangle">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#right-triangle" />
 					</svg>
 				</li>
-				<li>
+				<li data-shape="star">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#star" />
 					</svg>
 				</li>
-				<li>
+				<li data-shape="raindrop">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#raindrop" />
 					</svg>
@@ -132,8 +132,8 @@
 			</div>
 			<label for="opacity">Opacity</label>
 			<div class="range-slider opacity-range">
-				<input type="range" name="minOpacity" id="minOpacity" min="0" max="1" step="0.1" value="0.15"/>
-				<input type="range" name="maxOpacity" id="maxOpacity" min="0" max="1" step="0.1" value="0.5"/>
+				<input type="range" name="minOpacity" id="minOpacity" min="0" max="1" step="0.01" value="0.15"/>
+				<input type="range" name="maxOpacity" id="maxOpacity" min="0" max="1" step="0.01" value="0.5"/>
 			</div>
 		</section>
 	</fieldset>
@@ -237,8 +237,8 @@
 			</div>
 			<label for="rotationVelocity">Velocity</label>
 			<div class="range-slider rotationVelocity-range">
-				<input type="range" name="minRotationVelocity" id="minRotationVelocity" min="0" max="5" step="0.1" value="0.1"/>
-				<input type="range" name="maxRotationVelocity" id="maxRotationVelocity" min="0" max="5" step="0.1" value="0.1"/>
+				<input type="range" name="minRotationVelocity" id="minRotationVelocity" min="0" max="5" step="0.01" value="0.01"/>
+				<input type="range" name="maxRotationVelocity" id="maxRotationVelocity" min="0" max="5" step="0.01" value="0.5"/>
 			</div>
 		</section>
 	</fieldset>
