@@ -54,16 +54,7 @@
 </section>
 
 <form class="toolbox">
-	<fieldset class="background">
-		<legend><h6>Background</h6></legend>
-		<section class="fields">
-			<div class="color-field">
-				<input type="color" name="canvasBackground" id="canvasBackground"  value="#212121" oninput="canvasBackgroundDisplay.value = canvasBackground.value.replace('#', '')" />
-				<label for="color">#</label>
-				<input type="text" name="canvasBackgroundDisplay" id="canvasBackgroundDisplay"  value="212121" oninput="canvasBackground.value = '#'+canvasBackgroundDisplay.value">
-			</div>
-		</section>
-	</fieldset>
+	
 	<fieldset class="shape">
 		<legend><h6>Shape</h6></legend>
 		<section class="fields">
@@ -100,17 +91,24 @@
 					</svg>
 				</li>
 			</ul>
+			<label for="minSize">Size</label>
+			<div class="range-slider size-range">
+				<input type="range" name="minSize" id="minSize" min="1" max="300" step="1" value="4"/>
+				<input type="range" name="maxSize" id="minSize" min="1" max="300" step="1" value="90"/>
+			</div>
 		</section>
 	</fieldset>
-	<fieldset class="size">
-		<legend>
-			<h6>Size</h6>
-		</legend>
-		<div class="range-slider size-range">
-			<input type="range" name="minSize" id="minSize" min="1" max="300" step="1" value="4"/>
-			<input type="range" name="maxSize" id="minSize" min="1" max="300" step="1" value="90"/>
-		</div>
+	<fieldset class="background">
+		<legend><h6>Background</h6></legend>
+		<section class="fields">
+			<div class="color-field">
+				<input type="color" name="canvasBackground" id="canvasBackground"  value="#212121" oninput="canvasBackgroundDisplay.value = canvasBackground.value.replace('#', '')" />
+				<label for="color">#</label>
+				<input type="text" name="canvasBackgroundDisplay" id="canvasBackgroundDisplay"  value="212121" oninput="canvasBackground.value = '#'+canvasBackgroundDisplay.value">
+			</div>
+		</section>
 	</fieldset>
+	
 	<fieldset class="color">
 		<legend>
 			<h6>Color</h6>
@@ -176,10 +174,6 @@
 					<input type="checkbox" id="gravityBool" name="gravityBool" checked><span class="lever"></span>
 				</label>
 			</div>
-			<p class="random">
-				<input type="checkbox" name="gravityRandomize" id="gravityRandomize" />
-				<label for="gravityRandomize">Randomize</label>
-			</p>
 		</legend>
 		<section class="fields">
 			<div class="range-slider gravity-range">
@@ -196,10 +190,6 @@
 					<input type="checkbox" id="windBool" name="windBool" checked><span class="lever"></span>
 				</label>
 			</div>
-			<p class="random">
-				<input type="checkbox" name="windRandomize" id="windRandomize" />
-				<label for="windRandomize">Randomize</label>
-			</p>
 		</legend>
 		<section class="fields">
 			<div class="range-slider wind-range">
@@ -207,6 +197,32 @@
 				<input type="range" name="maxWind" id="maxWind" min="-5" max="5" step="0.25" value="-0.25"/>
 			</div>
 		</section>
+	</fieldset>
+	<fieldset class="sizeDynamics disabled">
+	<legend>
+		<h6>Scale</h6>
+		<div class="switch">
+			<label for="scaleBool">
+				<input type="checkbox" id="scaleBool" name="scaleBool"><span class="lever"></span>
+			</label>
+		</div>
+	</legend>
+	<section class="fields">
+		<input type="radio" class="with-gap" name="scale" id="scaleGrow" value="grow" checked disabled/><label for="scaleGrow">Grow</label>
+		<input type="radio" class="with-gap" name="scale" id="scaleShrink" value="shrink" disabled/><label for="scaleShrink">Shrink</label>
+		<input type="radio" class="with-gap" name="scale" id="scaleRandom" value="random" disabled/><label for="scaleRandom">Random</label>
+		<br/>
+		<label for="scaleRate">Rate</label>
+		<div class="range-slider scaleRate-range">
+			<input type="range" name="scaleRate" id="scaleRate" min="0" max="5" step="0.1" value="0.1" disabled/>
+			<input type="range" name="scaleRate" id="scaleRate" min="0" max="5" step="0.1" value="0.3" disabled/>
+		</div>
+		<label for="scaleLimit">Limit</label>
+		<div class="range-slider scaleLimit-range">
+			<input type="range" name="scaleLimit" id="scaleLimit" min="0" max="800" step="1" value="40" disabled/>
+			<input type="range" name="scaleLimit" id="scaleLimit" min="0" max="800" step="1" value="250" disabled/>
+		</div>
+	</section>
 	</fieldset>
 	<fieldset class="rotation disabled">
 		<legend>
@@ -216,10 +232,6 @@
 					<input type="checkbox" id="rotationBool" name="rotationBool"><span class="lever"></span>
 				</label>
 			</div>
-			<p class="random">
-				<input type="checkbox" name="rotateRandomize" id="rotateRandomize" />
-				<label for="rotateRandomize">Randomize</label>
-			</p>
 		</legend>
 		<section class="fields">
 			<label for="rotationDirection">Direction</label>
@@ -250,10 +262,6 @@
 					<input type="checkbox" id="fadeBool" name="fadeBool"><span class="lever"></span>
 				</label>
 			</div>
-			<p class="random">
-				<input type="checkbox" name="fadeRandomize" id="fadeRandomize" />
-				<label for="fadeRandomize">Randomize</label>
-			</p>
 		</legend>
 		<section class="fields">
 			<label for="fade">Animate</label>
@@ -262,6 +270,7 @@
 					<option value="in" selected>In</option>
 					<option value="out">Out</option>
 					<option value="in-out">In-Out</option>
+					<option value="random">Random</option>
 				</select>
 			</div>
 			<label for="">Speed</label>
@@ -280,10 +289,6 @@
 					<input type="checkbox" id="deathBool" name="deathBool"><span class="lever"></span>
 				</label>
 			</div>
-			<p class="random">
-				<input type="checkbox" name="deathRandomise" id="deathRandomise" disabled/>
-				<label for="deathRandomise">Randomize</label>
-			</p>
 		</legend>
 		<section class="fields">
 			<div class="range-slider death-range">

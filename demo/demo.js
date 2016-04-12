@@ -156,6 +156,7 @@ ion.setParticles({
 	death: false,
 	fade: false,
 	gravity: $('.gravity-range').rangeVal(),
+	grow: false,
 	opacity: $('.opacity-range').rangeVal(),
 	origin: ['random', 'random'],
 	rotationVelocity: 0,
@@ -200,7 +201,8 @@ var updateCanvas = function() {
 		spawnOriginX = $('[name="spawnOriginXPreset"]:checked').val(),
 		spawnOriginY = $('[name="spawnOriginYPreset"]:checked').val(),
 		spawnRate = 0,
-		wind = 0;
+		wind = 0,
+		scale = false;
 
 	// Read form fields values 
 
@@ -321,6 +323,11 @@ var updateCanvas = function() {
 		}
 	}
 
+	//Size Dynamic
+	if($('#scaleBool').is(':checked')) {
+		scale = $('[name="scale"]:checked').val();
+	}
+
 
 	// Create a new instance of Ion with the new settings
 	var ion =  new Ion('testcanvas', {
@@ -343,6 +350,9 @@ var updateCanvas = function() {
 		spawnRate: spawnRate,
 		spawnOrigin: spawnOrigin,
 		wind: wind,
+		scale: scale,
+		scaleRate:  $('.scaleRate-range').rangeVal(),
+		scaleLimit: $('.scaleLimit-range').rangeVal()
 	}, {
 		canvasBackground: $('#canvasBackground').val()
 	});

@@ -142,7 +142,7 @@ section.fields {
 }
 
 .select-wrapper {
-	background-color: rbga(255,255,255,0.2);
+	background-color: $select-background;
 	color: color("blue-grey", "lighten-4");
 	input.select-dropdown {
 		padding: 0 1em;
@@ -179,6 +179,25 @@ div.range, div.range-slider {
 
 .noUi-connect, .noUi-handle, .noUi-target .range-label {
 	background-color: $switch-bg-color;
+}
+
+input[type="radio"].with-gap {
+	&:disabled {
+		& + label {
+			color: color("blue-grey", "darken-2");
+		}
+		&:not(:checked) + label:before {
+			border-color: color("blue-grey", "darken-2");
+		}
+		&:checked + label {
+			&:before {
+				border-color: color("cyan", "darken-4");
+			}
+			&:after {
+				background-color: color("cyan", "darken-4");
+			}
+		}
+	}
 }
 
 input[type="range"] {

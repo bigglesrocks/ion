@@ -12833,7 +12833,7 @@ Particle.prototype.init = function(o) {
   p.setProperty({
     property: 'rotationDirection',
     value: o.rotationDirection,
-    acceptedValues: ['clockwise', 'counter-clockwise', 'random']
+    acceptedValues: ['clockwise', 'counter-clockwise']
   });
 
   // Rotation Velocity
@@ -12842,6 +12842,36 @@ Particle.prototype.init = function(o) {
     value: o.rotationVelocity,
     randomize: [0,10]
   });
+
+  //Scale
+  p.setProperty({
+    property: 'scale',
+    value: o.scale,
+    acceptedValues: ['grow','shrink']
+  });
+
+  // console.log("o.scale="+o.scale);
+  // console.log("p.scale="+p.scale);
+
+  //Scale Rate
+  p.setProperty({
+    property: 'scaleRate',
+    value: o.scaleRate,
+    randomize: [0.1,3]
+  });
+
+  var scaleLimitMin = 0,
+      scaleLimitMax = p.ion.canvas.width;
+
+  p.scale == "grow" ? scaleLimitMin = p.size : scaleLimitMax = p.size
+
+  p.setProperty({
+    property: 'scaleLimit',
+    value: o.scaleLimit,
+    randomize: [scaleLimitMin, scaleLimitMax]
+  });
+
+  // console.log(p);
   
 }
 
@@ -12891,14 +12921,13 @@ Particle.prototype.draw = function() {
     }
   }
 
-  // if(particle.id == 5) {
-  //    console.log(particle.orient);
-  // } 
-
-  // if(particle.grow) {
-  //   particle.size = particle.size*particle.grow;
-  // }
-  
+  // Adjust particle size based on scaling options
+  if(particle.scale == 'grow' && particle.size < particle.scaleLimit) {
+     particle.size += particle.scaleRate;
+  } else if(particle.scale == 'shrink' && particle.size > particle.scaleLimit) {
+     particle.size -= particle.scaleRate;
+  }
+   
   // Adjust the particle's opacity based on the fade settings
   if(particle.fade) {
     if(particle.fadeStop === false) {
@@ -12930,6 +12959,7 @@ Particle.prototype.draw = function() {
 
    // Kill the particle if it's reached it's death or has left the visible canvas area
    if((particle.life > particle.death && particle.death != false) || 
+    (particle.size < 0) ||
     (particle.gravity > 0 && particle.y > canvas.height+particle.size*2) || 
     (particle.gravity < 0 && particle.y < -particle.size*2) ||
     (particle.wind < 0 && particle.x < -particle.size*2) ||
@@ -13019,12 +13049,14 @@ Ion.prototype.setParticles = function(particles) {
       strokeOpacity: 1,
       size: [10,90],
       rotationDirection: 'clockwise',
-      rotationVelocity: 0.1,
+      rotationVelocity: 0,
       orient: 0,
-      death: 100,
+      death: false,
       fade: false,
       fadeSpeed: 0.01,
-      grow: false,
+      scale: false,
+      scaleRate: 0.2,
+      scaleLimit: 500,
       gravity: 1,
       wind: 1,
       density: 20,
@@ -13381,6 +13413,7 @@ ion.setParticles({
 	death: false,
 	fade: false,
 	gravity: $('.gravity-range').rangeVal(),
+	grow: false,
 	opacity: $('.opacity-range').rangeVal(),
 	origin: ['random', 'random'],
 	rotationVelocity: 0,
@@ -13425,7 +13458,8 @@ var updateCanvas = function() {
 		spawnOriginX = $('[name="spawnOriginXPreset"]:checked').val(),
 		spawnOriginY = $('[name="spawnOriginYPreset"]:checked').val(),
 		spawnRate = 0,
-		wind = 0;
+		wind = 0,
+		scale = false;
 
 	// Read form fields values 
 
@@ -13546,6 +13580,11 @@ var updateCanvas = function() {
 		}
 	}
 
+	//Size Dynamic
+	if($('#scaleBool').is(':checked')) {
+		scale = $('[name="scale"]:checked').val();
+	}
+
 
 	// Create a new instance of Ion with the new settings
 	var ion =  new Ion('testcanvas', {
@@ -13568,6 +13607,9 @@ var updateCanvas = function() {
 		spawnRate: spawnRate,
 		spawnOrigin: spawnOrigin,
 		wind: wind,
+		scale: scale,
+		scaleRate:  $('.scaleRate-range').rangeVal(),
+		scaleLimit: $('.scaleLimit-range').rangeVal()
 	}, {
 		canvasBackground: $('#canvasBackground').val()
 	});
