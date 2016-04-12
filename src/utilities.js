@@ -27,7 +27,15 @@ function convertHex(hex,opacity){
 
 // Create an array of separate values from an rgba color string
 function colorArray(rgbaString) {
-  return p.color.match(/(\d{1,4})/g);
+  return rgbaString.match(/(\d{1,4})/g);
+}
+
+function isColor(color) {
+  if(color.match(/(#(\d|[a-f]|[A-F]){6})|(rgba\((\d{1,3},\s?){3}\d?\.?\d{1}\))/g).length > 0) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // Strip any trailing zeros from decimal places on numbers

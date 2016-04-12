@@ -5,7 +5,7 @@ var drawCircle = function(p) {
        ctx.beginPath();
        ctx.arc(30, 30, p.size, 0, Math.PI*2, true);
        ctx.fill();
-       if(p.borderWidth) {
+       if(p.strokeWidth) {
         ctx.stroke();
        }
        ctx.closePath();

@@ -47,8 +47,36 @@ Particle.prototype.setProperty = function(opts) {
        p[prop] = randomNumber(val[0],val[1],true);
     }
   // Otherwise, just st the property value to what was passed
-  } else {
+  } else if(val) {
     p[prop] = val;
+  } else {
+    p[prop] = false;
+  }
+
+}
+
+Particle.prototype.colorFormat = function() {
+  var rgbaString,
+      p = this,
+      opacity = p.opacity*100 || 100,
+      strokeOpacity = p.strokeOpacity*100 || 100;
+
+  //Check if we have a hex value
+  if(p.color.indexOf('#' >= 0)) {
+    p.color = convertHex(p.color, opacity);
+  }
+  p.colorArray = colorArray(p.color);
+
+  if(p.opacity) {
+    p.colorArray[3] = p.opacity;
+  }
+
+  if(p.strokeColor.indexOf('#') >= 0) {
+    p.strokeColor = convertHex(p.strokeColor, strokeOpacity);
+  }
+  p.strokeColorArray = colorArray(p.strokeColor);
+  if(p.strokeOpacity) {
+    p.strokeColorArray[3] = p.strokeOpacity;
   }
 
 }
@@ -57,7 +85,10 @@ Particle.prototype.init = function(o) {
   var p = this,
       opacity = o.opacity || 1;
 
-  // Background Color
+  // Colors
+  // ========================================
+  
+  // Color
   p.setProperty({
     property: 'color', 
     value: o.color, 
@@ -71,31 +102,32 @@ Particle.prototype.init = function(o) {
     randomize: [0,1]
   });
 
-  // Convert color & opacity to rgba
-  if(p.color.indexOf("#") >= 0) {
-    p.color = convertHex(p.color, p.opacity*100);
-  }
-
-  // Split the RGBA string in an array of values so we can fade if needed
-  p.colorArray = p.color.match(/(\d{1,4})/g);
-
-  if(p.opacity) {
-    p.colorArray[3] = p.opacity;
-  }
-
-  // Border Color
+  // Stroke Color
   p.setProperty({
-    property: 'borderColor', 
-    value: o.borderColor, 
+    property: 'strokeColor', 
+    value: o.strokeColor, 
     randomize: 'color'
   });
 
-  // Border Width
+
+  //Stroke Width
   p.setProperty({
-    property: 'borderWidth', 
-    value: o.borderWidth, 
+    property: 'strokeWidth', 
+    value: o.strokeWidth, 
     randomize: [0,10]
   });
+
+  //Stroke Width
+  p.setProperty({
+    property: 'strokeOpacity', 
+    value: o.strokeOpacity, 
+    randomize: [0,1]
+  });
+
+  p.colorFormat();
+
+  // Format
+  // ========================================
 
   // Size
   p.setProperty({
@@ -111,6 +143,16 @@ Particle.prototype.init = function(o) {
     acceptedValues: Object.keys(p.ion.shapes)
   });
 
+  // Orientation
+  p.setProperty({
+    property: 'orient',
+    value: o.orient,
+    randomize: [0,360]
+  });
+
+  // Movement
+  // ========================================
+  
   // Gravity
   p.setProperty({
     property: 'gravity',
@@ -125,23 +167,8 @@ Particle.prototype.init = function(o) {
     randomize: [-5,5]
   });
 
-
-  // Orientation
-  p.setProperty({
-    property: 'orient',
-    value: o.orient,
-    randomize: [0,360]
-  });
-
-  // Age/Death
-  p.setProperty({
-    property: 'death',
-    value: o.death,
-    randomize: [0, 3000]
-  });
-
-  // Set intial particle life to 0
-  p.life = 0;
+  // Dynamics
+  // ========================================
 
   p.setProperty({
     property: 'fade',
@@ -231,8 +258,8 @@ Particle.prototype.render = function() {
 
       // Set the visual properties for the shape & line of the particles
       context.fillStyle = particle.color;
-      context.strokeStyle = particle.borderColor;
-      context.lineWidth = particle.borderWidth;
+      context.strokeStyle = particle.strokeColor;
+      context.lineWidth = particle.strokeWidth;
 
      //  save the untranslated/unrotated context
      context.save();
@@ -392,9 +419,9 @@ Ion.prototype.setParticles = function(particles) {
       shape: 'circle',
       color: 'rgba(0,0,0,1)',
       opacity: 1,
-      borderColor: "rbga(0,0,0,0)",
-      borderWidth: 0,
-      borderOpacity: 1,
+      strokeColor: "rbga(0,0,0,0)",
+      strokeWidth: 0,
+      strokeOpacity: 1,
       size: [10,90],
       rotationDirection: 'clockwise',
       rotationVelocity: 0.1,

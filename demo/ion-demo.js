@@ -12642,8 +12642,36 @@ Particle.prototype.setProperty = function(opts) {
        p[prop] = randomNumber(val[0],val[1],true);
     }
   // Otherwise, just st the property value to what was passed
-  } else {
+  } else if(val) {
     p[prop] = val;
+  } else {
+    p[prop] = false;
+  }
+
+}
+
+Particle.prototype.colorFormat = function() {
+  var rgbaString,
+      p = this,
+      opacity = p.opacity*100 || 100,
+      strokeOpacity = p.strokeOpacity*100 || 100;
+
+  //Check if we have a hex value
+  if(p.color.indexOf('#' >= 0)) {
+    p.color = convertHex(p.color, opacity);
+  }
+  p.colorArray = colorArray(p.color);
+
+  if(p.opacity) {
+    p.colorArray[3] = p.opacity;
+  }
+
+  if(p.strokeColor.indexOf('#') >= 0) {
+    p.strokeColor = convertHex(p.strokeColor, strokeOpacity);
+  }
+  p.strokeColorArray = colorArray(p.strokeColor);
+  if(p.strokeOpacity) {
+    p.strokeColorArray[3] = p.strokeOpacity;
   }
 
 }
@@ -12652,7 +12680,10 @@ Particle.prototype.init = function(o) {
   var p = this,
       opacity = o.opacity || 1;
 
-  // Background Color
+  // Colors
+  // ========================================
+  
+  // Color
   p.setProperty({
     property: 'color', 
     value: o.color, 
@@ -12666,31 +12697,32 @@ Particle.prototype.init = function(o) {
     randomize: [0,1]
   });
 
-  // Convert color & opacity to rgba
-  if(p.color.indexOf("#") >= 0) {
-    p.color = convertHex(p.color, p.opacity*100);
-  }
-
-  // Split the RGBA string in an array of values so we can fade if needed
-  p.colorArray = p.color.match(/(\d{1,4})/g);
-
-  if(p.opacity) {
-    p.colorArray[3] = p.opacity;
-  }
-
-  // Border Color
+  // Stroke Color
   p.setProperty({
-    property: 'borderColor', 
-    value: o.borderColor, 
+    property: 'strokeColor', 
+    value: o.strokeColor, 
     randomize: 'color'
   });
 
-  // Border Width
+
+  //Stroke Width
   p.setProperty({
-    property: 'borderWidth', 
-    value: o.borderWidth, 
+    property: 'strokeWidth', 
+    value: o.strokeWidth, 
     randomize: [0,10]
   });
+
+  //Stroke Width
+  p.setProperty({
+    property: 'strokeOpacity', 
+    value: o.strokeOpacity, 
+    randomize: [0,1]
+  });
+
+  p.colorFormat();
+
+  // Format
+  // ========================================
 
   // Size
   p.setProperty({
@@ -12706,6 +12738,16 @@ Particle.prototype.init = function(o) {
     acceptedValues: Object.keys(p.ion.shapes)
   });
 
+  // Orientation
+  p.setProperty({
+    property: 'orient',
+    value: o.orient,
+    randomize: [0,360]
+  });
+
+  // Movement
+  // ========================================
+  
   // Gravity
   p.setProperty({
     property: 'gravity',
@@ -12720,23 +12762,8 @@ Particle.prototype.init = function(o) {
     randomize: [-5,5]
   });
 
-
-  // Orientation
-  p.setProperty({
-    property: 'orient',
-    value: o.orient,
-    randomize: [0,360]
-  });
-
-  // Age/Death
-  p.setProperty({
-    property: 'death',
-    value: o.death,
-    randomize: [0, 3000]
-  });
-
-  // Set intial particle life to 0
-  p.life = 0;
+  // Dynamics
+  // ========================================
 
   p.setProperty({
     property: 'fade',
@@ -12826,8 +12853,8 @@ Particle.prototype.render = function() {
 
       // Set the visual properties for the shape & line of the particles
       context.fillStyle = particle.color;
-      context.strokeStyle = particle.borderColor;
-      context.lineWidth = particle.borderWidth;
+      context.strokeStyle = particle.strokeColor;
+      context.lineWidth = particle.strokeWidth;
 
      //  save the untranslated/unrotated context
      context.save();
@@ -12987,9 +13014,9 @@ Ion.prototype.setParticles = function(particles) {
       shape: 'circle',
       color: 'rgba(0,0,0,1)',
       opacity: 1,
-      borderColor: "rbga(0,0,0,0)",
-      borderWidth: 0,
-      borderOpacity: 1,
+      strokeColor: "rbga(0,0,0,0)",
+      strokeWidth: 0,
+      strokeOpacity: 1,
       size: [10,90],
       rotationDirection: 'clockwise',
       rotationVelocity: 0.1,
@@ -13094,7 +13121,7 @@ var drawCircle = function(p) {
        ctx.beginPath();
        ctx.arc(30, 30, p.size, 0, Math.PI*2, true);
        ctx.fill();
-       if(p.borderWidth) {
+       if(p.strokeWidth) {
         ctx.stroke();
        }
        ctx.closePath();
@@ -13110,7 +13137,7 @@ var drawSquare = function(p) {
        ctx.beginPath();
        ctx.rect(-p.size*0.5, -p.size*0.5, p.size, p.size);
        ctx.fill();
-       if(p.borderWidth) {
+       if(p.strokeWidth) {
         ctx.stroke();
        }
        ctx.closePath();
@@ -13144,7 +13171,15 @@ function convertHex(hex,opacity){
 
 // Create an array of separate values from an rgba color string
 function colorArray(rgbaString) {
-  return p.color.match(/(\d{1,4})/g);
+  return rgbaString.match(/(\d{1,4})/g);
+}
+
+function isColor(color) {
+  if(color.match(/(#(\d|[a-f]|[A-F]){6})|(rgba\((\d{1,3},\s?){3}\d?\.?\d{1}\))/g).length > 0) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // Strip any trailing zeros from decimal places on numbers
@@ -13338,9 +13373,9 @@ ion.setOptions({
 });
 
 ion.setParticles({
-	borderColor: $('#borderColor').val(),
-	borderWidth: $('.borderWidth-range').rangeVal(),
-	borderOpacity: $('.borderOpacity-range').rangeVal(),
+	strokeColor: $('#strokeColor').val(),
+	strokeWidth: $('.strokeWidth-range').rangeVal(),
+	strokeOpacity: $('.strokeOpacity-range').rangeVal(),
 	color: $('#color').val(),
 	density: $('#density').rangeVal(),
 	death: false,
@@ -13371,9 +13406,9 @@ var updateCanvas = function() {
 	
 
 	// Default values for settings when a fieldset is disabled or "off"
-	var border = false,
-		borderColor = 'rgba(0,0,0,0)',
-		borderWidth = 0,
+	var stroke = false,
+		strokeColor = 'rgba(0,0,0,0)',
+		strokeWidth = 0,
 		color = 'rgba(0,0,0,0)',
 		death = false,
 		fade = false,
@@ -13447,15 +13482,15 @@ var updateCanvas = function() {
 	}
 
 	//Border
-	if($('#borderBool').is(':checked')) {
-		if($('#borderRandomize').is(':checked')) {
-			borderColor = 'random';
-			borderWidth = 'random';
-			borderOpacity = 'random';
+	if($('#strokeBool').is(':checked')) {
+		if($('#strokeRandomize').is(':checked')) {
+			strokeColor = 'random';
+			strokeWidth = 'random';
+			strokeOpacity = 'random';
 		} else {
-			borderColor = $('#borderColor').val();
-			borderWidth = $('.borderWidth-range').rangeVal();
-			borderOpacity = $('.borderOpacity-range').rangeVal();
+			strokeColor = $('#strokeColor').val();
+			strokeWidth = $('.strokeWidth-range').rangeVal();
+			strokeOpacity = $('.strokeOpacity-range').rangeVal();
 		}
 	}
 
@@ -13514,9 +13549,9 @@ var updateCanvas = function() {
 
 	// Create a new instance of Ion with the new settings
 	var ion =  new Ion('testcanvas', {
-		borderColor: borderColor,
-		borderWidth: borderWidth,
-		borderOpacity: borderOpacity,
+		strokeColor: strokeColor,
+		strokeWidth: strokeWidth,
+		strokeOpacity: strokeOpacity,
 		color: color,
 		density: $('#density').rangeVal(),
 		death: death,

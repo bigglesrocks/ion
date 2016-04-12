@@ -137,34 +137,34 @@
 			</div>
 		</section>
 	</fieldset>
-	<fieldset class="border">
+	<fieldset class="stroke">
 		<legend>
 			<h6>Stroke</h6>
 			<div class="switch">
-				<label for="borderBool">
-					<input type="checkbox" id="borderBool" name="borderBool" checked><span class="lever"></span>
+				<label for="strokeBool">
+					<input type="checkbox" id="strokeBool" name="strokeBool" checked><span class="lever"></span>
 				</label>
 			</div>
 			<p class="random">
-				<input type="checkbox" name="borderRandomize" id="borderRandomize" />
-				<label for="borderRandomize">Randomize</label>
+				<input type="checkbox" name="strokeRandomize" id="strokeRandomize" />
+				<label for="strokeRandomize">Randomize</label>
 			</p>
 		</legend>
 		<section class="fields">
 			<div class="color-field">
-				<input type="color" name="borderColor" id="borderColor"  value="#00e5ff" oninput="borderColorDisplay.value = borderColor.value.replace('#', '')" />
-					<label for="borderColor">#</label>
-					<input type="text" name="borderColorDisplay" id="borderColorDisplay"  value="00e5ff" oninput="borderColor.value = '#'+borderColorDisplay.value">
+				<input type="color" name="strokeColor" id="strokeColor"  value="#00e5ff" oninput="strokeColorDisplay.value = strokeColor.value.replace('#', '')" />
+					<label for="strokeColor">#</label>
+					<input type="text" name="strokeColorDisplay" id="strokeColorDisplay"  value="00e5ff" oninput="strokeColor.value = '#'+strokeColorDisplay.value">
 			</div>
-			<label for="borderOpacity">Opacity</label>
-			<div class="range-slider borderOpacity-range">
-				<input type="range" name="minBorderOpacity" id="minBorderOpacity" min="0" max="1" step="0.1" value="0.1"/>
-				<input type="range" name="maxBorderOpacity" id="maxBorderOpacity" min="0" max="1" step="0.1" value="0.3"/>
+			<label for="strokeOpacity">Opacity</label>
+			<div class="range-slider strokeOpacity-range">
+				<input type="range" name="minStrokeOpacity" id="minStrokeOpacity" min="0" max="1" step="0.1" value="0.5"/>
+				<input type="range" name="maxStrokeOpacity" id="maxStrokeOpacity" min="0" max="1" step="0.1" value="1"/>
 			</div>
-			<label for="borderWidth">Width</label>
-			<div class="range-slider borderWidth-range">
-				<input type="range" name="minBorderWidth" id="minBorderWidth" min="0" max="10" step="0.1" value="1"/>
-				<input type="range" name="maxBorderWidth" id="maxBorderWidth" min="0" max="10" step="0.1" value="3"/>
+			<label for="strokeWidth">Width</label>
+			<div class="range-slider strokeWidth-range">
+				<input type="range" name="minStrokeWidth" id="minStrokeWidth" min="0" max="10" step="0.05" value="0.25"/>
+				<input type="range" name="maxStrokeWidth" id="maxStrokeWidth" min="0" max="10" step="0.1" value="2"/>
 			</div>
 		</section>
 	</fieldset>

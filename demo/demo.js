@@ -148,9 +148,9 @@ ion.setOptions({
 });
 
 ion.setParticles({
-	borderColor: $('#borderColor').val(),
-	borderWidth: $('.borderWidth-range').rangeVal(),
-	borderOpacity: $('.borderOpacity-range').rangeVal(),
+	strokeColor: $('#strokeColor').val(),
+	strokeWidth: $('.strokeWidth-range').rangeVal(),
+	strokeOpacity: $('.strokeOpacity-range').rangeVal(),
 	color: $('#color').val(),
 	density: $('#density').rangeVal(),
 	death: false,
@@ -181,9 +181,9 @@ var updateCanvas = function() {
 	
 
 	// Default values for settings when a fieldset is disabled or "off"
-	var border = false,
-		borderColor = 'rgba(0,0,0,0)',
-		borderWidth = 0,
+	var stroke = false,
+		strokeColor = 'rgba(0,0,0,0)',
+		strokeWidth = 0,
 		color = 'rgba(0,0,0,0)',
 		death = false,
 		fade = false,
@@ -257,15 +257,15 @@ var updateCanvas = function() {
 	}
 
 	//Border
-	if($('#borderBool').is(':checked')) {
-		if($('#borderRandomize').is(':checked')) {
-			borderColor = 'random';
-			borderWidth = 'random';
-			borderOpacity = 'random';
+	if($('#strokeBool').is(':checked')) {
+		if($('#strokeRandomize').is(':checked')) {
+			strokeColor = 'random';
+			strokeWidth = 'random';
+			strokeOpacity = 'random';
 		} else {
-			borderColor = $('#borderColor').val();
-			borderWidth = $('.borderWidth-range').rangeVal();
-			borderOpacity = $('.borderOpacity-range').rangeVal();
+			strokeColor = $('#strokeColor').val();
+			strokeWidth = $('.strokeWidth-range').rangeVal();
+			strokeOpacity = $('.strokeOpacity-range').rangeVal();
 		}
 	}
 
@@ -324,9 +324,9 @@ var updateCanvas = function() {
 
 	// Create a new instance of Ion with the new settings
 	var ion =  new Ion('testcanvas', {
-		borderColor: borderColor,
-		borderWidth: borderWidth,
-		borderOpacity: borderOpacity,
+		strokeColor: strokeColor,
+		strokeWidth: strokeWidth,
+		strokeOpacity: strokeOpacity,
 		color: color,
 		density: $('#density').rangeVal(),
 		death: death,

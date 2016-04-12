@@ -9,7 +9,7 @@ var drawSquare = function(p) {
        ctx.beginPath();
        ctx.rect(-p.size*0.5, -p.size*0.5, p.size, p.size);
        ctx.fill();
-       if(p.borderWidth) {
+       if(p.strokeWidth) {
         ctx.stroke();
        }
        ctx.closePath();
