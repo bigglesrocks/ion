@@ -8,6 +8,7 @@ var autoprefixer = require('gulp-autoprefixer'),
   minifycss = require('gulp-minify-css'),
   order = require("gulp-order"),
   path = require('path'),
+  plumber = require('gulp-plumber'),
   rename = require("gulp-rename"),
   sass = require('gulp-sass'),
   sourcemaps = require('gulp-sourcemaps'),
@@ -25,9 +26,24 @@ var autoprefixer = require('gulp-autoprefixer'),
    });
   });
 
+  var errorHandler = function(error) {
+    gutil.log(gutil.colors.cyan(error.plugin)+': ['+gutil.colors.red.bold("ERROR")+'] '+gutil.colors.red(error.name));
+    gutil.log(gutil.colors.blue('Line '+error.lineNumber+': '+error.fileName));
+    if(error.message) {
+      gutil.log(gutil.colors.red.bold(error.message));
+    } else {
+      guitl.log("No Error Message!");
+    }
+    
+    if(error.stack != undefined) {
+      gutil.log(gutil.colors.yellow('STACK TRACE -> '));
+      gutil.log(error.stack);
+    }
+  };
 
 gulp.task('styles', function() {
   return gulp.src('assets/scss/styles.scss')
+    .pipe(plumber({ errorHandler: errorHandler }))
     .pipe(sourcemaps.init())
     .pipe(sass({ style: 'expanded'}, {sourcemap: true}))
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
@@ -42,10 +58,12 @@ gulp.task('styles', function() {
       sourceRoot: '/'
     }))
     .pipe(gulp.dest('assets/css'))
+    .pipe(plumber.stop())
 });
 
 gulp.task('tStyles', function() {
   return gulp.src('demo/*.scss')
+    .pipe(plumber({ errorHandler: errorHandler }))
     .pipe(sourcemaps.init())
     .pipe(sass({ style: 'expanded'}, {sourcemap: true}))
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
@@ -60,11 +78,13 @@ gulp.task('tStyles', function() {
       sourceRoot: '/'
     }))
     .pipe(gulp.dest('demo'))
+    .pipe(plumber.stop())
 });
 
 gulp.task('scripts', function() {
   // Get the files to be included
   return gulp.src("src/**/*.js")
+    .pipe(plumber({ errorHandler: errorHandler }))
     .pipe(order([
         "src/utilities.js",
         "src/shapes/*.js",
@@ -77,9 +97,10 @@ gulp.task('scripts', function() {
     }))
     .pipe(rename('ion-min.js'))
     .pipe(gulp.dest('dist'))
+    .pipe(plumber.stop())
 });
 
-gulp.task('tScripts', function() {
+gulp.task('tScripts', ['scripts'], function() {
   // Get the files to be included
   return gulp.src(
     ["bower_components/jquery/dist/jquery.js",
@@ -90,6 +111,7 @@ gulp.task('tScripts', function() {
     "bower_components/materialize/js/forms.js", 
     "dist/ion.js", 
     "demo/demo.js",])
+    .pipe(plumber({ errorHandler: errorHandler }))
     .pipe(concat('ion-demo.js'))
     .pipe(gulp.dest('demo'))
     .pipe(uglify({
@@ -97,6 +119,7 @@ gulp.task('tScripts', function() {
     }))
     .pipe(rename('ion-demo-min.js'))
     .pipe(gulp.dest('demo'))
+    .pipe(plumber.stop())
 });
 
 gulp.task('fonts', function() {
