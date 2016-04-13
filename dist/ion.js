@@ -611,7 +611,7 @@ var drawIsoTriangle = function(p) {
        ctx.beginPath();
        ctx.lineTo(p.size*0.5, p.size*0.5);
        ctx.lineTo(-p.size*0.5, p.size*0.5);
-       ctx.lineTo(0, -p.size*0.5);
+       ctx.lineTo(0, -p.size*0.4);
        ctx.closePath();
        ctx.fill();
        if(p.strokeWidth) {
