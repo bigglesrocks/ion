@@ -546,7 +546,8 @@ Ion.prototype.init = function() {
   // Add the default shapes
   this.shapes = {
     circle: drawCircle, 
-    square: drawSquare
+    square: drawSquare,
+    isoTriangle: drawIsoTriangle
   };
 
 }
