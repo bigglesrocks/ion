@@ -102,7 +102,7 @@ $('.range').each(function() {
 });
 
 // Intialize custom materialize selects
-$('select').not('.disabled').material_select();
+$('select').material_select();
 
 // Emulate field focus for custom color fields
 $('.color-field input').focus(function() {
@@ -115,18 +115,11 @@ $('.color-field input').focus(function() {
 $('.switch input[type="checkbox"]').on('change', function() {
 	if($(this).is(":checked")) {
 		$(this).parents('fieldset').removeClass('disabled').find('input, select').not('[id*="Bool"]').prop('disabled', false);
+		$(this).parents('fieldset').find('select').material_select();
+
 	} else {
 		$(this).parents('fieldset').addClass('disabled').find('input, select').not('[id*="Bool"]').prop('disabled', true);
-	}
-});
-
-// Disabled fieldsets when fieldset randomize checkbox is toggles
-$('.random input[type="checkbox"]').on('change', function() {
-	if($(this).is(":checked")) {
-		$(this).parents('fieldset').addClass('disabled').find('input, select').not('[id*="Bool"], [id*="Randomize"]').prop('disabled', true);
-	} else {
-		$(this).parents('fieldset').removeClass('disabled').find('input, select').not('[id*="Bool"], [id*="Randomize"]').prop('disabled', false);
-		
+		$(this).parents('fieldset').find('.caret').addClass('disabled');
 	}
 });
 
@@ -157,7 +150,7 @@ ion.setParticles({
 	fade: false,
 	gravity: $('.gravity-range').rangeVal(),
 	grow: false,
-	opacity: $('.opacity-range').rangeVal(),
+	colorOpacity: $('.colorOpacity-range').rangeVal(),
 	origin: ['random', 'random'],
 	rotationVelocity: 0,
 	shape: $('#shape').val(),
@@ -188,9 +181,9 @@ var updateCanvas = function() {
 		color = 'rgba(0,0,0,0)',
 		death = false,
 		fade = false,
-		fadeSpeed = 0,
+		fadeRate = 0,
 		gravity = 0,
-		opacity = [10,30],
+		colorOpacity = [10,30],
 		orient = 0,
 		origin,
 		originX = $('[name="originXPreset"]:checked').val(),
@@ -249,85 +242,56 @@ var updateCanvas = function() {
 
 	//Color
 	if($('#colorBool').is(':checked')) {
+		colorOpacity = $('.colorOpacity-range').rangeVal();
 		if($('#colorRandomize').is(':checked')) {
 			color = 'random';
-			opacity = 'random'
 		} else {
 			color = $('#color').val();
-			opacity = $('.opacity-range').rangeVal();
 		}
 	}
 
 	//Border
 	if($('#strokeBool').is(':checked')) {
+		strokeWidth = $('.strokeWidth-range').rangeVal();
+		strokeOpacity = $('.strokeOpacity-range').rangeVal();
 		if($('#strokeRandomize').is(':checked')) {
 			strokeColor = 'random';
-			strokeWidth = 'random';
-			strokeOpacity = 'random';
 		} else {
 			strokeColor = $('#strokeColor').val();
-			strokeWidth = $('.strokeWidth-range').rangeVal();
-			strokeOpacity = $('.strokeOpacity-range').rangeVal();
 		}
 	}
 
 	//Gravity
 	if($('#gravityBool').is(':checked')) {
-		if($('#gravityRandomize').is(':checked')) {
-			gravity = 'random';
-		} else {
-			gravity = $('.gravity-range').rangeVal();
-		
-		}
-		
+		gravity = $('.gravity-range').rangeVal();
 	}
 
 	//Wind
 	if($('#windBool').is(':checked')) {
-		if($('#windRandomize').is(':checked')) {
-			wind = 'random';
-		} else {
-			wind = $('.wind-range').rangeVal();
-		}
+		wind = $('.wind-range').rangeVal();
 	}
 
 	//Rotation
 	if($('#rotationBool').is(':checked')) {
-		if($('#rotationRandomize').is(':checked')) {
-			rotationVelocity = 'random';
-			orient = 'random';
-		} else {
-			orient = $('.orient-range').rangeVal();
-			rotationVelocity = $('.rotationVelocity-range').rangeVal();
-		}
+		orient = $('.orient-range').rangeVal();
+		rotationVelocity = $('.rotationVelocity-range').rangeVal();
 	}
 
 	//Fade
 	if($('#fadeBool').is(':checked')) {
-		if($('#fadeRandomize'),is(':checked')) {
-			fade = 'random';
-			fadeSpeed = 'random';
-		} else {
-			fade = $('#fade').val();
-			fadeSpeed = $('.fade-range').rangeVal();
-		}
-		
+		fade = $('#fade').val();
+		fadeRate = $('.fadeRate-range').rangeVal();
 	}
 
 	//Life
 	if($('#deathBool').is(':checked')) {
-		if($('#deathRandomize').is(':checked')) {
-			death = 'random';
-		} else {
-			death = $('.death-range').rangeVal();
-		}
+		death = $('.death-range').rangeVal();
 	}
 
 	//Size Dynamic
 	if($('#scaleBool').is(':checked')) {
 		scale = $('[name="scale"]:checked').val();
 	}
-
 
 	// Create a new instance of Ion with the new settings
 	var ion =  new Ion('testcanvas', {
@@ -338,9 +302,9 @@ var updateCanvas = function() {
 		density: $('#density').rangeVal(),
 		death: death,
 		fade: fade,
-		fadeSpeed: fadeSpeed,
+		fadeRate: fadeRate,
 		gravity: gravity,
-		opacity: opacity,
+		colorOpacity: colorOpacity,
 		origin: origin,
 		orient: orient,
 		rotationVelocity: rotationVelocity,

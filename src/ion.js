@@ -2,15 +2,15 @@
 var Particle = function(particleOptions, ion) {
 
   var o = particleOptions,
-      particle = this;
+      p = this;
 
-  particle.ion = ion;
+  p.ion = ion;
 
   // Setup all the particle properties
-  particle.init(particleOptions);
+  p.init(particleOptions);
 
   // Draw the particle on the first frame
-  particle.draw();
+  p.draw();
 
 }
 
@@ -58,17 +58,17 @@ Particle.prototype.setProperty = function(opts) {
 Particle.prototype.colorFormat = function() {
   var rgbaString,
       p = this,
-      opacity = p.opacity*100 || 100,
+      colorOpacity = p.colorOpacity*100 || 100,
       strokeOpacity = p.strokeOpacity*100 || 100;
 
   //Check if we have a hex value
   if(p.color.indexOf('#' >= 0)) {
-    p.color = convertHex(p.color, opacity);
+    p.color = convertHex(p.color, colorOpacity);
   }
   p.colorArray = colorArray(p.color);
 
-  if(p.opacity) {
-    p.colorArray[3] = p.opacity;
+  if(p.colorOpacity) {
+    p.colorArray[3] = p.colorOpacity;
   }
 
   if(p.strokeColor.indexOf('#') >= 0) {
@@ -97,8 +97,8 @@ Particle.prototype.init = function(o) {
 
    // Opacity
   p.setProperty({
-    property: 'opacity', 
-    value: o.opacity, 
+    property: 'colorOpacity', 
+    value: o.colorOpacity, 
     randomize: [0,1]
   });
 
@@ -176,22 +176,28 @@ Particle.prototype.init = function(o) {
     acceptedValues: ['in', 'out', 'in-out']
   });
 
-  // Fade Speed
+  // Fade Rate
   p.setProperty({
-    property: 'fadeSpeed',
-    value: o.fadeSpeed,
-    randomize: [0,20]
+    property: 'fadeRate',
+    value: o.fadeRate,
+    randomize: [5,20]
   });
-
 
   // If the fade property is set, then we need to adjust the initial opacity
   // based on the fade animation
-  if(p.fade == 'in' || p.fade == "in-out") {
-    p.opacity = 0;
-  } else if(p.fade == 'out') {
-    p.opacity = 1
+  if(p.fade) {
+    p.fadeStop = false;
+    p.colorOpacityFadeIncrement = p.colorArray[3]/(100/p.fadeRate);
+    p.strokeOpacityFadeIncrement = p.strokeColorArray[3]/(100/p.fadeRate);
+    if(p.fade.indexOf('in') >= 0) {
+      p.opacity = 0;
+      p.colorArray[3] = 0;
+      p.strokeColorArray[3] = 0;
+    } else {
+      p.opacity = 100;
+    }
   } else {
-    p.opacity = p.colorArray[3];
+    p.opacity = 100;
   }
 
   // Depending on what the spawn point properties are for this Particle,
@@ -255,9 +261,6 @@ Particle.prototype.init = function(o) {
     acceptedValues: ['grow','shrink']
   });
 
-  // console.log("o.scale="+o.scale);
-  // console.log("p.scale="+p.scale);
-
   //Scale Rate
   p.setProperty({
     property: 'scaleRate',
@@ -276,26 +279,25 @@ Particle.prototype.init = function(o) {
     randomize: [scaleLimitMin, scaleLimitMax]
   });
 
-  // console.log(p);
   
 }
 
 // Place the drawn particle on the canvas
 Particle.prototype.render = function() {
 
-      var particle = this,
-          context = particle.ion.context;
+      var p = this,
+          context = p.ion.context;
 
       // Set the visual properties for the shape & line of the particles
-      context.fillStyle = particle.color;
-      context.strokeStyle = particle.strokeColor;
-      context.lineWidth = particle.strokeWidth;
+      context.fillStyle = p.color;
+      context.strokeStyle = p.strokeColor;
+      context.lineWidth = p.strokeWidth;
 
      //  save the untranslated/unrotated context
      context.save();
 
      // Use the drawing instructions for the particle's shape to render the particle
-     particle.ion.shapes[particle.shape](particle);
+     p.ion.shapes[p.shape](p);
     
     // restore the context to its untranslated/unrotated state
     context.restore();
@@ -304,73 +306,107 @@ Particle.prototype.render = function() {
 
 // Draw the particle shape
 Particle.prototype.draw = function() {
-  var particle = this,
-      ion = particle.ion,
+  var p = this,
+      ion = p.ion,
       canvas = ion.canvas,
       context = ion.context;
 
   // Adjust particle position based on wind and gravity
-  particle.y +=  particle.gravity;
-  particle.x += particle.wind;
+  p.y +=  p.gravity;
+  p.x += p.wind;
 
   // Age the particle
-  particle.life++;
+  p.life++;
   
   // Adjust the particles orientation based on rotation settings
-  if(particle.rotationVelocity > 0) {
+  if(p.rotationVelocity > 0) {
 
-    if(particle.rotationDirection == 'clockwise') {
-      particle.orient += particle.rotationVelocity;
+    if(p.rotationDirection == 'clockwise') {
+      p.orient += p.rotationVelocity;
     } else {
-       particle.orient -= particle.rotationVelocity;
+       p.orient -= p.rotationVelocity;
     }
   }
 
   // Adjust particle size based on scaling options
-  if(particle.scale == 'grow' && particle.size < particle.scaleLimit) {
-     particle.size += particle.scaleRate;
-  } else if(particle.scale == 'shrink' && particle.size > particle.scaleLimit) {
-     particle.size -= particle.scaleRate;
+  if(p.scale == 'grow' && p.size < p.scaleLimit) {
+     p.size += p.scaleRate;
+  } else if(p.scale == 'shrink' && p.size > p.scaleLimit) {
+     p.size -= p.scaleRate;
   }
-   
-  // Adjust the particle's opacity based on the fade settings
-  if(particle.fade) {
-    if(particle.fadeStop === false) {
-      if(particle.opacity >= 1) {
-         particle.fade = 'out';
-      }
-    }
-    switch(particle.fade) {
+  
+  if(p.fade) {
+    switch(p.fade) {
         case 'in':
-          particle.opacity = particle.opacity + particle.fadeSpeed;
+          if(p.opacity < 100) {
+             p.colorArray[3] += p.colorOpacityFadeIncrement;
+             p.strokeColorArray[3] += p.strokeOpacityFadeIncrement;
+             p.opacity += p.fadeRate;
+          } else {
+            p.fade = false;
+          }
         break;
         case 'out':
-          particle.opacity = particle.opacity - particle.fadeSpeed;
+          if(p.opacity > 0) {
+             p.colorArray[3] = p.colorArray[3] - p.colorOpacityFadeIncrement;
+             p.strokeColorArray[3] = p.strokeColorArray[3] - p.strokeOpacityFadeIncrement;
+             p.opacity = p.opacity - p.fadeRate;
+          } else {
+            p.fade = false;
+          }
+        break;
+        case 'in-out':
+          if(p.opacity >= 100) {
+            p.fadeStop = true;
+            p.opacity = 100 - p.fadeRate;
+          } else if(p.fadeStop == false && p.opacity < 100) {
+             p.colorArray[3] += p.colorOpacityFadeIncrement;
+             p.strokeColorArray[3] += p.strokeOpacityFadeIncrement;
+             p.opacity += p.fadeRate;
+          } else if(p.fadeStop == true && p.opacity > 0) {
+            p.colorArray[3] =  p.colorArray[3] - p.colorOpacityFadeIncrement;
+            p.strokeColorArray[3] = p.stokrColorArray[3] - p.strokeOpacityFadeIncrement;
+            p.opacity -= p.colorArray[3] - p.fadeRate;
+          } else {
+            p.fade = false;
+          }
         break;
     }
-    particle.color = 'rgba('+particle.colorArray[0]+','+particle.colorArray[1]+','+particle.colorArray[2]+','+particle.opacity+')'; 
+    p.color = rgbaString(p.colorArray); 
+    p.strokeColor = rgbaString(p.strokeColorArray);
+
   }
- 
+
  // Clear the canvas
   context.clearRect(canvas.width, canvas.height, canvas.width, canvas.height);
 
   // context.globalCompositeOperation = this.composite;
 
   // Render the particle on the canvas
-  particle.render();
+  p.render();
 
   // context.globalCompositeOpteration = 'destination-out';
 
 
-   // Kill the particle if it's reached it's death or has left the visible canvas area
-   if((particle.life > particle.death && particle.death != false) || 
-    (particle.size < 0) ||
-    (particle.gravity > 0 && particle.y > canvas.height+particle.size*2) || 
-    (particle.gravity < 0 && particle.y < -particle.size*2) ||
-    (particle.wind < 0 && particle.x < -particle.size*2) ||
-    (particle.wind > 0 && particle.x > canvas.width+particle.size*2)) {
-      delete ion.particleTracker[particle.id];
+   // Kill the particle if it has:
+   // 1.) Reached it's death age
+   // 2.) Moved beyond the visible boundries of the canvas
+   // 3.) Shrunk down to nothing
+   // 4.) Faded out to zero opacity
+ if(
+  (p.life > p.death && p.death != false) || 
+  (p.gravity > 0 && p.y > canvas.height+p.size*2) || 
+  (p.gravity < 0 && p.y < -p.size*2) ||
+  (p.wind < 0 && p.x < -p.size*2) ||
+  (p.wind > 0 && p.x > canvas.width+p.size*2) ||
+  (p.size <= 0) ||
+  ((p.fade == 'out' || p.fade == "in-out") && p.opacity <= 0) ||
+  (p.fade == false && p.opacity == 0)
+  ) {
+    delete ion.particleTracker[p.id];
   }
+
+
 }
 
 //Main plugin function
@@ -448,7 +484,7 @@ Ion.prototype.setParticles = function(particles) {
     particles[p] = defaultOptions({
       shape: 'circle',
       color: 'rgba(0,0,0,1)',
-      opacity: 1,
+      colorOpacity: 1,
       strokeColor: "rbga(0,0,0,0)",
       strokeWidth: 0,
       strokeOpacity: 1,
@@ -458,7 +494,7 @@ Ion.prototype.setParticles = function(particles) {
       orient: 0,
       death: false,
       fade: false,
-      fadeSpeed: 0.01,
+      fadeRate: 20,
       scale: false,
       scaleRate: 0.2,
       scaleLimit: 500,

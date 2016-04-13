@@ -30,6 +30,10 @@ function colorArray(rgbaString) {
   return rgbaString.match(/(\d{1,4})/g);
 }
 
+function rgbaString(arr) {
+  return 'rgba('+arr[0]+','+arr[1]+','+arr[2]+','+arr[3]+')'
+}
+
 function isColor(color) {
   if(color.match(/(#(\d|[a-f]|[A-F]){6})|(rgba\((\d{1,3},\s?){3}\d?\.?\d{1}\))/g).length > 0) {
     return true;

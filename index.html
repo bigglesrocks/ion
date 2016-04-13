@@ -128,8 +128,8 @@
 				<label for="color">#</label>
 				<input type="text" name="colorDisplay" id="colorDisplay"  value="00e5ff" oninput="color.value = '#'+colorDisplay.value">
 			</div>
-			<label for="opacity">Opacity</label>
-			<div class="range-slider opacity-range">
+			<label for="colorOpacity">Opacity</label>
+			<div class="range-slider colorOpacity-range">
 				<input type="range" name="minOpacity" id="minOpacity" min="0" max="1" step="0.01" value="0.15"/>
 				<input type="range" name="maxOpacity" id="maxOpacity" min="0" max="1" step="0.01" value="0.5"/>
 			</div>
@@ -273,10 +273,10 @@
 					<option value="random">Random</option>
 				</select>
 			</div>
-			<label for="">Speed</label>
-			<div class="range-slider fadeSpeed-range">
-				<input type="range" name="minFadeSpeed" id="minFadeSpeed" min="0" max="20" step="0.1" value="0.2"/>
-				<input type="range" name="maxFadeSpeed" id="maxFadeSpeed" min="0" max="20" step="0.1" value="0.2"/>
+			<label for="fadeRate">Rate</label>
+			<div class="range-slider fadeRate-range">
+				<input type="range" name="minFadeRate" id="minFadeRate" min="0" max="10" step="0.1" value="0.1"/>
+				<input type="range" name="maxFadeRate" id="maxFadeRate" min="0" max="10" step="0.1" value="1"/>
 			</div>
 		</section>
 	</fieldset>

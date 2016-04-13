@@ -96,6 +96,12 @@ fieldset {
 		width: 50%;
 		float: left;
 	}
+	&.fade {
+		z-index: 3;
+	}
+	&.rotate {
+		z-index: 2;
+	}
 }
 
 label {
@@ -176,6 +182,7 @@ input[type="checkbox"] + label {
 div.range, div.range-slider {
 	margin: 0 0 2em 0;
 }
+
 
 .noUi-connect, .noUi-handle, .noUi-target .range-label {
 	background-color: $switch-bg-color;
