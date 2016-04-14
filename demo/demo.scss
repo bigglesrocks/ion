@@ -47,7 +47,7 @@ $toolbox-width: 300px;
 @import "bower_components/materialize/sass/components/forms/switches";
 @import "bower_components/materialize/sass/components/forms/range";
 
-@import "../bower_components/materialize/extras/noUiSlider/nouislider.css";
+@import "../bower_components/materialize/extras/noUiSlider/_nouislider.scss";
 
 *  {
 	box-sizing: border-box;
