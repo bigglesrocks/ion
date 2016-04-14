@@ -123,6 +123,7 @@ gulp.task('tScripts', ['scripts'], function() {
     "bower_components/materialize/js/dropdown.js",
     "bower_components/materialize/js/forms.js", 
     "dist/ion.js", 
+    "demo/presets/*.js",
     "demo/demo.js",])
     .pipe(plumber({ errorHandler: errorHandler }))
     .pipe(concat('ion-demo.js'))
@@ -157,7 +158,7 @@ gulp.task('watch', function() {
 
   gulp.watch(['src/**/*.js'], ['scripts', 'tScripts']);
 
-  gulp.watch(['demo/demo.js'], ['tScripts']);
+  gulp.watch(['demo/demo.js', 'demo/presets/*.js'], ['tScripts']);
 
   gulp.watch(["demo/demo.html"], ['demo']);
 

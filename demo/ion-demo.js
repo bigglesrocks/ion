@@ -13404,16 +13404,181 @@ function defaultOptions(standard, user) {
 isArray = function(val) {
   return Object.prototype.toString.call(val) == '[object Array]'
 }
-// function convertHex(hex,opacity){
-//     hex = hex.replace('#','');
-//     r = parseInt(hex.substring(0,2), 16);
-//     g = parseInt(hex.substring(2,4), 16);
-//     b = parseInt(hex.substring(4,6), 16);
+var bokeh =  {
+	particleSettings: [{
+		strokeColor: "#F8BE67",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#F8BE67",
+		colorOpacity: [0.1,0.3],
+		density: 20,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 1,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	},
+	{   strokeColor: "#E7489A",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#E7489A",
+		colorOpacity: [0.1,0.3],
+		density: 15,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 1,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	},
+	{   strokeColor: "#A848E8",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#A848E8",
+		colorOpacity: [0.1,0.3],
+		density: 15,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 1,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	},
+	{   strokeColor: "#48B5E8",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#48B5E8",
+		colorOpacity: [0.1,0.3],
+		density: 15,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 0,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	},
+	{   strokeColor: "#95E848",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#95E848",
+		colorOpacity: [0.1,0.3],
+		density: 15,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 1,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	}],
+	options: {
+		canvasBackground: "#212121"
+	}
+}
 
-//     result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
-//     return result;
-// }
+var ions = {
+	particleSettings: {
+		strokeColor: "#00e5ff",
+		strokeWidth: [0.25,2],
+		strokeOpacity: [0.5,1],
+		color: "00e5ff",
+		colorOpacity: [0.15,0.5],
+		gravity: [-0.75,-0.25],
+		shape: 'circle',
+		size: [4,10,50,150],
+		spawnRate: 8,
+		spawnOrigin: ['random', 'bottom'],
+		wind: [-0.75,-0.25]
+	},
+	options: {
+		canvasBackground: "#212121"
+	}
+}
 
+var lightshow =  {
+	particleSettings: [{
+		strokeWidth: [1,6],
+		color: "#F8BE67",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	},
+	{   strokeWidth: [1,6],
+		color: "#E7489A",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	},
+	{   strokeWidth: [1,6],
+		color: "#A848E8",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	},
+	{   strokeWidth: [1,6],
+		color: "#48B5E8",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	},
+	{   strokeWidth: [1,6],
+		color: "#95E848",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	}],
+	options: {
+		canvasBackground: "#000000"
+	}
+}
+
+var presets = {
+	ions: ions,
+	bokeh: bokeh,
+	// lightshow: lightshow,
+	// geometry: geometry,
+	// space: space
+}
 
 function getAbsValue(val) {
 	var number;
@@ -13547,6 +13712,8 @@ $('fieldset.shape .fields ul li').click(function(e) {
 	}
 });
 
+
+
 // Ion Particle Generator
 // ========================================
 
@@ -13582,6 +13749,17 @@ ion.start();
 
 // Update Ion Generator on value changes
 // ========================================
+
+//Set presets when the preset select is chosen
+$('#preset').on('change', function() {
+	var preset = $(this).val();
+	$('#testcanvas').remove();
+	$('header').before('<canvas id="testcanvas"></canvas>');
+	console.log(presets[preset]);
+	var ion = null;
+	var ion = new Ion('testcanvas', presets[preset].particleSettings, presets[preset].options);
+});
+
 
 // Read values and re-initialize Ion Particle Generator with new settings
 var updateCanvas = function() {
@@ -13754,7 +13932,7 @@ var updateCanvas = function() {
 }
 
 // Update the canvas on setting change from UI
-$('input, select').on('change', function() {
+$('.toolbox input, .toolbox select').on('change', function() {
 	updateCanvas();
 });
 $('.range-slider, .range').each(function() {
