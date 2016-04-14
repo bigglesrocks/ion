@@ -125,9 +125,20 @@ $('.switch input[type="checkbox"]').on('change', function() {
 
 //Set the value of the hidden select when clicking on shape icons
 $('fieldset.shape .fields ul li').click(function(e) {
+	var shape = $(this).data('shape');
 	$('fieldset.shape .fields ul li').removeClass('selected');
 	$(this).addClass('selected');
 	$('#shape').val($(this).data('shape')).trigger('change');
+	if(shape == 'star' || shape == 'polygon') {
+		$('.points-range').removeClass('disabled').find('input').prop('disabled', false);
+	} else {
+		$('.points-range').addClass('disabled').find('input').prop('disabled', true);
+	}
+	if(shape == 'star') {
+		$('.girth-range').removeClass('disabled').find('input').prop('disabled', false);
+	} else {
+		$('.girth-range').addClass('disabled').find('input').prop('disabled', true);
+	}
 });
 
 // Ion Particle Generator
@@ -195,9 +206,11 @@ var updateCanvas = function() {
 		spawnOriginY = $('[name="spawnOriginYPreset"]:checked').val(),
 		spawnRate = 0,
 		wind = 0,
-		scale = false;
+		scale = false,
+		shape = $('#shape').val(),
+		polygonPoints = false,
+		starGirth = false;
 
-	// Read form fields values 
 
 	// Starting Population
 	if(!isNaN(parseInt(originX))) {
@@ -293,6 +306,14 @@ var updateCanvas = function() {
 		scale = $('[name="scale"]:checked').val();
 	}
 
+	if(shape == 'star' || shape == 'polygon') {
+		polygonPoints = $('.points-range').rangeVal();
+	}
+
+	if(shape == 'star') {
+		starGirth = $('.girth-range').rangeVal();
+	}
+
 	// Create a new instance of Ion with the new settings
 	var ion =  new Ion('testcanvas', {
 		strokeColor: strokeColor,
@@ -309,14 +330,18 @@ var updateCanvas = function() {
 		orient: orient,
 		rotationVelocity: rotationVelocity,
 		rotationDirection: $('#rotationDirection').val(),
-		shape: $('#shape').val(),
+		shape: shape,
 		size: $('.size-range').rangeVal(),
 		spawnRate: spawnRate,
 		spawnOrigin: spawnOrigin,
 		wind: wind,
 		scale: scale,
 		scaleRate:  $('.scaleRate-range').rangeVal(),
-		scaleLimit: $('.scaleLimit-range').rangeVal()
+		scaleLimit: $('.scaleLimit-range').rangeVal(),
+		shapeProperties: {
+			polygonPoints: polygonPoints,
+			starGirth: starGirth
+		}
 	}, {
 		canvasBackground: $('#canvasBackground').val()
 	});

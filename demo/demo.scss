@@ -181,6 +181,9 @@ input[type="checkbox"] + label {
 
 div.range, div.range-slider {
 	margin: 0 0 2em 0;
+	&.disabled {
+		pointer-events: none;
+	}
 }
 
 

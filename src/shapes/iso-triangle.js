@@ -5,7 +5,7 @@ var drawIsoTriangle = function(p) {
        if(p.orient) {
           ctx.rotate(p.orient*Math.PI/180);
        }
-       ctx.moveTo(p.x-p.size*0.5, p.y-p.size*0.5);
+       ctx.moveTo(p.x, p.y);
        ctx.beginPath();
        ctx.lineTo(p.size*0.5, p.size*0.5);
        ctx.lineTo(-p.size*0.5, p.size*0.5);

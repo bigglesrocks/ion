@@ -85,6 +85,14 @@ Particle.prototype.init = function(o) {
   var p = this,
       opacity = o.opacity || 1;
 
+  p.setProperty({
+    property: 'death',
+    value: o.death,
+    randomize: [500,3000]
+  });
+
+  p.life = 0;
+
   // Colors
   // ========================================
   
@@ -279,7 +287,11 @@ Particle.prototype.init = function(o) {
     randomize: [scaleLimitMin, scaleLimitMax]
   });
 
-  
+  // Set additional custom particle properties, if passed
+  if(p.ion.shapes[p.shape].init !== false) {
+    p.ion.shapes[p.shape].init(p,o.shapeProperties);
+  }
+
 }
 
 // Place the drawn particle on the canvas
@@ -297,7 +309,7 @@ Particle.prototype.render = function() {
      context.save();
 
      // Use the drawing instructions for the particle's shape to render the particle
-     p.ion.shapes[p.shape](p);
+     p.ion.shapes[p.shape].draw(p);
     
     // restore the context to its untranslated/unrotated state
     context.restore();
@@ -503,7 +515,8 @@ Ion.prototype.setParticles = function(particles) {
       density: 20,
       spawnOrigin: ['random', 'top'],
       origin: ['random', 'random'],
-      spawnRate: 2
+      spawnRate: 2,
+      shapeProperties: false
     }, particles[p]);
   }
    ion.particles = particles;
@@ -537,17 +550,19 @@ Ion.prototype.createParticle = function(par) {
 }
 
 // Add a new option for particle shape
-Ion.prototype.addShape = function(id, instructions) {
-  this.shapes[id] = instructions;
+Ion.prototype.addShape = function(id, drawingInstructions, init) {
+  this.shapes[id].draw = instructions;
+  this.shapes[id].init = init;
 }
 
 // Intialize the particle generator
 Ion.prototype.init = function() {
   // Add the default shapes
   this.shapes = {
-    circle: drawCircle, 
-    square: drawSquare,
-    isoTriangle: drawIsoTriangle
+    circle: { draw: drawCircle, init: false },
+    square: { draw: drawSquare, init: false },
+    isoTriangle: { draw: drawIsoTriangle, init: false },
+    star: { draw: drawStar, init: initStar }
   };
 
 }

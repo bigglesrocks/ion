@@ -1,7 +1,7 @@
 var drawSquare = function(p) {
     var ctx = p.ion.context;
        ctx.translate(p.x, p.y);
-       ctx.moveTo(p.x, p.y);
+       ctx.moveTo(0, 0);
        if(p.orient) {
           ctx.rotate(p.orient*Math.PI/180);
        }

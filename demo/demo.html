@@ -75,11 +75,6 @@
 					      <use xlink:href="#iso-triangle" />
 					</svg>
 				</li>
-				<li data-shape="right-triangle">
-					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
-					      <use xlink:href="#right-triangle" />
-					</svg>
-				</li>
 				<li data-shape="star">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#star" />
@@ -90,11 +85,46 @@
 					      <use xlink:href="#raindrop" />
 					</svg>
 				</li>
+<!-- 				<li data-shape="diamond">
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#diamond" />
+					</svg>
+				</li>
+				<li data-shape="crescent">
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#crescent" />
+					</svg>
+				</li>
+				<li data-shape="chevron">
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#chevron" />
+					</svg>
+				</li>
+				<li data-shape="heart">
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#heart" />
+					</svg>
+				</li>
+				<li data-shape="sparkle">
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#sparkle" />
+					</svg>
+				</li> -->
 			</ul>
 			<label for="minSize">Size</label>
 			<div class="range-slider size-range">
 				<input type="range" name="minSize" id="minSize" min="1" max="300" step="1" value="4"/>
 				<input type="range" name="maxSize" id="minSize" min="1" max="300" step="1" value="90"/>
+			</div>
+			<label for="minPoints">Points</label>
+			<div class="range-slider points-range">
+				<input type="range" name="minPoints" id="minPoints" min="3" max="12" step="1" value="5" disabled/>
+				<input type="range" name="maxPoints" id="maxPoints" min="3" max="12" step="1" value="5" disabled/>
+			</div>
+			<label for="minGirth">Girth</label>
+			<div class="range-slider girth-range disabled">
+				<input type="range" name="minGirth" id="minGirth" min="0.05" max="1" step="0.05" value="0.55" disabled/>
+				<input type="range" name="maxGirth" id="maxGirth" min="0.05" max="1" step="0.05" value="0.55" disabled/>
 			</div>
 		</section>
 	</fieldset>
