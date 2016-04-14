@@ -13145,9 +13145,9 @@ Ion.prototype.createParticle = function(par) {
 }
 
 // Add a new option for particle shape
-Ion.prototype.addShape = function(id, drawingInstructions, init) {
-  this.shapes[id].draw = instructions;
-  this.shapes[id].init = init;
+Ion.prototype.addShape = function(opts) {
+  this.shapes[opts.name].draw = opts.drawingInstructions;
+  this.shapes[opts.name].init = opts.init;
 }
 
 // Intialize the particle generator
