@@ -1,8 +1,8 @@
 {
-  "name": "ion",
+  "name": "ionjs",
   "version": "1.0.0",
   "description": "A particle generator using canvas",
-  "main": "index.js",
+  "main": "dist/ion.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +10,7 @@
     "particle",
     "canvas"
   ],
-  "author": "Jessica Biggs <jessica@jessicabiggs.com> (http://jessicabiggs.com/)",
+  "author": "Jessica Biggs <jlegosama@gmail.com> (http://biggles.codes)",
   "license": "ISC",
   "devDependencies": {
     "bower": "^1.7.7",
