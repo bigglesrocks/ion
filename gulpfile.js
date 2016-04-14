@@ -41,6 +41,19 @@ var autoprefixer = require('gulp-autoprefixer'),
     }
   };
 
+  //Task for creating sass partials that runs after bower installs
+  gulp.task('cssToScss', function() {
+    return gulp.src("./bower_components/**/*.css")
+    .pipe(plumber(errorHandler))
+    .pipe(rename({
+      prefix: "_",
+      extname: ".scss"
+    }))
+    .pipe(gulp.dest(function(file) { return file.base; }))
+    .pipe(plumber.stop());
+  });
+
+
 gulp.task('styles', function() {
   return gulp.src('assets/scss/styles.scss')
     .pipe(plumber({ errorHandler: errorHandler }))
@@ -93,7 +106,7 @@ gulp.task('scripts', function() {
     .pipe(concat('ion.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({
-      mangle: false
+      // mangle: false
     }))
     .pipe(rename('ion-min.js'))
     .pipe(gulp.dest('dist'))

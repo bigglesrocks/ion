@@ -1,11 +1,11 @@
 {
-  "name": "ion",
-  "version": "0.0.0",
+  "name": "ionjs",
+  "version": "1.0.0",
   "authors": [
-    "Jessica Biggs <jlegosama@gmail.com>"
+    "Jessica Biggs <jlegosama@gmail.com> (http://biggles.codes)"
   ],
-  "description": "A particle generator using canvas",
-  "main": "index.js",
+  "description": "A javascript particle generator for canvas",
+  "main": "dist/ion.js",
   "keywords": [
     "particle",
     "canvas"
@@ -16,7 +16,8 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "demo"
   ],
   "devDependencies": {
     "jquery": "~2.2.2",
