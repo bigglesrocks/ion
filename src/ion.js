@@ -561,7 +561,7 @@ Ion.prototype.init = function() {
   this.shapes = {
     circle: { draw: drawCircle, init: false },
     square: { draw: drawSquare, init: false },
-    isoTriangle: { draw: drawIsoTriangle, init: false },
+    triangle: { draw: drawTriangle, init: false },
     star: { draw: drawStar, init: initStar }
   };
 

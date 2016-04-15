@@ -561,7 +561,7 @@ Ion.prototype.init = function() {
   this.shapes = {
     circle: { draw: drawCircle, init: false },
     square: { draw: drawSquare, init: false },
-    isoTriangle: { draw: drawIsoTriangle, init: false },
+    triangle: { draw: drawTriangle, init: false },
     star: { draw: drawStar, init: initStar }
   };
 
@@ -615,26 +615,6 @@ var drawCircle = function(p) {
        }
        ctx.closePath();
 }
-var drawIsoTriangle = function(p) {
-    var ctx = p.ion.context;
-       ctx.translate(p.x, p.y);
-       ctx.moveTo(p.x, p.y);
-       if(p.orient) {
-          ctx.rotate(p.orient*Math.PI/180);
-       }
-       ctx.moveTo(p.x, p.y);
-       ctx.beginPath();
-       ctx.lineTo(p.size*0.5, p.size*0.5);
-       ctx.lineTo(-p.size*0.5, p.size*0.5);
-       ctx.lineTo(0, -p.size*0.4);
-       ctx.closePath();
-       ctx.fill();
-       if(p.strokeWidth) {
-        ctx.stroke();
-       }
-       
-}
-
 var drawSquare = function(p) {
     var ctx = p.ion.context;
        ctx.translate(p.x, p.y);
@@ -724,6 +704,26 @@ var drawStar = function(p) {
    ctx.fill()
     
 }
+var drawTriangle = function(p) {
+    var ctx = p.ion.context;
+       ctx.translate(p.x, p.y);
+       ctx.moveTo(p.x, p.y);
+       if(p.orient) {
+          ctx.rotate(p.orient*Math.PI/180);
+       }
+       ctx.moveTo(p.x, p.y);
+       ctx.beginPath();
+       ctx.lineTo(p.size*0.5, p.size*0.5);
+       ctx.lineTo(-p.size*0.5, p.size*0.5);
+       ctx.lineTo(0, -p.size*0.4);
+       ctx.closePath();
+       ctx.fill();
+       if(p.strokeWidth) {
+        ctx.stroke();
+       }
+       
+}
+
 // get a random number provided min & max values
 function randomNumber(min, max, frac) {
    var num = Math.random() * (max - min) + min;
