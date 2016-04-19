@@ -6,11 +6,10 @@ Ion is a particle generator written in javascript and powered by canvas. It has 
 
 ## Quickstart
 
-Install ion (bower, npm, or manually):
+Install ion (bower or manually):
 
 ```bash
     bower install ionjs
-    npm install ionjs
 ```
 
 Add ion & a canvas element to your page:
