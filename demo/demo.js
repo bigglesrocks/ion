@@ -2,7 +2,8 @@ var presets = {
 	ions: ions,
 	bokeh: bokeh,
 	space: space,
-	geometry: geometry
+	geometry: geometry,
+	ripples: ripples
 }
 
 function getAbsValue(val) {
