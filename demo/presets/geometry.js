@@ -5,7 +5,7 @@ var geometry = {
 		colorOpacity: [0.05,0.25],
 		density: 20,
 		origin: ['random', 'random'],
-		spawnRate: 10,
+		spawnRate: 5,
 		spawnOrigin: ['random', 'bottom'],
 		gravity: [-0.25,-0.1],
 		shape: ['circle', 'square', 'triangle', 'polygon'],
