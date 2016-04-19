@@ -13,7 +13,7 @@
 <rect id="square" x="2.1" y="3.3" width="30.9" height="30.9"/>
 <polygon id="right-triangle" points="33.1,3.3 2.1,34.2 33.1,34.2 "/>
 <polygon id="iso-triangle" points="1.1,31 17.3,3.1 33.4,31 "/>
-<polygon id="octogon" points="9.3,32.9 0.8,18.1 9.3,3.4 26.3,3.4 34.8,18.1 26.3,32.9 "/>
+<polygon id="polygon" points="9.3,32.9 0.8,18.1 9.3,3.4 26.3,3.4 34.8,18.1 26.3,32.9 "/>
 <polygon id="star" points="18.5,0.8 24.5,10.6 35.7,13.3 28.3,22.1 29.1,33.5 18.5,29.2 7.9,33.5 8.7,22.1 1.3,13.3 12.4,10.6 "/>
 <path id="raindrop" d="M29.9,18.2c-2.7-8.4-10.9-16.9-12-18V0c0,0,0,0-0.1,0.1c0,0-0.1-0.1-0.1-0.1v0.1C16.5,1.4,6.1,12.1,5,21.6
 	c0,0.1,0,0.2,0,0.3c0,0.4-0.1,0.8-0.1,1.2c0,7.2,5.8,13,13,13c7.2,0,13-5.8,13-13C30.9,21.4,30.5,19.7,29.9,18.2z"/>
@@ -39,17 +39,14 @@
 		<h4>A javascript particle generator for canvas</h4>
 		<div class="input-field">
 			<select name="preset" id="preset">
-				<option value="ion" selected>Ion</option>
+				<option value="ions" selected>Ions</option>
 				<option value="bokeh">Bokeh</option>
 				<option value="space">Space</option>
 				<option value="geometry">Geometry</option>
-				<option value="rain">Rain</option>
-				<option value="music">Music</option>
-				<option value="sakura">Sakura Blossoms</option>
+				<option value="ripples">Ripples</option>
 			</select>
 			<label for="preset">Select a Preset</label>
 		</div>
-		
 	</header>
 </section>
 
@@ -70,7 +67,7 @@
 					      <use xlink:href="#square" />
 					</svg>
 				</li>
-				<li data-shape="isoTriangle">
+				<li data-shape="triangle">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#iso-triangle" />
 					</svg>
@@ -80,11 +77,21 @@
 					      <use xlink:href="#star" />
 					</svg>
 				</li>
-				<li data-shape="raindrop">
+				<li data-shape="polygon">
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#polygon" />
+					</svg>
+				</li>
+				<li data-shape="line">
+					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
+					      <use xlink:href="#line" />
+					</svg>
+				</li>
+<!-- 				<li data-shape="raindrop">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#raindrop" />
 					</svg>
-				</li>
+				</li> -->
 <!-- 				<li data-shape="diamond">
 					<svg class="shape" width="36" height="36" viewBox="0 0 36 36">
 					      <use xlink:href="#diamond" />
@@ -116,12 +123,12 @@
 				<input type="range" name="minSize" id="minSize" min="1" max="300" step="1" value="4"/>
 				<input type="range" name="maxSize" id="minSize" min="1" max="300" step="1" value="90"/>
 			</div>
-			<label for="minPoints">Points</label>
-			<div class="range-slider points-range">
+			<label for="minPoints" class="disabled">Points</label>
+			<div class="range-slider points-range disabled">
 				<input type="range" name="minPoints" id="minPoints" min="3" max="12" step="1" value="5" disabled/>
 				<input type="range" name="maxPoints" id="maxPoints" min="3" max="12" step="1" value="5" disabled/>
 			</div>
-			<label for="minGirth">Girth</label>
+			<label for="minGirth" class="disabled">Girth</label>
 			<div class="range-slider girth-range disabled">
 				<input type="range" name="minGirth" id="minGirth" min="0.05" max="1" step="0.05" value="0.55" disabled/>
 				<input type="range" name="maxGirth" id="maxGirth" min="0.05" max="1" step="0.05" value="0.55" disabled/>
@@ -148,7 +155,7 @@
 				</label>
 			</div>
 			<p class="random">
-				<input type="checkbox" name="colorRandomize" id="colorRadomize" />
+				<input type="checkbox" name="colorRandomize" id="colorRandomize" />
 				<label for="colorRandomize">Randomize</label>
 			</p>
 		</legend>

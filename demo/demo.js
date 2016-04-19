@@ -1,13 +1,10 @@
-// function convertHex(hex,opacity){
-//     hex = hex.replace('#','');
-//     r = parseInt(hex.substring(0,2), 16);
-//     g = parseInt(hex.substring(2,4), 16);
-//     b = parseInt(hex.substring(4,6), 16);
-
-//     result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
-//     return result;
-// }
-
+var presets = {
+	ions: ions,
+	bokeh: bokeh,
+	space: space,
+	geometry: geometry,
+	ripples: ripples
+}
 
 function getAbsValue(val) {
 	var number;
@@ -80,7 +77,6 @@ $('.range-slider').each(function() {
 			'max': getAbsValue(max.attr('max'))
 		}
 	});
-
 });
 
 // Initialize noUiSlider single-range inputs
@@ -141,6 +137,8 @@ $('fieldset.shape .fields ul li').click(function(e) {
 	}
 });
 
+
+
 // Ion Particle Generator
 // ========================================
 
@@ -176,6 +174,17 @@ ion.start();
 
 // Update Ion Generator on value changes
 // ========================================
+
+//Set presets when the preset select is chosen
+$('#preset').on('change', function() {
+	var preset = $(this).val();
+	$('#testcanvas').remove();
+	$('header').before('<canvas id="testcanvas"></canvas>');
+	console.log(presets[preset]);
+	var ion = null;
+	var ion = new Ion('testcanvas', presets[preset].particleSettings, presets[preset].options);
+});
+
 
 // Read values and re-initialize Ion Particle Generator with new settings
 var updateCanvas = function() {
@@ -348,7 +357,7 @@ var updateCanvas = function() {
 }
 
 // Update the canvas on setting change from UI
-$('input, select').on('change', function() {
+$('.toolbox input, .toolbox select').on('change', function() {
 	updateCanvas();
 });
 $('.range-slider, .range').each(function() {

@@ -62,7 +62,7 @@ Particle.prototype.colorFormat = function() {
       strokeOpacity = p.strokeOpacity*100 || 100;
 
   //Check if we have a hex value
-  if(p.color.indexOf('#' >= 0)) {
+  if(p.color.match('#')) {
     p.color = convertHex(p.color, colorOpacity);
   }
   p.colorArray = colorArray(p.color);
@@ -561,8 +561,9 @@ Ion.prototype.init = function() {
   this.shapes = {
     circle: { draw: drawCircle, init: false },
     square: { draw: drawSquare, init: false },
-    isoTriangle: { draw: drawIsoTriangle, init: false },
-    star: { draw: drawStar, init: initStar }
+    triangle: { draw: drawTriangle, init: false },
+    star: { draw: drawStar, init: initStar },
+    polygon: {draw: drawPolygon, init: initPolygon}
   };
 
 }
@@ -615,26 +616,56 @@ var drawCircle = function(p) {
        }
        ctx.closePath();
 }
-var drawIsoTriangle = function(p) {
-    var ctx = p.ion.context;
-       ctx.translate(p.x, p.y);
-       ctx.moveTo(p.x, p.y);
-       if(p.orient) {
-          ctx.rotate(p.orient*Math.PI/180);
-       }
-       ctx.moveTo(p.x, p.y);
-       ctx.beginPath();
-       ctx.lineTo(p.size*0.5, p.size*0.5);
-       ctx.lineTo(-p.size*0.5, p.size*0.5);
-       ctx.lineTo(0, -p.size*0.4);
-       ctx.closePath();
-       ctx.fill();
-       if(p.strokeWidth) {
-        ctx.stroke();
-       }
-       
+var initPolygon = function(p, options) {
+
+	polygonPoints = options.polygonPoints || 5;
+	
+	p.setProperty({
+		property: 'polygonPoints',
+		value: polygonPoints,
+		acceptedValues: [3,4,5,6,7,8,9,10,11,12]
+	});
+
+	p.polygonAngle = 2*Math.PI/p.polygonPoints;
+
 }
 
+var drawPolygon = function(p) {
+	var ctx = p.ion.context,
+		points = new Array();
+	// Set new radius is the original size has
+	for(i=1; i<=p.polygonPoints; i++) {
+		var point = [
+			p.size*Math.cos(p.polygonAngle*i-(2*Math.PI*0.2)),
+			p.size*Math.sin(p.polygonAngle*i-(2*Math.PI*0.2))
+		];
+		points.push(point);
+	}
+  
+   ctx.translate(p.x, p.y);
+   ctx.moveTo(0,0);
+   if(p.orient) {
+      ctx.rotate(p.orient*Math.PI/180);
+   }
+
+   ctx.moveTo(points[0][0], points[0][1]);
+
+   ctx.beginPath();
+
+   for(var t=1;t<points.length;t++) {
+   	 ctx.lineTo(points[t][0], points[t][1]);
+   }
+
+   ctx.lineTo(points[0][0], points[0][1]);
+
+   ctx.closePath();
+
+   if(p.strokeWidth) {
+    ctx.stroke();
+   }
+   ctx.fill()
+    
+}
 var drawSquare = function(p) {
     var ctx = p.ion.context;
        ctx.translate(p.x, p.y);
@@ -724,6 +755,26 @@ var drawStar = function(p) {
    ctx.fill()
     
 }
+var drawTriangle = function(p) {
+    var ctx = p.ion.context;
+       ctx.translate(p.x, p.y);
+       ctx.moveTo(p.x, p.y);
+       if(p.orient) {
+          ctx.rotate(p.orient*Math.PI/180);
+       }
+       ctx.moveTo(p.x, p.y);
+       ctx.beginPath();
+       ctx.lineTo(p.size*0.5, p.size*0.5);
+       ctx.lineTo(-p.size*0.5, p.size*0.5);
+       ctx.lineTo(0, -p.size*0.4);
+       ctx.closePath();
+       ctx.fill();
+       if(p.strokeWidth) {
+        ctx.stroke();
+       }
+       
+}
+
 // get a random number provided min & max values
 function randomNumber(min, max, frac) {
    var num = Math.random() * (max - min) + min;
@@ -735,7 +786,7 @@ function randomNumber(min, max, frac) {
 
 // Get a random rgba value
 function randomRGBA() {
-  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0.255)+","+randomNumber(0,1,true)+")";
+  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0,1,true)+")";
 }
 
 // Convert hex values to rgba values

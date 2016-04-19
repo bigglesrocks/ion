@@ -9,7 +9,7 @@ function randomNumber(min, max, frac) {
 
 // Get a random rgba value
 function randomRGBA() {
-  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0.255)+","+randomNumber(0,1,true)+")";
+  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0,1,true)+")";
 }
 
 // Convert hex values to rgba values

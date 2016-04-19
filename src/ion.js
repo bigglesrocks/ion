@@ -62,7 +62,7 @@ Particle.prototype.colorFormat = function() {
       strokeOpacity = p.strokeOpacity*100 || 100;
 
   //Check if we have a hex value
-  if(p.color.indexOf('#' >= 0)) {
+  if(p.color.match('#')) {
     p.color = convertHex(p.color, colorOpacity);
   }
   p.colorArray = colorArray(p.color);
@@ -561,8 +561,9 @@ Ion.prototype.init = function() {
   this.shapes = {
     circle: { draw: drawCircle, init: false },
     square: { draw: drawSquare, init: false },
-    isoTriangle: { draw: drawIsoTriangle, init: false },
-    star: { draw: drawStar, init: initStar }
+    triangle: { draw: drawTriangle, init: false },
+    star: { draw: drawStar, init: initStar },
+    polygon: {draw: drawPolygon, init: initPolygon}
   };
 
 }

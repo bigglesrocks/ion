@@ -12657,7 +12657,7 @@ Particle.prototype.colorFormat = function() {
       strokeOpacity = p.strokeOpacity*100 || 100;
 
   //Check if we have a hex value
-  if(p.color.indexOf('#' >= 0)) {
+  if(p.color.match('#')) {
     p.color = convertHex(p.color, colorOpacity);
   }
   p.colorArray = colorArray(p.color);
@@ -13156,8 +13156,9 @@ Ion.prototype.init = function() {
   this.shapes = {
     circle: { draw: drawCircle, init: false },
     square: { draw: drawSquare, init: false },
-    isoTriangle: { draw: drawIsoTriangle, init: false },
-    star: { draw: drawStar, init: initStar }
+    triangle: { draw: drawTriangle, init: false },
+    star: { draw: drawStar, init: initStar },
+    polygon: {draw: drawPolygon, init: initPolygon}
   };
 
 }
@@ -13210,26 +13211,56 @@ var drawCircle = function(p) {
        }
        ctx.closePath();
 }
-var drawIsoTriangle = function(p) {
-    var ctx = p.ion.context;
-       ctx.translate(p.x, p.y);
-       ctx.moveTo(p.x, p.y);
-       if(p.orient) {
-          ctx.rotate(p.orient*Math.PI/180);
-       }
-       ctx.moveTo(p.x, p.y);
-       ctx.beginPath();
-       ctx.lineTo(p.size*0.5, p.size*0.5);
-       ctx.lineTo(-p.size*0.5, p.size*0.5);
-       ctx.lineTo(0, -p.size*0.4);
-       ctx.closePath();
-       ctx.fill();
-       if(p.strokeWidth) {
-        ctx.stroke();
-       }
-       
+var initPolygon = function(p, options) {
+
+	polygonPoints = options.polygonPoints || 5;
+	
+	p.setProperty({
+		property: 'polygonPoints',
+		value: polygonPoints,
+		acceptedValues: [3,4,5,6,7,8,9,10,11,12]
+	});
+
+	p.polygonAngle = 2*Math.PI/p.polygonPoints;
+
 }
 
+var drawPolygon = function(p) {
+	var ctx = p.ion.context,
+		points = new Array();
+	// Set new radius is the original size has
+	for(i=1; i<=p.polygonPoints; i++) {
+		var point = [
+			p.size*Math.cos(p.polygonAngle*i-(2*Math.PI*0.2)),
+			p.size*Math.sin(p.polygonAngle*i-(2*Math.PI*0.2))
+		];
+		points.push(point);
+	}
+  
+   ctx.translate(p.x, p.y);
+   ctx.moveTo(0,0);
+   if(p.orient) {
+      ctx.rotate(p.orient*Math.PI/180);
+   }
+
+   ctx.moveTo(points[0][0], points[0][1]);
+
+   ctx.beginPath();
+
+   for(var t=1;t<points.length;t++) {
+   	 ctx.lineTo(points[t][0], points[t][1]);
+   }
+
+   ctx.lineTo(points[0][0], points[0][1]);
+
+   ctx.closePath();
+
+   if(p.strokeWidth) {
+    ctx.stroke();
+   }
+   ctx.fill()
+    
+}
 var drawSquare = function(p) {
     var ctx = p.ion.context;
        ctx.translate(p.x, p.y);
@@ -13319,6 +13350,26 @@ var drawStar = function(p) {
    ctx.fill()
     
 }
+var drawTriangle = function(p) {
+    var ctx = p.ion.context;
+       ctx.translate(p.x, p.y);
+       ctx.moveTo(p.x, p.y);
+       if(p.orient) {
+          ctx.rotate(p.orient*Math.PI/180);
+       }
+       ctx.moveTo(p.x, p.y);
+       ctx.beginPath();
+       ctx.lineTo(p.size*0.5, p.size*0.5);
+       ctx.lineTo(-p.size*0.5, p.size*0.5);
+       ctx.lineTo(0, -p.size*0.4);
+       ctx.closePath();
+       ctx.fill();
+       if(p.strokeWidth) {
+        ctx.stroke();
+       }
+       
+}
+
 // get a random number provided min & max values
 function randomNumber(min, max, frac) {
    var num = Math.random() * (max - min) + min;
@@ -13330,7 +13381,7 @@ function randomNumber(min, max, frac) {
 
 // Get a random rgba value
 function randomRGBA() {
-  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0.255)+","+randomNumber(0,1,true)+")";
+  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0,1,true)+")";
 }
 
 // Convert hex values to rgba values
@@ -13404,16 +13455,249 @@ function defaultOptions(standard, user) {
 isArray = function(val) {
   return Object.prototype.toString.call(val) == '[object Array]'
 }
-// function convertHex(hex,opacity){
-//     hex = hex.replace('#','');
-//     r = parseInt(hex.substring(0,2), 16);
-//     g = parseInt(hex.substring(2,4), 16);
-//     b = parseInt(hex.substring(4,6), 16);
+var bokeh =  {
+	particleSettings: [{
+		strokeColor: "#F8BE67",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#F8BE67",
+		colorOpacity: [0.1,0.3],
+		density: 20,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 1,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	},
+	{   strokeColor: "#E7489A",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#E7489A",
+		colorOpacity: [0.1,0.3],
+		density: 15,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 1,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	},
+	{   strokeColor: "#A848E8",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#A848E8",
+		colorOpacity: [0.1,0.3],
+		density: 15,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 1,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	},
+	{   strokeColor: "#48B5E8",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#48B5E8",
+		colorOpacity: [0.1,0.3],
+		density: 15,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 0,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	},
+	{   strokeColor: "#95E848",
+		strokeWidth: [1,2],
+		strokeOpacity: [0.4,1],
+		color: "#95E848",
+		colorOpacity: [0.1,0.3],
+		density: 15,
+		gravity: [-0.15,0.15],
+		shape: 'circle',
+		size: [150,300],
+		spawnRate: 1,
+		wind: [-0.15, 0.15],
+		fade: 'in',
+		fadeRate: [0.1,0.5]
+	}],
+	options: {
+		canvasBackground: "#212121"
+	}
+}
 
-//     result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
-//     return result;
-// }
+var geometry = {
+	particleSettings: {
+		strokeWidth: 0,
+		color: "#000000",
+		colorOpacity: [0.05,0.25],
+		density: 20,
+		origin: ['random', 'random'],
+		spawnRate: 5,
+		spawnOrigin: ['random', 'bottom'],
+		gravity: [-0.25,-0.1],
+		shape: ['circle', 'square', 'triangle', 'polygon'],
+		size: [15,100],
+		wind: 0,
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.5],
+		polygonPoints: 5
+	},
+	options: {
+		canvasBackground: "#76C46F"
+	}
+};
+var ions = {
+	particleSettings: {
+		strokeColor: "#00e5ff",
+		strokeWidth: [0.25,2],
+		strokeOpacity: [0.5,1],
+		color: "00e5ff",
+		colorOpacity: [0.15,0.5],
+		gravity: [-0.75,-0.25],
+		shape: 'circle',
+		size: [4,10,50,150],
+		spawnRate: 8,
+		spawnOrigin: ['random', 'bottom'],
+		wind: [-0.75,-0.25]
+	},
+	options: {
+		canvasBackground: "#212121"
+	}
+}
 
+var lightshow =  {
+	particleSettings: [{
+		strokeWidth: [1,6],
+		color: "#F8BE67",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	},
+	{   strokeWidth: [1,6],
+		color: "#E7489A",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	},
+	{   strokeWidth: [1,6],
+		color: "#A848E8",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	},
+	{   strokeWidth: [1,6],
+		color: "#48B5E8",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	},
+	{   strokeWidth: [1,6],
+		color: "#95E848",
+		colorOpacity: [0.1,0.8],
+		density: 10,
+		gravity: [-0.25,0.25],
+		shape: 'line',
+		size: [50,200],
+		wind: [-0.25, 0.25],
+		rotationDirection: 'random',
+		rotationVelocity: [0.1,0.8],
+		fade: 'in-out',
+		fadeRate: [0,0.5]
+	}],
+	options: {
+		canvasBackground: "#000000"
+	}
+}
+
+var ripples = {
+	particleSettings: {
+		strokeWidth: [0.25,2],
+		strokeOpacity: 1,
+		strokeColor: "#BFD8CC",
+		color: "#BFD8CC",
+		colorOpacity: [0,0.001],
+		density: 3,
+		origin: ['random', 'random'],
+		spawnRate: 2,
+		spawnOrigin: ['random', 'random'],
+		gravity: 0,
+		shape: 'circle',
+		size: 1,
+		wind: 0,
+		scale: 'grow',
+		scaleRate: [0.5,0.75],
+		fade: 'out',
+		fadeRate: [0.15,0.25]
+	},
+	options: {
+		canvasBackground: "#5A6D79"
+	}
+};
+var space =  {
+	particleSettings: {
+		strokeColor: "#B1F2F8",
+		strokeWidth: 1,
+		strokeOpacity: [0.1,0.5],
+		color: "#E0F1F1",
+		colorOpacity: [0.2,1],
+		density: 10,
+		gravity: [-1,1],
+		origin: ['center', 'center'],
+		shape: 'circle',
+		size: [1,5],
+		spawnRate: 50,
+		spawnOrigin: ['center', 'center'],
+		wind: [-1, -0.75, -0.5, -0.25, 0.25, 0.5, 0.75, 1],
+		scale: 'grow',
+		scaleRate: 0.01
+	},
+	options: {
+		canvasBackground: "#10101F"
+	}
+};
+
+var presets = {
+	ions: ions,
+	bokeh: bokeh,
+	space: space,
+	geometry: geometry,
+	ripples: ripples
+}
 
 function getAbsValue(val) {
 	var number;
@@ -13486,7 +13770,6 @@ $('.range-slider').each(function() {
 			'max': getAbsValue(max.attr('max'))
 		}
 	});
-
 });
 
 // Initialize noUiSlider single-range inputs
@@ -13547,6 +13830,8 @@ $('fieldset.shape .fields ul li').click(function(e) {
 	}
 });
 
+
+
 // Ion Particle Generator
 // ========================================
 
@@ -13582,6 +13867,17 @@ ion.start();
 
 // Update Ion Generator on value changes
 // ========================================
+
+//Set presets when the preset select is chosen
+$('#preset').on('change', function() {
+	var preset = $(this).val();
+	$('#testcanvas').remove();
+	$('header').before('<canvas id="testcanvas"></canvas>');
+	console.log(presets[preset]);
+	var ion = null;
+	var ion = new Ion('testcanvas', presets[preset].particleSettings, presets[preset].options);
+});
+
 
 // Read values and re-initialize Ion Particle Generator with new settings
 var updateCanvas = function() {
@@ -13754,7 +14050,7 @@ var updateCanvas = function() {
 }
 
 // Update the canvas on setting change from UI
-$('input, select').on('change', function() {
+$('.toolbox input, .toolbox select').on('change', function() {
 	updateCanvas();
 });
 $('.range-slider, .range').each(function() {
