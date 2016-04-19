@@ -3086,6 +3086,37 @@ header .input-field label {
   top: -2em;
 }
 
+nav {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+
+nav ul li {
+  display: inline-block;
+  float: left;
+  margin: 0;
+}
+
+nav ul li:first-child a {
+  border-right: 1px solid #cfd8dc;
+}
+
+nav ul li a {
+  color: #cfd8dc;
+  padding: 0.5em 1em;
+  font-weight: 600;
+  transition: all 0.35s ease-in-out;
+  margin: 0;
+  display: block;
+  font-size: 1.1em;
+}
+
+nav ul li a:hover {
+  background-color: #cfd8dc;
+  color: #263238;
+}
+
 @font-face {
   font-family:"Roboto";src:local(Roboto Thin), url("fonts/roboto/Roboto-Thin.eot");src:url("fonts/roboto/Roboto-Thin.eot?#iefix") format("embedded-opentype"), url("fonts/roboto/Roboto-Thin.woff2") format("woff2"), url("fonts/roboto/Roboto-Thin.woff") format("woff"), url("fonts/roboto/Roboto-Thin.ttf") format("truetype");font-weight:200;
 }

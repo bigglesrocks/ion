@@ -361,4 +361,32 @@ header {
 	}
 }
 
+nav {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+
+	ul li {
+		display: inline-block;
+		float: left;
+		margin: 0;
+		&:first-child a {
+			border-right: 1px solid color("blue-grey", 'lighten-4');
+		}
+		a {
+			color: color("blue-grey", "lighten-4");
+			padding: 0.5em 1em;
+			font-weight: 600;
+			transition: all 0.35s ease-in-out;
+			margin: 0;
+			display: block;
+			font-size: 1.1em;
+			&:hover {
+				background-color: color("blue-grey", "lighten-4");
+				color: color("blue-grey", "darken-4");
+			}
+		}
+	}
+}
+
 
