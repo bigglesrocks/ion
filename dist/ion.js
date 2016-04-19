@@ -562,7 +562,8 @@ Ion.prototype.init = function() {
     circle: { draw: drawCircle, init: false },
     square: { draw: drawSquare, init: false },
     triangle: { draw: drawTriangle, init: false },
-    star: { draw: drawStar, init: initStar }
+    star: { draw: drawStar, init: initStar },
+    polygon: {draw: drawPolygon, init: initPolygon}
   };
 
 }
