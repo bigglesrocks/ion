@@ -123,12 +123,12 @@
 				<input type="range" name="minSize" id="minSize" min="1" max="300" step="1" value="4"/>
 				<input type="range" name="maxSize" id="minSize" min="1" max="300" step="1" value="90"/>
 			</div>
-			<label for="minPoints">Points</label>
-			<div class="range-slider points-range">
+			<label for="minPoints" class="disabled">Points</label>
+			<div class="range-slider points-range disabled">
 				<input type="range" name="minPoints" id="minPoints" min="3" max="12" step="1" value="5" disabled/>
 				<input type="range" name="maxPoints" id="maxPoints" min="3" max="12" step="1" value="5" disabled/>
 			</div>
-			<label for="minGirth">Girth</label>
+			<label for="minGirth" class="disabled">Girth</label>
 			<div class="range-slider girth-range disabled">
 				<input type="range" name="minGirth" id="minGirth" min="0.05" max="1" step="0.05" value="0.55" disabled/>
 				<input type="range" name="maxGirth" id="maxGirth" min="0.05" max="1" step="0.05" value="0.55" disabled/>
@@ -155,7 +155,7 @@
 				</label>
 			</div>
 			<p class="random">
-				<input type="checkbox" name="colorRandomize" id="colorRadomize" />
+				<input type="checkbox" name="colorRandomize" id="colorRandomize" />
 				<label for="colorRandomize">Randomize</label>
 			</p>
 		</legend>

@@ -77,7 +77,6 @@ $('.range-slider').each(function() {
 			'max': getAbsValue(max.attr('max'))
 		}
 	});
-
 });
 
 // Initialize noUiSlider single-range inputs

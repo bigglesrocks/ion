@@ -178,12 +178,26 @@ input[type="checkbox"] + label {
 	font-size: 0.8em;
 }
 
+label.disabled {
+	color: color('blue-grey', 'lighten-1');
+}
 
 div.range, div.range-slider {
 	margin: 0 0 2em 0;
-	&.disabled {
+	&.disabled, .disabled & {
 		pointer-events: none;
+		background-color: color("blue-grey", "darken-2");
+		.noUi-connect {
+			background-color: color("blue-grey", 'base');
+		}
+		.noUi-background {
+			background-color: color("blue-grey", "darken-2");
+		}
+		.range-label {
+			background-color: color("blue-grey", "base")
+		}
 	}
+
 }
 
 
@@ -213,58 +227,29 @@ input[type="radio"].with-gap {
 input[type="range"] {
 	display: none;
 	border: none;
-		&::-webkit-slider-thumb {
-			background-color: $switch-bg-color;
-		}
-		&::-moz-slider-thumb {
-			background-color: $switch-bg-color;
-		}
-		&::-ms-slider-thumb {
-			background-color: $switch-bg-color;
-		}
-		&::-webkit-slider-runnable-track {
-			background-color:  $switch-unchecked-lever-bg;
-		}
-		&::-moz-slider-runnable-track {
-			background-color:  $switch-unchecked-lever-bg;
-
-		}
-		&::-ms-slider-runnable-track {
-			background-color: $switch-unchecked-lever-bg;
-
-		}
-	&[disabled] {
-		&::-webkit-slider-thumb {
-			background-color: $switch-unchecked-bg;
-		}
-		&::-moz-slider-thumb {
-			background-color: $switch-unchecked-bg;
-		}
-		&::-ms-slider-thumb {
-			background-color: $switch-unchecked-bg;
-		}
-	}
-
 }
 
 fieldset.shape {
-	ul li {
-		display: inline-block;
-		width: 2em;
-		margin: 0.2em;
-		svg {
-			width: 100%;
-			* {
-				fill: $switch-unchecked-bg;
-				transition: fill 0.35s ease-in-out;
-				&:hover {
-					cursor: pointer;
-					fill: $switch-unchecked-lever-bg;
+	ul {
+		margin: 0;
+		li {
+			display: inline-block;
+			width: 2em;
+			margin: 0.2em;
+			svg {
+				width: 100%;
+				* {
+					fill: $switch-unchecked-bg;
+					transition: fill 0.35s ease-in-out;
+					&:hover {
+						cursor: pointer;
+						fill: $switch-unchecked-lever-bg;
+					}
 				}
 			}
-		}
-		&.selected svg * {
-			fill: $switch-bg-color;
+			&.selected svg * {
+				fill: $switch-bg-color;
+			}
 		}
 	}
 }
