@@ -62,7 +62,7 @@ Particle.prototype.colorFormat = function() {
       strokeOpacity = p.strokeOpacity*100 || 100;
 
   //Check if we have a hex value
-  if(p.color.indexOf('#' >= 0)) {
+  if(p.color.match('#')) {
     p.color = convertHex(p.color, colorOpacity);
   }
   p.colorArray = colorArray(p.color);

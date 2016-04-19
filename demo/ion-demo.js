@@ -12657,7 +12657,7 @@ Particle.prototype.colorFormat = function() {
       strokeOpacity = p.strokeOpacity*100 || 100;
 
   //Check if we have a hex value
-  if(p.color.indexOf('#' >= 0)) {
+  if(p.color.match('#')) {
     p.color = convertHex(p.color, colorOpacity);
   }
   p.colorArray = colorArray(p.color);
@@ -13381,7 +13381,7 @@ function randomNumber(min, max, frac) {
 
 // Get a random rgba value
 function randomRGBA() {
-  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0.255)+","+randomNumber(0,1,true)+")";
+  return "rgba("+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0,255)+","+randomNumber(0,1,true)+")";
 }
 
 // Convert hex values to rgba values
@@ -13770,7 +13770,6 @@ $('.range-slider').each(function() {
 			'max': getAbsValue(max.attr('max'))
 		}
 	});
-
 });
 
 // Initialize noUiSlider single-range inputs
