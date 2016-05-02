@@ -1,7 +1,7 @@
 #Ion
 Ion is a particle generator written in javascript and powered by canvas. It has no dependecies and is pure javascript.
 
-[Demo](https://jlegosama.github.io/ion)
+[Demo](https://bigglesrocks.github.io/ion)
 
 
 ## Quickstart
@@ -30,7 +30,7 @@ Create a new instance of Ion with desired options:
     ); 
 ```
 
-See [Getting Setup](https://github.com/jlegosama/ion/wiki/Getting-Setup) for a more detailed setup guide.
+See [Getting Setup](https://github.com/bigglesrocks/ion/wiki/Getting-Setup) for a more detailed setup guide.
 
 
 ## Basic Usage
@@ -39,7 +39,7 @@ The Ion constructor takes 3 arguments:
 
 `canvasId`: **string** _required_ ID of the `<canvas>` element Ion should use
 
-`particleSettings`: **object** or **array of objects** _optional_ [Particle Options](https://github.com/jlegosama/ion/wiki/Particle-Options)
+`particleSettings`: **object** or **array of objects** _optional_ [Particle Options](https://github.com/bigglesrocks/ion/wiki/Particle-Options)
 
 `options`: **object** _optional_ Global options for Ion
 
@@ -66,9 +66,9 @@ ion.start();
 
 ## Advanced Usage
 
-- [Particle Randomization](https://github.com/jlegosama/ion/wiki/Variance-&-Randomization) 
+- [Particle Randomization](https://github.com/bigglesrocks/ion/wiki/Variance-&-Randomization) 
 
-- [Custom Particle Shapes](https://github.com/jlegosama/ion/wiki/Custom-Particle-Shapes)
+- [Custom Particle Shapes](https://github.com/bigglesrocks/ion/wiki/Custom-Particle-Shapes)
 
 
 
